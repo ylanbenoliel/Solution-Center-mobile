@@ -64,21 +64,20 @@ export default function Login() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={{
-        flex: 1
-      }}
-    >
-      <View
+    <>
+      <KeyboardAvoidingView
+        behavior="padding"
         style={{
-          flex: 1,
-          justifyContent: "space-between",
-          marginTop: "20%",
-          color: colors.whiteColor
+          flex: 1
         }}
       >
-        <View style={{ paddingLeft: 20 }}>
+        <View
+          style={{
+            paddingLeft: 20,
+            marginTop: "15%",
+            position: "absolute"
+          }}
+        >
           <TouchableOpacity>
             <MaterialIcons
               name="menu"
@@ -90,20 +89,29 @@ export default function Login() {
 
         <View
           style={{
-            alignItems: "center",
-            justifyContent: "center"
+            flex: 1,
+            justifyContent: "space-between",
+            marginTop: "20%",
+            color: colors.whiteColor
           }}
         >
-          <Image
-            style={{ width: 128, height: 128 }}
-            source={require("../assets/LogoLogin.png")}
-          />
-          <Input name="Email" placeholder="Digite seu email" />
-          <Input name="Senha" placeholder="Digite sua senha" />
-          <Button text="Entrar" />
-          <Button text="Registrar" />
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Image
+              style={{ width: 128, height: 128 }}
+              source={require("../assets/LogoLogin.png")}
+            />
+            <Input name="Email" placeholder="Digite seu email" />
+            <Input name="Senha" placeholder="Digite sua senha" />
+            <Button text="Entrar" />
+            <Button text="Registrar" />
+          </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </>
   );
 }
