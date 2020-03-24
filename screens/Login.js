@@ -12,7 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import colors from "../constants/colors";
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const Input = ({ name, placeholder }) => {
     return (
@@ -35,9 +35,10 @@ export default function Login() {
     );
   };
 
-  const Button = ({ text }) => {
+  const Button = ({ text, screen }) => {
     return (
       <TouchableOpacity
+        onPress={() => navigation.navigate(screen)}
         style={{
           width: "80%",
           height: 40,
@@ -107,7 +108,7 @@ export default function Login() {
             />
             <Input name="Email" placeholder="Digite seu email" />
             <Input name="Senha" placeholder="Digite sua senha" />
-            <Button text="Entrar" />
+            <Button text="Entrar" screen="Schedule" />
             <Button text="Registrar" />
           </View>
         </View>

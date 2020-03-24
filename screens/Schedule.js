@@ -6,7 +6,7 @@ import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
 import colors from "../constants/colors";
 import VacancyModal from "../components/VacancyModal";
 
-export default function Schedule() {
+export default function Schedule({ navigation }) {
   const [daySelected, setDaySelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sundays, setSundays] = useState([]);

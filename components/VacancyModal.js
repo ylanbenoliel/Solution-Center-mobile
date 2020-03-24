@@ -123,7 +123,7 @@ const VacancyModal = ({ isVisible, toogle }) => {
             marginRight: 10
           }}
         >
-          <TouchableOpacity onPress={() => toogle}>
+          <TouchableOpacity>
             <MaterialIcons
               name="close"
               color={colors.navigationColor}
