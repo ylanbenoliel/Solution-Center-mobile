@@ -4,6 +4,7 @@ import { Calendar } from "react-native-calendars";
 import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
 
 import colors from "../constants/colors";
+import VacancyModal from "../components/VacancyModal";
 
 export default function Schedule() {
   const [daySelected, setDaySelected] = useState("");
@@ -33,6 +34,14 @@ export default function Schedule() {
   const _onDayPress = day => {
     setDaySelected(day);
   };
+
+  function toggleModal() {
+    setIsModalOpen(!isModalOpen);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+  }
 
   return (
     <View
@@ -111,7 +120,7 @@ export default function Schedule() {
         {sundays[0] + sundays[1]}
       </Text> */}
 
-      {/* <View
+      <View
         style={{
           flex: 1,
           alignItems: "center",
@@ -130,13 +139,14 @@ export default function Schedule() {
             borderRadius: 4,
             backgroundColor: colors.navigationColor
           }}
-          onPress={() => setIsModalOpen(true)}
+          onPress={toggleModal}
         >
           <Text style={{ fontSize: 32, color: colors.whiteColor }}>
             Horários
           </Text>
         </TouchableOpacity>
-      </View> */}
+        <VacancyModal isVisible={isModalOpen} toggle={toggleModal} />
+      </View>
     </View>
   );
 }
