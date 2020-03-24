@@ -4,7 +4,8 @@ import Schedule from "./screens/Schedule";
 import colors from "./constants/colors";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import ModalTester from "./components/ModalTester";
+import Login from "./screens/Login";
+// import ModalTester from "./components/ModalTester";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -15,8 +16,8 @@ export default function App() {
     // </View>
     <NavigationContainer>
       <Stack.Navigator headerMode="none">
-        <Stack.Screen name="Schedule" component={Schedule} />
-        {/* <Stack.Screen name="Teste" component={ModalTester} /> */}
+        {/* <Stack.Screen name="Schedule" component={Schedule} /> */}
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
