@@ -109,7 +109,7 @@ export default function Login({ navigation }) {
             <Input name="Email" placeholder="Digite seu email" />
             <Input name="Senha" placeholder="Digite sua senha" />
             <Button text="Entrar" screen="Schedule" />
-            <Button text="Registrar" />
+            <Button text="Registrar" screen="Agenda" />
           </View>
         </View>
       </KeyboardAvoidingView>

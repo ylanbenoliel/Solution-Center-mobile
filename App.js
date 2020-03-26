@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import Schedule from "./screens/Schedule";
+import Agenda from "./screens/Agenda";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Agenda" component={Agenda} />
         <Stack.Screen name="Schedule" component={Schedule} />
       </Stack.Navigator>
     </NavigationContainer>
