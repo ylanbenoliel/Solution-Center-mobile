@@ -4,12 +4,24 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  ScrollView
+  FlatList
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import colors from "../constants/colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import moment from "moment";
+
+const ROOM_DATA = [
+  { id: 1, name: "Sala 1" },
+  { id: 2, name: "Sala 2" },
+  { id: 3, name: "Sala 3" },
+  { id: 4, name: "Sala 4" },
+  { id: 5, name: "Sala 5" },
+  { id: 6, name: "Sala 6" },
+  { id: 7, name: "Sala 7" },
+  { id: 8, name: "Sala 8" },
+  { id: 9, name: "Sala 9" },
+  { id: 10, name: "Sala de reunião" }
+];
 
 export default function Schedule() {
   let datesWhitelist = [
@@ -22,28 +34,24 @@ export default function Schedule() {
 
   const Room = ({ name }) => {
     return (
-      <View
+      <TouchableOpacity
         style={{
-          width: "40%",
-          height: "50%",
+          width: "45%",
+          height: 120,
           backgroundColor: colors.whiteColor,
           alignItems: "flex-start",
           justifyContent: "flex-end",
-          paddingLeft: 10,
-          paddingBottom: 10,
           margin: 10
         }}
+        onPress={() => {}}
       >
-        <Text style={{ fontSize: 20, color: colors.mainColor }}>{name}</Text>
-      </View>
+        <Text style={{ margin: 5, fontSize: 24, color: colors.mainColor }}>
+          {name}
+        </Text>
+      </TouchableOpacity>
     );
   };
 
-  const Icon = ({ name }) => {
-    return (
-      <MaterialIcons name={name} size={16} color={colors.navigationColor} />
-    );
-  };
   return (
     <>
       <View style={{ flex: 1, backgroundColor: colors.secondaryColor }}>
@@ -72,47 +80,29 @@ export default function Schedule() {
             // iconRight={<Icon name="chevron-right" />}
           />
         </View>
+
         <View
           style={{
-            flex: 2,
+            flex: 4,
             backgroundColor: colors.mainColor,
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
             alignItems: "center"
           }}
         >
-          <View style={{ marginTop: 60 }}>
-            <ScrollView showsHorizontalScrollIndicator={false}>
-              <Room name="Sala 1" />
-              <Room name="Sala 2" />
-              <Room name="Sala 3" />
-              <Room name="Sala 4" />
-              <Room name="Sala 5" />
-              <Room name="Sala 6" />
-              <Room name="Sala 7" />
-              <Room name="Sala 8" />
-              <Room name="Sala 9" />
-              <Room name="Sala de reunião" />
-            </ScrollView>
-          </View>
-
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          <Text
+            style={{ fontSize: 24, color: colors.whiteColor, marginTop: 5 }}
           >
-            <TouchableOpacity
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                width: 150,
-                height: 40,
-                borderRadius: 4,
-                backgroundColor: colors.navigationColor
-              }}
-            >
-              <Text style={{ fontSize: 32, color: colors.whiteColor }}>
-                Horários
-              </Text>
-            </TouchableOpacity>
+            Selecione a sala
+          </Text>
+
+          <View style={{ flex: 1, marginTop: 10, width: "100%" }}>
+            <FlatList
+              data={ROOM_DATA}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <Room {...item} />}
+            />
           </View>
         </View>
       </View>
