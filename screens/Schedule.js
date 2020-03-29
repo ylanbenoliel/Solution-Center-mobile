@@ -1,27 +1,17 @@
-import React from "react";
+import React, { useState, createRef } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList
+  FlatList,
+  ScrollView
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
+import BottomSheet from "reanimated-bottom-sheet";
 import colors from "../constants/colors";
+import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
 import moment from "moment";
-
-const ROOM_DATA = [
-  { id: 1, name: "Sala 1" },
-  { id: 2, name: "Sala 2" },
-  { id: 3, name: "Sala 3" },
-  { id: 4, name: "Sala 4" },
-  { id: 5, name: "Sala 5" },
-  { id: 6, name: "Sala 6" },
-  { id: 7, name: "Sala 7" },
-  { id: 8, name: "Sala 8" },
-  { id: 9, name: "Sala 9" },
-  { id: 10, name: "Sala de reunião" }
-];
 
 export default function Schedule() {
   let datesWhitelist = [
@@ -32,6 +22,201 @@ export default function Schedule() {
   ];
   let datesBlacklist = [moment().add(6, "days")];
 
+  const [scheduleList, setScheduleList] = useState(ROOM_SCHEDULE);
+
+  const StatusButton = ({ code }) => {
+    if (code == 1) {
+      return (
+        <TouchableOpacity
+          style={{
+            width: "80%",
+            height: "65%",
+            borderRadius: 8,
+            justifyContent: "center",
+            backgroundColor: colors.accentColor
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 22,
+              color: colors.whiteColor
+            }}
+          >
+            Pressione para reservar
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+    if (code == 2) {
+      return (
+        <TouchableOpacity
+          style={{
+            width: "90%",
+            height: "95%",
+            borderRadius: 8,
+            justifyContent: "center",
+            backgroundColor: colors.mainColor
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 22,
+              color: colors.whiteColor
+            }}
+          >
+            Você já reservou esse horário
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+    if (code == 3) {
+      return (
+        <TouchableOpacity
+          style={{
+            width: "90%",
+            height: "95%",
+            borderRadius: 8,
+            justifyContent: "center",
+            backgroundColor: colors.disableColor
+          }}
+          disabled
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 22,
+              color: colors.whiteColor
+            }}
+          >
+            Não é possível desmarcar {"\n"} esse horário
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+    if (code == 4) {
+      return (
+        <TouchableOpacity
+          style={{
+            width: "90%",
+            height: "95%",
+            borderRadius: 8,
+            justifyContent: "center",
+            backgroundColor: colors.errorColor
+          }}
+          disabled
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 22,
+              color: colors.whiteColor
+            }}
+          >
+            Horário indisponível
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  };
+
+  const Schedule = ({ id, hour, code }) => {
+    return (
+      <View
+        key={id}
+        style={{
+          height: 70,
+          flexDirection: "row",
+          alignItems: "center"
+          // backgroundColor: "rgba(255, 0, 0, 0.5)"
+        }}
+      >
+        {/*  */}
+        <View
+          style={{
+            height: "100%",
+            justifyContent: "center"
+            // backgroundColor: "rgba(0, 255, 0, 0.5)"
+          }}
+        >
+          <Text
+            style={{
+              marginHorizontal: 10,
+              color: colors.mainColor,
+              fontSize: 22
+            }}
+          >
+            {hour}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <StatusButton code={code} />
+        </View>
+        {/*  */}
+      </View>
+    );
+  };
+
+  // Start of BottomSheet
+  const bottomSheetRef = createRef();
+
+  const renderHeader = () => {
+    return (
+      <View style={styles.header}>
+        <View style={styles.panelHeader}>
+          <View style={styles.panelHandle} />
+        </View>
+      </View>
+    );
+  };
+
+  const renderInner = () => {
+    const list = scheduleList.map(item => {
+      return <Schedule {...item} />;
+    });
+    return (
+      <View style={styles.panel}>
+        <ScrollView>{list}</ScrollView>
+        {/* <FlatList
+          data={scheduleList}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            return <Schedule {...item} />;
+          }}
+        /> */}
+      </View>
+    );
+  };
+
+  const BSheet = () => {
+    return (
+      <View
+        style={{
+          flex: 0.01,
+          width: "100%",
+          height: "100%"
+        }}
+      >
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={["75%", "50%", "0%"]}
+          renderContent={renderInner}
+          renderHeader={renderHeader}
+          initialSnap={0}
+        />
+      </View>
+    );
+  };
+  // End of BottomSheet
   const Room = ({ name }) => {
     return (
       <TouchableOpacity
@@ -43,7 +228,9 @@ export default function Schedule() {
           justifyContent: "flex-end",
           margin: 10
         }}
-        onPress={() => {}}
+        onPress={() => {
+          bottomSheetRef.current.snapTo(0);
+        }}
       >
         <Text style={{ margin: 5, fontSize: 24, color: colors.mainColor }}>
           {name}
@@ -104,6 +291,8 @@ export default function Schedule() {
               renderItem={({ item }) => <Room {...item} />}
             />
           </View>
+
+          <BSheet />
         </View>
       </View>
     </>
@@ -111,5 +300,71 @@ export default function Schedule() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: "10%" }
+  container: { flex: 1, marginTop: "10%" },
+  box: {
+    width: 200,
+    height: 200
+  },
+  panelContainer: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  panel: {
+    height: 600,
+    padding: 20,
+    backgroundColor: colors.whiteColor,
+    paddingTop: 20
+  },
+  header: {
+    width: "100%",
+    height: 50,
+    paddingTop: 10,
+    backgroundColor: colors.whiteColor,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16
+  },
+  panelHeader: {
+    alignItems: "center"
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.disableColor,
+    marginBottom: 10
+  },
+  panelTitle: {
+    fontSize: 27,
+    height: 35
+  },
+  panelSubtitle: {
+    fontSize: 14,
+    color: "gray",
+    height: 30,
+    marginBottom: 10
+  },
+  panelButton: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "#292929",
+    alignItems: "center",
+    marginVertical: 10
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "white"
+  },
+  photo: {
+    width: "100%",
+    height: 225,
+    marginTop: 30
+  },
+  map: {
+    height: "100%",
+    width: "100%"
+  }
 });
