@@ -169,7 +169,7 @@ export default function Schedule() {
   // Start of BottomSheet
   const bottomSheetRef = createRef();
 
-  const renderHeader = () => {
+  function renderHeader() {
     return (
       <View style={styles.header}>
         <View style={styles.panelHeader}>
@@ -177,25 +177,21 @@ export default function Schedule() {
         </View>
       </View>
     );
-  };
+  }
 
-  const renderInner = () => {
-    const list = scheduleList.map(item => {
-      return <Schedule {...item} />;
-    });
+  function renderInner() {
     return (
       <View style={styles.panel}>
-        <ScrollView>{list}</ScrollView>
-        {/* <FlatList
+        <FlatList
           data={scheduleList}
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
             return <Schedule {...item} />;
           }}
-        /> */}
+        />
       </View>
     );
-  };
+  }
 
   const BSheet = () => {
     return (
@@ -313,10 +309,11 @@ const styles = StyleSheet.create({
     right: 0
   },
   panel: {
-    height: 600,
-    padding: 20,
+    height: 72 * 14,
+    padding: 10,
     backgroundColor: colors.whiteColor,
-    paddingTop: 20
+    paddingTop: 20,
+    marginBottom: 0
   },
   header: {
     width: "100%",
