@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Separator } from "./index";
 import { MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import colors from "../constants/colors";
@@ -24,18 +25,6 @@ const VacancyModal = ({ isVisible, toogle }) => {
           />
         </View>
       </TouchableOpacity>
-    );
-  };
-
-  const Line = () => {
-    return (
-      <View
-        style={{
-          width: "100%",
-          height: 2,
-          backgroundColor: colors.disableColor
-        }}
-      />
     );
   };
 
@@ -98,7 +87,7 @@ const VacancyModal = ({ isVisible, toogle }) => {
         >
           {hours}
         </View>
-        <Line />
+        <Separator />
       </>
     );
   };
@@ -132,7 +121,7 @@ const VacancyModal = ({ isVisible, toogle }) => {
           </TouchableOpacity>
         </View>
 
-        <Line />
+        <Separator />
 
         <View
           style={{
@@ -185,7 +174,7 @@ const VacancyModal = ({ isVisible, toogle }) => {
           <Room number={9} />
         </View>
 
-        <Line />
+        <Separator />
         <User name="Jose Scales" room={3} schedule={[14, 15, 16]} />
         <User name="Elene Brewster" room={5} schedule={[16, 18]} />
       </View>

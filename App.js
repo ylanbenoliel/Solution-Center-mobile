@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import colors from "./constants/colors";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -13,8 +13,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Agenda" component={Agenda} />
         <Stack.Screen name="Schedule" component={Schedule} />
+        <Stack.Screen name="Agenda" component={Agenda} />
       </Stack.Navigator>
     </NavigationContainer>
   );

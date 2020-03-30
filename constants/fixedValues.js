@@ -12,18 +12,18 @@ export const ROOM_DATA = [
 ];
 
 export const ROOM_SCHEDULE = [
-  { id: Math.random(), hour: "08h", code: 1 },
-  { id: Math.random(), hour: "09h", code: 1 },
-  { id: Math.random(), hour: "10h", code: 1 },
-  { id: Math.random(), hour: "11h", code: 2 },
-  { id: Math.random(), hour: "12h", code: 2 },
-  { id: Math.random(), hour: "13h", code: 2 },
-  { id: Math.random(), hour: "14h", code: 2 },
-  { id: Math.random(), hour: "15h", code: 3 },
-  { id: Math.random(), hour: "16h", code: 3 },
-  { id: Math.random(), hour: "17h", code: 4 },
-  { id: Math.random(), hour: "18h", code: 4 },
-  { id: Math.random(), hour: "19h", code: 4 },
-  { id: Math.random(), hour: "20h", code: 4 },
-  { id: Math.random(), hour: "21h", code: 4 }
+  { id: Math.random(), hour: "08", code: 1 },
+  { id: Math.random(), hour: "09", code: 1 },
+  { id: Math.random(), hour: "10", code: 1 },
+  { id: Math.random(), hour: "11", code: 2 },
+  { id: Math.random(), hour: "12", code: 2 },
+  { id: Math.random(), hour: "13", code: 2 },
+  { id: Math.random(), hour: "14", code: 2 },
+  { id: Math.random(), hour: "15", code: 3 },
+  { id: Math.random(), hour: "16", code: 3 },
+  { id: Math.random(), hour: "17", code: 4 },
+  { id: Math.random(), hour: "18", code: 4 },
+  { id: Math.random(), hour: "19", code: 4 },
+  { id: Math.random(), hour: "20", code: 4 },
+  { id: Math.random(), hour: "21", code: 4 }
 ];

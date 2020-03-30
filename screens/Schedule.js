@@ -1,14 +1,14 @@
-import React, { useState, createRef } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
-  ScrollView
+  FlatList
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
+import { Separator, StatusButton } from "../components";
 import colors from "../constants/colors";
 import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
 import moment from "moment";
@@ -24,101 +24,26 @@ export default function Schedule() {
 
   const [scheduleList, setScheduleList] = useState(ROOM_SCHEDULE);
 
-  const StatusButton = ({ code }) => {
-    if (code == 1) {
-      return (
-        <TouchableOpacity
-          style={{
-            width: "80%",
-            height: "65%",
-            borderRadius: 8,
-            justifyContent: "center",
-            backgroundColor: colors.accentColor
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 22,
-              color: colors.whiteColor
-            }}
-          >
-            Pressione para reservar
-          </Text>
-        </TouchableOpacity>
-      );
-    }
-    if (code == 2) {
-      return (
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            height: "95%",
-            borderRadius: 8,
-            justifyContent: "center",
-            backgroundColor: colors.mainColor
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 22,
-              color: colors.whiteColor
-            }}
-          >
-            Você já reservou esse horário
-          </Text>
-        </TouchableOpacity>
-      );
-    }
-    if (code == 3) {
-      return (
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            height: "95%",
-            borderRadius: 8,
-            justifyContent: "center",
-            backgroundColor: colors.disableColor
-          }}
-          disabled
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 22,
-              color: colors.whiteColor
-            }}
-          >
-            Não é possível desmarcar {"\n"} esse horário
-          </Text>
-        </TouchableOpacity>
-      );
-    }
-    if (code == 4) {
-      return (
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            height: "95%",
-            borderRadius: 8,
-            justifyContent: "center",
-            backgroundColor: colors.errorColor
-          }}
-          disabled
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 22,
-              color: colors.whiteColor
-            }}
-          >
-            Horário indisponível
-          </Text>
-        </TouchableOpacity>
-      );
-    }
+  const Room = ({ name }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          width: "45%",
+          height: 120,
+          backgroundColor: colors.whiteColor,
+          alignItems: "flex-start",
+          justifyContent: "flex-end",
+          margin: 10
+        }}
+        onPress={() => {
+          bottomSheetRef.current.snapTo(1);
+        }}
+      >
+        <Text style={{ margin: 5, fontSize: 24, color: colors.mainColor }}>
+          {name}
+        </Text>
+      </TouchableOpacity>
+    );
   };
 
   const Schedule = ({ id, hour, code }) => {
@@ -126,18 +51,19 @@ export default function Schedule() {
       <View
         key={id}
         style={{
+          // backgroundColor: "rgba(255, 0, 0, 0.5)",
+          width: "100%",
           height: 70,
           flexDirection: "row",
           alignItems: "center"
-          // backgroundColor: "rgba(255, 0, 0, 0.5)"
         }}
       >
         {/*  */}
         <View
           style={{
+            // backgroundColor: "rgba(0, 255, 0, 0.5)",
             height: "100%",
             justifyContent: "center"
-            // backgroundColor: "rgba(0, 255, 0, 0.5)"
           }}
         >
           <Text
@@ -147,9 +73,11 @@ export default function Schedule() {
               fontSize: 22
             }}
           >
-            {hour}
+            {hour}h
           </Text>
         </View>
+
+        <Separator vertical />
 
         <View
           style={{
@@ -161,7 +89,6 @@ export default function Schedule() {
         >
           <StatusButton code={code} />
         </View>
-        {/*  */}
       </View>
     );
   };
@@ -173,7 +100,9 @@ export default function Schedule() {
     return (
       <View style={styles.header}>
         <View style={styles.panelHeader}>
-          <View style={styles.panelHandle} />
+          <View style={styles.panelHandle}>
+            {/* <Text ref={roomTitle} style={styles.panelTitle}></Text> */}
+          </View>
         </View>
       </View>
     );
@@ -184,7 +113,7 @@ export default function Schedule() {
       <View style={styles.panel}>
         <FlatList
           data={scheduleList}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => {
             return <Schedule {...item} />;
           }}
@@ -207,33 +136,12 @@ export default function Schedule() {
           snapPoints={["75%", "50%", "0%"]}
           renderContent={renderInner}
           renderHeader={renderHeader}
-          initialSnap={0}
+          initialSnap={2}
         />
       </View>
     );
   };
   // End of BottomSheet
-  const Room = ({ name }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          width: "45%",
-          height: 120,
-          backgroundColor: colors.whiteColor,
-          alignItems: "flex-start",
-          justifyContent: "flex-end",
-          margin: 10
-        }}
-        onPress={() => {
-          bottomSheetRef.current.snapTo(0);
-        }}
-      >
-        <Text style={{ margin: 5, fontSize: 24, color: colors.mainColor }}>
-          {name}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <>
@@ -283,7 +191,7 @@ export default function Schedule() {
             <FlatList
               data={ROOM_DATA}
               numColumns={2}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.id.toString()}
               renderItem={({ item }) => <Room {...item} />}
             />
           </View>
@@ -297,24 +205,26 @@ export default function Schedule() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, marginTop: "10%" },
-  box: {
-    width: 200,
-    height: 200
-  },
-  panelContainer: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0
-  },
-  panel: {
-    height: 72 * 14,
-    padding: 10,
-    backgroundColor: colors.whiteColor,
-    paddingTop: 20,
-    marginBottom: 0
-  },
+  // box: {
+  //   width: 200,
+  //   height: 200
+  // },
+  // panelContainer: {
+  //   position: "absolute",
+  //   top: 0,
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0
+  // },
+  panel:
+    //bottomsheet
+    {
+      height: 72 * 14,
+      padding: 10,
+      backgroundColor: colors.whiteColor,
+      paddingTop: 20,
+      marginBottom: -5
+    },
   header: {
     width: "100%",
     height: 50,
@@ -334,22 +244,17 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   panelTitle: {
-    fontSize: 27,
-    height: 35
+    fontSize: 24,
+    width: 100,
+    color: colors.disableColor
   },
-  panelSubtitle: {
-    fontSize: 14,
-    color: "gray",
-    height: 30,
-    marginBottom: 10
-  },
-  panelButton: {
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: "#292929",
-    alignItems: "center",
-    marginVertical: 10
-  },
+  // panelSubtitle: {
+  //   fontSize: 14,
+  //   color: "gray",
+  //   height: 30,
+  //   marginBottom: 10
+  // },
+
   panelButtonTitle: {
     fontSize: 17,
     fontWeight: "bold",
@@ -359,9 +264,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 225,
     marginTop: 30
-  },
-  map: {
-    height: "100%",
-    width: "100%"
   }
 });
