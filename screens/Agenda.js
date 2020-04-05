@@ -11,15 +11,15 @@ export default function Agenda({ navigation }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sundays, setSundays] = useState([]);
 
-  const disableSundays = date => {
+  const disableSundays = (date) => {
     const month = parseISO(date);
     const weekends = eachWeekendOfMonth(month);
     const sundaysInMonth = weekends
-      .filter(day => {
+      .filter((day) => {
         let sunday = isSunday(day);
         return sunday;
       })
-      .map(day => {
+      .map((day) => {
         let result = format(day, "yyyy-MM-dd");
         return result;
       });
@@ -31,12 +31,12 @@ export default function Agenda({ navigation }) {
     disableSundays(currentDate);
   }, []);
 
-  const _onDayPress = day => {
+  const _onDayPress = (day) => {
     setDaySelected(day);
   };
 
-  function toggleModal() {
-    setIsModalOpen(!isModalOpen);
+  function handleOpenModal() {
+    setIsModalOpen(true);
   }
 
   function closeModal() {
@@ -48,7 +48,7 @@ export default function Agenda({ navigation }) {
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: colors.mainColor
+        backgroundColor: colors.mainColor,
       }}
     >
       <View
@@ -57,19 +57,19 @@ export default function Agenda({ navigation }) {
           height: 100,
           paddingTop: 20,
           justifyContent: "flex-start",
-          backgroundColor: colors.mainColor
+          backgroundColor: colors.mainColor,
         }}
       >
         <Calendar
           markingType={"custom"}
-          onMonthChange={date => {
+          onMonthChange={(date) => {
             disableSundays(date.dateString);
           }}
           minDate={"2020-03-19"}
           maxDate={"2020-04-30"}
           monthFormat={"MMMM yyyy"}
           current={daySelected}
-          onDayPress={date => _onDayPress(date.dateString)}
+          onDayPress={(date) => _onDayPress(date.dateString)}
           hideExtraDays
           markedDates={{
             [sundays]: { disabled: true, disableTouchEvent: true },
@@ -78,17 +78,17 @@ export default function Agenda({ navigation }) {
               disableTouchEvent: false,
               customStyles: {
                 container: {
-                  backgroundColor: colors.accentColor
+                  backgroundColor: colors.accentColor,
                 },
                 text: {
                   color: colors.whiteColor,
-                  fontWeight: "bold"
-                }
-              }
-            }
+                  fontWeight: "bold",
+                },
+              },
+            },
           }}
           style={{
-            height: 350
+            height: 350,
           }}
           theme={{
             backgroundColor: "blue",
@@ -111,7 +111,7 @@ export default function Agenda({ navigation }) {
             textMonthFontWeight: "bold",
             //   textDayHeaderFontFamily: "space-mono",
             textDayHeaderFontSize: 16,
-            textDayHeaderFontWeight: "300"
+            textDayHeaderFontWeight: "300",
           }}
         />
       </View>
@@ -127,7 +127,7 @@ export default function Agenda({ navigation }) {
           justifyContent: "center",
           backgroundColor: colors.secondaryColor,
           borderTopLeftRadius: 16,
-          borderTopRightRadius: 16
+          borderTopRightRadius: 16,
         }}
       >
         <TouchableOpacity
@@ -137,15 +137,16 @@ export default function Agenda({ navigation }) {
             width: 150,
             height: 40,
             borderRadius: 4,
-            backgroundColor: colors.navigationColor
+            backgroundColor: colors.navigationColor,
           }}
-          onPress={toggleModal}
+          onPress={handleOpenModal}
         >
           <Text style={{ fontSize: 32, color: colors.whiteColor }}>
             Horários
           </Text>
         </TouchableOpacity>
-        <VacancyModal isVisible={isModalOpen} toggle={toggleModal} />
+
+        <VacancyModal isVisible={isModalOpen} onClose={closeModal} />
       </View>
     </View>
   );
