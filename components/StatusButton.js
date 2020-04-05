@@ -1,12 +1,13 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, Alert } from "react-native";
 import colors from "../constants/colors";
 
-const StatusButton = ({ code }) => {
+const StatusButton = ({ code, onChange }) => {
   if (code == 1) {
     return (
       <>
         <TouchableOpacity
+          onLongPress={() => onChange()}
           style={{
             width: "80%",
             height: "65%",
@@ -32,6 +33,7 @@ const StatusButton = ({ code }) => {
   if (code == 2) {
     return (
       <TouchableOpacity
+        onLongPress={() => onChange()}
         style={{
           width: "95%",
           height: "80%",
@@ -47,7 +49,7 @@ const StatusButton = ({ code }) => {
             color: colors.whiteColor
           }}
         >
-          Você já reservou esse horário
+          Sua reserva
         </Text>
       </TouchableOpacity>
     );
@@ -55,6 +57,11 @@ const StatusButton = ({ code }) => {
   if (code == 3) {
     return (
       <TouchableOpacity
+        onLongPress={() =>
+          Alert.alert("Erro", "Não é possível cancelar esse horário", [
+            { text: "Ok" }
+          ])
+        }
         style={{
           width: "95%",
           height: "80%",
@@ -62,7 +69,6 @@ const StatusButton = ({ code }) => {
           justifyContent: "center",
           backgroundColor: colors.disableColor
         }}
-        disabled
       >
         <Text
           style={{
@@ -71,7 +77,7 @@ const StatusButton = ({ code }) => {
             color: colors.whiteColor
           }}
         >
-          Não é possível desmarcar {"\n"} esse horário
+          Sua reserva
         </Text>
       </TouchableOpacity>
     );

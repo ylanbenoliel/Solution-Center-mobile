@@ -10,6 +10,7 @@ import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
 import { Separator, StatusButton } from "../components";
 import colors from "../constants/colors";
+import { MaterialIcons } from "@expo/vector-icons";
 import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
 import moment from "moment";
 
@@ -17,12 +18,22 @@ export default function Schedule() {
   let datesWhitelist = [
     {
       start: moment(),
-      end: moment().add(4, "days")
+      end: moment().add(5, "days")
     }
   ];
   let datesBlacklist = [moment().add(6, "days")];
 
   const [scheduleList, setScheduleList] = useState(ROOM_SCHEDULE);
+
+  function changeReserve(id) {
+    const newSchedule = scheduleList.map(item => {
+      if (item.id === id) {
+        item.code === 2 ? (item.code = 1) : (item.code = 2);
+      }
+      return item;
+    });
+    setScheduleList(newSchedule);
+  }
 
   const Room = ({ name }) => {
     return (
@@ -51,7 +62,6 @@ export default function Schedule() {
       <View
         key={id}
         style={{
-          // backgroundColor: "rgba(255, 0, 0, 0.5)",
           width: "100%",
           height: 70,
           flexDirection: "row",
@@ -61,7 +71,6 @@ export default function Schedule() {
         {/*  */}
         <View
           style={{
-            // backgroundColor: "rgba(0, 255, 0, 0.5)",
             height: "100%",
             justifyContent: "center"
           }}
@@ -87,7 +96,7 @@ export default function Schedule() {
             justifyContent: "center"
           }}
         >
-          <StatusButton code={code} />
+          <StatusButton code={code} onChange={() => changeReserve(id)} />
         </View>
       </View>
     );
@@ -152,22 +161,24 @@ export default function Schedule() {
             daySelectionAnimation={{
               type: "border",
               duration: 200,
-              borderWidth: 1,
+              borderWidth: 3,
               borderHighlightColor: colors.accentColor
             }}
-            style={{ height: 100, paddingTop: 20, paddingBottom: 10 }}
+            style={{ height: 100, margin: "3%" }}
             calendarHeaderStyle={{ color: "white" }}
             calendarColor={colors.secondaryColor}
             dateNumberStyle={{ color: "white" }}
             dateNameStyle={{ color: "white" }}
-            highlightDateNumberStyle={{ color: colors.whiteColor }}
+            highlightDateNumberStyle={{
+              color: colors.whiteColor
+            }}
             highlightDateNameStyle={{ color: colors.whiteColor }}
             disabledDateNameStyle={{ color: colors.disableColor }}
             disabledDateNumberStyle={{ color: colors.disableColor }}
             iconContainer={{ flex: 0.1 }}
             datesBlacklist={datesBlacklist}
             datesWhitelist={datesWhitelist}
-            // iconLeft={<Icon name="chevron-left" />}
+            // iconLeft={}
             // iconRight={<Icon name="chevron-right" />}
           />
         </View>
