@@ -5,11 +5,14 @@ import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
 
 import colors from "../constants/colors";
 import VacancyModal from "../components/VacancyModal";
+import { ALL_SCHEDULE_TABLE } from "../constants/fixedValues";
 
 export default function Agenda({ navigation }) {
   const [daySelected, setDaySelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sundays, setSundays] = useState([]);
+  const [hours, setHours] = useState([]);
+  const [users, setUsers] = useState({});
 
   const disableSundays = (date) => {
     const month = parseISO(date);
@@ -28,6 +31,7 @@ export default function Agenda({ navigation }) {
 
   useEffect(() => {
     const currentDate = format(new Date(), "yyyy-MM-dd");
+    setDaySelected(currentDate);
     disableSundays(currentDate);
   }, []);
 
@@ -36,6 +40,13 @@ export default function Agenda({ navigation }) {
   };
 
   function handleOpenModal() {
+    const data = ALL_SCHEDULE_TABLE;
+    const users = data.names;
+    const hours = data.hours;
+
+    setUsers(users);
+    setHours(hours);
+
     setIsModalOpen(true);
   }
 
@@ -66,7 +77,7 @@ export default function Agenda({ navigation }) {
             disableSundays(date.dateString);
           }}
           minDate={"2020-03-19"}
-          maxDate={"2020-04-30"}
+          maxDate={"2020-05-30"}
           monthFormat={"MMMM yyyy"}
           current={daySelected}
           onDayPress={(date) => _onDayPress(date.dateString)}
@@ -146,7 +157,13 @@ export default function Agenda({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        <VacancyModal isVisible={isModalOpen} onClose={closeModal} />
+        <VacancyModal
+          isVisible={isModalOpen}
+          onClose={closeModal}
+          showDate={daySelected}
+          users={users}
+          hours={hours}
+        />
       </View>
     </View>
   );

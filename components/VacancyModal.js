@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { Separator } from "./index";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import {
@@ -12,204 +17,137 @@ import {
 } from "react-native-table-component";
 import colors from "../constants/colors";
 
-const VacancyModal = ({ isVisible, onClose }) => {
+const tableHead = [
+  "",
+  "Sala 1",
+  "Sala 2",
+  "Sala 3",
+  "Sala 4",
+  "Sala 5",
+  "Sala 6",
+  "Sala 7",
+  "Sala 8",
+  "Sala 9",
+  "Sala de reunião",
+];
+const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
+  const tableTitle = hours;
+  const tableData = users;
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    const formatedDate = showDate.split("-").reverse().join("-");
+    setDate(formatedDate);
+    return () => {
+      setDate("");
+    };
+  }, [isVisible === true]);
+
   return (
     <Modal isVisible={isVisible}>
       <View
         style={{
           flex: 1,
-          alignItems: "center",
           backgroundColor: colors.whiteColor,
           borderRadius: 4,
         }}
       >
-        <Text>Oi</Text>
-        <TouchableOpacity
-          onPress={() => {
-            onClose();
+        {/*  */}
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+
+            padding: 10,
           }}
         >
-          <Text>Fechar</Text>
-        </TouchableOpacity>
+          <View style={{ width: 32 }} />
+
+          <Text style={[styles.text, { color: colors.disableColor }]}>
+            {date}
+          </Text>
+
+          <TouchableOpacity
+            style={{ justifyContent: "flex-end" }}
+            onPress={() => {
+              onClose();
+            }}
+          >
+            <MaterialIcons
+              name="close"
+              color={colors.navigationColor}
+              size={32}
+            />
+          </TouchableOpacity>
+        </View>
+        {/*  */}
+        <ScrollView
+          style={{ margin: "3%" }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <Table>
+            <Row
+              data={tableHead}
+              widthArr={[70, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]}
+              style={styles.head}
+              textStyle={styles.text}
+            />
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Table
+                borderStyle={{
+                  borderWidth: 2,
+                  borderColor: colors.disableColor,
+                }}
+              >
+                <TableWrapper style={styles.wrapper}>
+                  <Col
+                    data={tableTitle}
+                    style={styles.title}
+                    heightArr={[66]}
+                    textStyle={styles.text}
+                  />
+                  <Rows
+                    data={tableData}
+                    widthArr={[
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                    ]}
+                    style={styles.row}
+                    textStyle={[styles.text, { color: colors.mainColor }]}
+                  />
+                </TableWrapper>
+              </Table>
+            </ScrollView>
+          </Table>
+        </ScrollView>
+        {/*  */}
       </View>
     </Modal>
   );
 };
-// const [rooms, setRooms] = useState({})
-// const [usersReserve, setUsersReserve] = useState({
-//   0: { name: "Jose Scales", room: 3, schedule: [14, 15, 16] },
-//   1: { name: "Elene Brewster", room: 5, schedule: [16, 18] }
-// });
-// const VacancyModal = ({ isVisible, toogle }) => {
-//   const Room = ({ number, selected = false }) => {
-//     return (
-//       <TouchableOpacity>
-//         <View style={{ flexDirection: "row", alignItems: "center" }}>
-//           <Text style={{ fontSize: 18, color: colors.mainColor }}>
-//             Sala {number}
-//           </Text>
-//           <MaterialIcons
-//             name={selected === true ? "check-box" : "check-box-outline-blank"}
-//             size={28}
-//             color={colors.accentColor}
-//           />
-//         </View>
-//       </TouchableOpacity>
-//     );
-//   };
 
-//   const User = ({ name, room, schedule }) => {
-//     const hours = schedule.map((hour, index) => {
-//       return (
-//         <Text key={index} style={{ fontSize: 18, color: colors.mainColor }}>
-//           {hour}h
-//         </Text>
-//       );
-//     });
-//     return (
-//       <>
-//         <View
-//           style={{
-//             width: "100%",
-//             flexDirection: "row",
-//             alignItems: "center",
-//             justifyContent: "space-around",
-//             // marginTop: 5,
-//             paddingLeft: 25
-//           }}
-//         >
-//           <View />
-
-//           <Text style={{ fontSize: 32, color: colors.mainColor }}>{name}</Text>
-
-//           {/* Edit button which go to edit room */}
-//           <TouchableOpacity>
-//             <MaterialIcons
-//               name="edit"
-//               size={22}
-//               color={colors.navigationColor}
-//             />
-//           </TouchableOpacity>
-//         </View>
-
-//         <View style={{ marginTop: -10 }}>
-//           <Text
-//             style={{
-//               fontStyle: "italic",
-//               fontSize: 16,
-//               color: colors.disableColor
-//             }}
-//           >
-//             Sala {room}
-//           </Text>
-//         </View>
-
-//         <View
-//           style={{
-//             width: "70%",
-//             height: 20,
-//             flexDirection: "row",
-//             flexWrap: "wrap",
-//             alignItems: "flex-end",
-//             justifyContent: "space-between",
-//             marginVertical: 10
-//           }}
-//         >
-//           {hours}
-//         </View>
-//         <Separator />
-//       </>
-//     );
-//   };
-
-//   return (
-//     <Modal isVisible={isVisible}>
-//       <View
-//         style={{
-//           flex: 1,
-//           alignItems: "center",
-//           backgroundColor: colors.whiteColor,
-//           borderRadius: 4
-//         }}
-//       >
-//         <View
-//           style={{
-//             width: "100%",
-//             height: 38,
-//             flexDirection: "column",
-//             alignItems: "flex-end",
-//             justifyContent: "center",
-//             marginRight: 10
-//           }}
-//         >
-//           <TouchableOpacity>
-//             <MaterialIcons
-//               name="close"
-//               color={colors.navigationColor}
-//               size={32}
-//             />
-//           </TouchableOpacity>
-//         </View>
-
-//         <Separator />
-
-//         <View
-//           style={{
-//             marginVertical: 10,
-//             alignItems: "center",
-//             justifyContent: "center"
-//           }}
-//         >
-//           <Text style={{ fontSize: 22, color: colors.disableColor }}>
-//             Salas
-//           </Text>
-//         </View>
-
-//         <View
-//           style={{
-//             width: "90%",
-//             flexDirection: "row",
-//             justifyContent: "space-around",
-//             paddingBottom: 10
-//           }}
-//         >
-//           <Room number={1} />
-//           <Room number={2} />
-//           <Room number={3} selected />
-//         </View>
-
-//         <View
-//           style={{
-//             width: "90%",
-//             flexDirection: "row",
-//             justifyContent: "space-around",
-//             paddingBottom: 10
-//           }}
-//         >
-//           <Room number={4} />
-//           <Room number={5} selected />
-//           <Room number={6} />
-//         </View>
-
-//         <View
-//           style={{
-//             width: "90%",
-//             flexDirection: "row",
-//             justifyContent: "space-around",
-//             paddingBottom: 10
-//           }}
-//         >
-//           <Room number={7} />
-//           <Room number={8} />
-//           <Room number={9} />
-//         </View>
-
-//         <Separator />
-//         <User name="Jose Scales" room={3} schedule={[14, 15, 16]} />
-//         <User name="Elene Brewster" room={5} schedule={[16, 18]} />
-//       </View>
-//     </Modal>
-//   );
-// };
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  head: {
+    height: 75,
+    backgroundColor: colors.mainColor,
+    justifyContent: "center",
+  },
+  wrapper: { flexDirection: "row" },
+  title: { flex: 1, backgroundColor: colors.mainColor },
+  row: { height: 66, backgroundColor: colors.whiteColor },
+  text: { textAlign: "center", fontSize: 26, color: colors.whiteColor },
+});
 
 export default VacancyModal;

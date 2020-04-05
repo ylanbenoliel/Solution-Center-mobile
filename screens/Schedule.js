@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList
+  FlatList,
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
@@ -18,15 +18,15 @@ export default function Schedule() {
   let datesWhitelist = [
     {
       start: moment(),
-      end: moment().add(5, "days")
-    }
+      end: moment().add(5, "days"),
+    },
   ];
   let datesBlacklist = [moment().add(6, "days")];
 
   const [scheduleList, setScheduleList] = useState(ROOM_SCHEDULE);
 
   function changeReserve(id) {
-    const newSchedule = scheduleList.map(item => {
+    const newSchedule = scheduleList.map((item) => {
       if (item.id === id) {
         item.code === 2 ? (item.code = 1) : (item.code = 2);
       }
@@ -44,7 +44,7 @@ export default function Schedule() {
           backgroundColor: colors.whiteColor,
           alignItems: "flex-start",
           justifyContent: "flex-end",
-          margin: 10
+          margin: 10,
         }}
         onPress={() => {
           bottomSheetRef.current.snapTo(1);
@@ -65,21 +65,21 @@ export default function Schedule() {
           width: "100%",
           height: 70,
           flexDirection: "row",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         {/*  */}
         <View
           style={{
             height: "100%",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <Text
             style={{
               marginHorizontal: 10,
               color: colors.mainColor,
-              fontSize: 22
+              fontSize: 22,
             }}
           >
             {hour}h
@@ -93,7 +93,7 @@ export default function Schedule() {
             flex: 1,
             height: "100%",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <StatusButton code={code} onChange={() => changeReserve(id)} />
@@ -122,7 +122,7 @@ export default function Schedule() {
       <View style={styles.panel}>
         <FlatList
           data={scheduleList}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => {
             return <Schedule {...item} />;
           }}
@@ -137,7 +137,7 @@ export default function Schedule() {
         style={{
           flex: 0.01,
           width: "100%",
-          height: "100%"
+          height: "100%",
         }}
       >
         <BottomSheet
@@ -162,7 +162,7 @@ export default function Schedule() {
               type: "border",
               duration: 200,
               borderWidth: 3,
-              borderHighlightColor: colors.accentColor
+              borderHighlightColor: colors.accentColor,
             }}
             style={{ height: 100, margin: "3%" }}
             calendarHeaderStyle={{ color: "white" }}
@@ -170,7 +170,7 @@ export default function Schedule() {
             dateNumberStyle={{ color: "white" }}
             dateNameStyle={{ color: "white" }}
             highlightDateNumberStyle={{
-              color: colors.whiteColor
+              color: colors.whiteColor,
             }}
             highlightDateNameStyle={{ color: colors.whiteColor }}
             disabledDateNameStyle={{ color: colors.disableColor }}
@@ -189,7 +189,7 @@ export default function Schedule() {
             backgroundColor: colors.mainColor,
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Text
@@ -202,7 +202,7 @@ export default function Schedule() {
             <FlatList
               data={ROOM_DATA}
               numColumns={2}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => <Room {...item} />}
             />
           </View>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
       padding: 10,
       backgroundColor: colors.whiteColor,
       paddingTop: 20,
-      marginBottom: -5
+      marginBottom: -5,
     },
   header: {
     width: "100%",
@@ -242,22 +242,22 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.whiteColor,
     borderTopLeftRadius: 16,
-    borderTopRightRadius: 16
+    borderTopRightRadius: 16,
   },
   panelHeader: {
-    alignItems: "center"
+    alignItems: "center",
   },
   panelHandle: {
     width: 40,
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.disableColor,
-    marginBottom: 10
+    marginBottom: 10,
   },
   panelTitle: {
     fontSize: 24,
     width: 100,
-    color: colors.disableColor
+    color: colors.disableColor,
   },
   // panelSubtitle: {
   //   fontSize: 14,
@@ -269,11 +269,11 @@ const styles = StyleSheet.create({
   panelButtonTitle: {
     fontSize: 17,
     fontWeight: "bold",
-    color: "white"
+    color: "white",
   },
   photo: {
     width: "100%",
     height: 225,
-    marginTop: 30
-  }
+    marginTop: 30,
+  },
 });
