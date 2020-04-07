@@ -7,6 +7,10 @@ import colors from "../constants/colors";
 import VacancyModal from "../components/VacancyModal";
 import { ALL_SCHEDULE_TABLE } from "../constants/fixedValues";
 
+/* <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        {sundays[0] + sundays[1]}
+      </Text> */
+
 export default function Agenda({ navigation }) {
   const [daySelected, setDaySelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,10 +48,9 @@ export default function Agenda({ navigation }) {
     const users = data.names;
     const hours = data.hours;
 
+    setIsModalOpen(true);
     setUsers(users);
     setHours(hours);
-
-    setIsModalOpen(true);
   }
 
   function closeModal() {
@@ -74,7 +77,7 @@ export default function Agenda({ navigation }) {
         <Calendar
           markingType={"custom"}
           onMonthChange={(date) => {
-            disableSundays(date.dateString);
+            // disableSundays(date.dateString);
           }}
           minDate={"2020-03-19"}
           maxDate={"2020-05-30"}
@@ -83,7 +86,7 @@ export default function Agenda({ navigation }) {
           onDayPress={(date) => _onDayPress(date.dateString)}
           hideExtraDays
           markedDates={{
-            [sundays]: { disabled: true, disableTouchEvent: true },
+            // [sundays]: { disabled: true, disableTouchEvent: true },
             [daySelected]: {
               disabled: false,
               disableTouchEvent: false,
@@ -126,10 +129,6 @@ export default function Agenda({ navigation }) {
           }}
         />
       </View>
-
-      {/* <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {sundays[0] + sundays[1]}
-      </Text> */}
 
       <View
         style={{

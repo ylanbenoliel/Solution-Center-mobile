@@ -154,7 +154,7 @@ export default function Schedule() {
 
   return (
     <>
-      <View style={{ flex: 1, backgroundColor: colors.secondaryColor }}>
+      <View style={{ flex: 2, backgroundColor: colors.secondaryColor }}>
         <View style={styles.container}>
           <CalendarStrip
             calendarAnimation={{ type: "sequence", duration: 30 }}

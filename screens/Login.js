@@ -5,24 +5,23 @@ import {
   Image,
   TextInput,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("");
   const Input = ({ name, placeholder }) => {
     return (
       <View style={{ width: "80%", justifyContent: "flex-end" }}>
         <Text style={{ color: colors.mainColor }}>{name}</Text>
         <View
           style={{
-            borderRadius: 4,
+            borderRadius: 1,
             borderWidth: 2,
             borderColor: colors.mainColor,
-            marginBottom: 20
+            marginBottom: 20,
           }}
         >
           <TextInput
@@ -43,7 +42,7 @@ export default function Login({ navigation }) {
           height: 40,
           backgroundColor: colors.mainColor,
           marginVertical: 16,
-          borderRadius: 4
+          borderRadius: 4,
         }}
       >
         <LinearGradient
@@ -54,7 +53,7 @@ export default function Login({ navigation }) {
             height: 40,
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: 4
+            borderRadius: 4,
           }}
         >
           <Text style={{ fontSize: 24, color: colors.whiteColor }}>{text}</Text>
@@ -64,18 +63,12 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <>
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={{
-          flex: 1
-        }}
-      >
+    <View style={{ height: "100%" }}>
+      <View style={{ paddingTop: 30 }} />
+      <View style={{ width: "100%" }}>
         <View
           style={{
             paddingLeft: 20,
-            marginTop: "15%",
-            position: "absolute"
           }}
         >
           <TouchableOpacity>
@@ -86,19 +79,25 @@ export default function Login({ navigation }) {
             />
           </TouchableOpacity>
         </View>
-
+      </View>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          marginBottom: 100,
+        }}
+      >
         <View
           style={{
-            flex: 1,
             justifyContent: "space-between",
-            marginTop: "20%",
-            color: colors.whiteColor
           }}
         >
           <View
             style={{
+              height: 600,
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <Image
@@ -112,6 +111,6 @@ export default function Login({ navigation }) {
           </View>
         </View>
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 }
