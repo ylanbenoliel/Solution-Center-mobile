@@ -145,7 +145,7 @@ export default function Agenda({ navigation }) {
             alignItems: "center",
             justifyContent: "center",
             width: 150,
-            height: 40,
+            height: 48,
             borderRadius: 4,
             backgroundColor: colors.navigationColor,
           }}

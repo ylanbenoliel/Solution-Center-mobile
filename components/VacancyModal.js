@@ -58,13 +58,14 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-between",
-
             padding: 10,
           }}
         >
           <View style={{ width: 32 }} />
 
-          <Text style={[styles.text, { color: colors.disableColor }]}>
+          <Text
+            style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}
+          >
             {date}
           </Text>
 
@@ -90,7 +91,7 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
           <Table>
             <Row
               data={tableHead}
-              widthArr={[70, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]}
+              widthArr={[35, 50, 50, 50, 50, 50, 50, 50, 50, 50, 52]}
               style={styles.head}
               textStyle={styles.text}
             />
@@ -111,18 +112,7 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
                   />
                   <Rows
                     data={tableData}
-                    widthArr={[
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                    ]}
+                    widthArr={[50, 50, 50, 50, 50, 50, 50, 50, 50, 52]}
                     style={styles.row}
                     textStyle={[styles.text, { color: colors.mainColor }]}
                   />
@@ -140,14 +130,14 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
   head: {
-    height: 75,
+    height: 40,
     backgroundColor: colors.mainColor,
     justifyContent: "center",
   },
   wrapper: { flexDirection: "row" },
   title: { flex: 1, backgroundColor: colors.mainColor },
   row: { height: 66, backgroundColor: colors.whiteColor },
-  text: { textAlign: "center", fontSize: 26, color: colors.whiteColor },
+  text: { textAlign: "center", fontSize: 14, color: colors.whiteColor },
 });
 
 export default VacancyModal;

@@ -48,7 +48,7 @@ export const ALL_SCHEDULE_TABLE = {
 
   names: [
     [
-      "",
+      "Rossilea G",
       "João P",
       "Paula A",
       "José C",

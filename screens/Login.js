@@ -26,7 +26,7 @@ export default function Login({ navigation }) {
         >
           <TextInput
             placeholder={placeholder}
-            style={{ marginLeft: 5, fontSize: 18 }}
+            style={{ marginLeft: 5, fontSize: 18, height: 32 }}
           />
         </View>
       </View>
@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
         onPress={() => navigation.navigate(screen)}
         style={{
           width: "80%",
-          height: 40,
+          height: 48,
           backgroundColor: colors.mainColor,
           marginVertical: 16,
           borderRadius: 4,
@@ -50,7 +50,7 @@ export default function Login({ navigation }) {
           style={{
             flex: 1,
             width: "100%",
-            height: 40,
+            height: 48,
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 4,
