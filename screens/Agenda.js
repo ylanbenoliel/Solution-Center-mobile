@@ -6,6 +6,7 @@ import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
 import colors from "../constants/colors";
 import VacancyModal from "../components/VacancyModal";
 import { ALL_SCHEDULE_TABLE } from "../constants/fixedValues";
+import { GeneralStatusBar } from "../components";
 
 /* <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         {sundays[0] + sundays[1]}
@@ -60,11 +61,14 @@ export default function Agenda({ navigation }) {
   return (
     <View
       style={{
-        height: "100%",
-        width: "100%",
+        flex: 1,
         backgroundColor: colors.mainColor,
       }}
     >
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
       <View
         style={{
           flex: 2,

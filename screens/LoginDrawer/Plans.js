@@ -74,7 +74,10 @@ export default function Plans({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.whiteColor }}>
-      <GeneralStatusBar backgroundColor="#1b3662" barStyle="light-content" />
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
       <ImageBackground
         source={backgroundLogo}
         imageStyle={{

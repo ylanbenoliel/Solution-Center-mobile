@@ -10,6 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
+import { GeneralStatusBar } from "../components";
 
 export default function Login({ navigation }) {
   const Input = ({ name, placeholder }) => {
@@ -63,9 +64,12 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={{ height: "100%" }}>
-      <View style={{ paddingTop: 30 }} />
-      <View style={{ width: "100%" }}>
+    <View style={{ flex: 1 }}>
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
+      <View style={{ width: "100%", height: 48, justifyContent: "center" }}>
         <View
           style={{
             paddingLeft: 20,
@@ -106,7 +110,7 @@ export default function Login({ navigation }) {
             />
             <Input name="Email" placeholder="Digite seu email" />
             <Input name="Senha" placeholder="Digite sua senha" />
-            <Button text="Entrar" screen="Schedule" />
+            <Button text="Entrar" screen="Agendamento" />
             <Button text="Registrar" screen="Agenda" />
           </View>
         </View>

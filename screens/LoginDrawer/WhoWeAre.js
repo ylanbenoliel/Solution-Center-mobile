@@ -17,7 +17,10 @@ import logo from "../../assets/LogoHorizontal.png";
 export default function WhoWeAre({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.whiteColor }}>
-      <GeneralStatusBar backgroundColor="#1b3662" barStyle="light-content" />
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
       <ImageBackground source={background} style={styles.imageBackground}>
         {/*  */}
         <View style={styles.header}>
@@ -40,7 +43,7 @@ export default function WhoWeAre({ navigation }) {
             zIndex: 1,
           }}
         >
-          <Image source={logo} width={64} height={64} />
+          <Image source={logo} resizeMode="cover" width={64} height={64} />
         </View>
 
         <View style={styles.textContainer}>

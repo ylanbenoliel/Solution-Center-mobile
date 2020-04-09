@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
-import { Separator, StatusButton } from "../components";
+import { Separator, StatusButton, GeneralStatusBar } from "../components";
 import colors from "../constants/colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
@@ -154,6 +154,10 @@ export default function Schedule() {
 
   return (
     <>
+      <GeneralStatusBar
+        backgroundColor={colors.secondaryColor}
+        barStyle="light-content"
+      />
       <View style={{ flex: 2, backgroundColor: colors.secondaryColor }}>
         <View style={styles.container}>
           <CalendarStrip
