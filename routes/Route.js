@@ -29,7 +29,7 @@ function LoginDrawer() {
       }}
     >
       <Drawer.Screen name="Login" component={Login} />
-      <Drawer.Screen name="Quem Somos" component={WhoWeAre} />
+      <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
       <Drawer.Screen name="Parceiros" component={Partners} />
