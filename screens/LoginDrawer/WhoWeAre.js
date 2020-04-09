@@ -16,13 +16,14 @@ import logo from "../../assets/LogoHorizontal.png";
 
 export default function WhoWeAre({ navigation }) {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.whiteColor }}>
       <GeneralStatusBar backgroundColor="#1b3662" barStyle="light-content" />
       <ImageBackground source={background} style={styles.imageBackground}>
+        {/*  */}
         <View style={styles.header}>
           <View style={{ paddingLeft: 20 }} />
           <Text style={[styles.text, { fontSize: 36 }]}>Sobre nós</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Agenda")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <MaterialIcons
               name="close"
               size={32}
@@ -30,9 +31,18 @@ export default function WhoWeAre({ navigation }) {
             />
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center", marginVertical: -100 }}>
+
+        {/* Verificar aqui o bug de nao voltar para a tela de login */}
+        <View
+          style={{
+            alignItems: "center",
+            marginVertical: -100,
+            zIndex: 1,
+          }}
+        >
           <Image source={logo} width={64} height={64} />
         </View>
+
         <View style={styles.textContainer}>
           <Text style={styles.text}>
             O <Text style={styles.textStrong}>Solution Center</Text> foi
@@ -60,6 +70,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   header: {
+    zIndex: 2,
     width: "100%",
     height: 56,
     flexDirection: "row",
@@ -67,12 +78,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textContainer: {
-    marginHorizontal: 10,
+    marginHorizontal: 40,
+    zIndex: 10,
   },
   text: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: "700",
     color: colors.mainColor,
-    textAlign: "left",
+    textAlign: "justify",
   },
   textStrong: {
     fontWeight: "bold",
