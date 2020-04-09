@@ -71,7 +71,7 @@ export default function Login({ navigation }) {
             paddingLeft: 20,
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <MaterialIcons
               name="menu"
               size={32}
