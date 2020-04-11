@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import { GeneralStatusBar } from "../../components";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -46,20 +47,23 @@ export default function WhoWeAre({ navigation }) {
           <Image source={logo} resizeMode="cover" width={64} height={64} />
         </View>
 
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>
-            O <Text style={styles.textStrong}>Solution Center</Text> foi
-            idealizado pensando em você!{"\n"}
-            Somos profissionais liberais e entendemos a dinâmica de trabalho que
-            o cenário mundial, cada vez mais, nos traz.{"\n"}Por isso, nossa
-            missão é proporcionar ao profissional o espaço perfeito para o
-            desenvolvimento de seu trabalho, com uma estrutura de alto padrão.
-            Nossos ambientes são sofisticados, confortáveis e privados.{"\n"}
-            Assim, nós oferecemos segurança, conforto e praticidade ao seu
-            atendimento. Tudo isso sem custo fixo ou burocracia. Aqui você paga
-            somente quando usar.
-          </Text>
-        </View>
+        <ScrollView>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>
+              O <Text style={styles.textStrong}>Solution Center</Text> foi
+              idealizado pensando em você!{"\n"}
+              Somos profissionais liberais e entendemos a dinâmica de trabalho
+              que o cenário mundial, cada vez mais, nos traz.{"\n"}Por isso,
+              nossa missão é proporcionar ao profissional o espaço perfeito para
+              o desenvolvimento de seu trabalho, com uma estrutura de alto
+              padrão. Nossos ambientes são sofisticados, confortáveis e
+              privados.{"\n"}
+              Assim, nós oferecemos segurança, conforto e praticidade ao seu
+              atendimento. Tudo isso sem custo fixo ou burocracia. Aqui você
+              paga somente quando usar.
+            </Text>
+          </View>
+        </ScrollView>
       </ImageBackground>
     </View>
   );
@@ -86,7 +90,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    fontWeight: "700",
     color: colors.mainColor,
     textAlign: "justify",
   },
