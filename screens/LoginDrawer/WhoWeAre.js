@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import { verticalScale, scale } from "react-native-size-matters";
 import { GeneralStatusBar } from "../../components";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../../constants/colors";
@@ -25,8 +26,8 @@ export default function WhoWeAre({ navigation }) {
       <ImageBackground source={background} style={styles.imageBackground}>
         {/*  */}
         <View style={styles.header}>
-          <View style={{ paddingLeft: 20 }} />
-          <Text style={[styles.text, { fontSize: 36 }]}>Sobre nós</Text>
+          <View style={{ paddingLeft: scale(20) }} />
+          <Text style={[styles.text, styles.headerName]}>Sobre nós</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <MaterialIcons
               name="close"
@@ -36,31 +37,34 @@ export default function WhoWeAre({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Verificar aqui o bug de nao voltar para a tela de login */}
         <View
           style={{
             alignItems: "center",
-            marginVertical: -100,
+            marginVertical: verticalScale(-110),
             zIndex: 1,
           }}
         >
-          <Image source={logo} resizeMode="cover" width={64} height={64} />
+          <Image source={logo} resizeMode="contain" width={64} height={64} />
         </View>
 
         <ScrollView>
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              O <Text style={styles.textStrong}>Solution Center</Text> foi
-              idealizado pensando em você!{"\n"}
-              Somos profissionais liberais e entendemos a dinâmica de trabalho
-              que o cenário mundial, cada vez mais, nos traz.{"\n"}Por isso,
-              nossa missão é proporcionar ao profissional o espaço perfeito para
-              o desenvolvimento de seu trabalho, com uma estrutura de alto
-              padrão. Nossos ambientes são sofisticados, confortáveis e
-              privados.{"\n"}
-              Assim, nós oferecemos segurança, conforto e praticidade ao seu
-              atendimento. Tudo isso sem custo fixo ou burocracia. Aqui você
-              paga somente quando usar.
+              {"    "}O <Text style={styles.textStrong}>Solution Center</Text>{" "}
+              foi idealizado pensando em você! Somos profissionais liberais e
+              entendemos a dinâmica de trabalho que o cenário mundial, cada vez
+              mais, nos traz.
+            </Text>
+            <Text style={styles.text}>
+              {"    "}Por isso, nossa missão é proporcionar ao profissional o
+              espaço perfeito para o desenvolvimento de seu trabalho, com uma
+              estrutura de alto padrão. Nossos ambientes são sofisticados,
+              confortáveis e privados.
+            </Text>
+            <Text style={styles.text}>
+              {"    "}Assim, nós oferecemos segurança, conforto e praticidade ao
+              seu atendi-{"\n"}mento. Tudo isso sem custo fixo ou burocracia.
+              Aqui você paga somente quando usar.
             </Text>
           </View>
         </ScrollView>
@@ -79,19 +83,24 @@ const styles = StyleSheet.create({
   header: {
     zIndex: 2,
     width: "100%",
-    height: 56,
+    height: verticalScale(56),
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    marginTop: verticalScale(15),
+  },
+  headerName: {
+    fontWeight: "bold",
+    fontSize: scale(36),
   },
   textContainer: {
-    marginHorizontal: 40,
-    zIndex: 10,
+    marginHorizontal: scale(20),
   },
   text: {
-    fontSize: 20,
+    fontFamily: "Amaranth-Regular",
+    fontSize: scale(18),
     color: colors.mainColor,
-    textAlign: "justify",
+    textAlign: "left",
   },
   textStrong: {
     fontWeight: "bold",

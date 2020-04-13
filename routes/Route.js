@@ -14,7 +14,7 @@ import {
   Partners,
   Contact,
 } from "../screens/LoginDrawer/index";
-
+import { scale } from "react-native-size-matters";
 import colors from "../constants/colors";
 
 const Stack = createStackNavigator();
@@ -25,7 +25,7 @@ function LoginDrawer() {
     <Drawer.Navigator
       drawerStyle={{
         backgroundColor: colors.whiteColor,
-        width: 240,
+        width: scale(180),
       }}
     >
       <Drawer.Screen name="Login" component={Login} />

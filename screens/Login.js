@@ -5,29 +5,23 @@ import {
   Image,
   TextInput,
   Text,
+  StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
 import { GeneralStatusBar } from "../components";
+import { scale, verticalScale } from "react-native-size-matters";
 
 export default function Login({ navigation }) {
   const Input = ({ name, placeholder }) => {
     return (
-      <View style={{ width: "80%", justifyContent: "flex-end" }}>
-        <Text style={{ color: colors.mainColor }}>{name}</Text>
-        <View
-          style={{
-            borderRadius: 1,
-            borderWidth: 2,
-            borderColor: colors.mainColor,
-            marginBottom: 20,
-          }}
-        >
+      <View style={styles.inputContainer}>
+        <Text style={styles.text}>{name}</Text>
+        <View style={styles.textInputContainer}>
           <TextInput
             placeholder={placeholder}
-            style={{ marginLeft: 5, fontSize: 18, height: 32 }}
+            style={[styles.text, styles.textInput]}
           />
         </View>
       </View>
@@ -38,27 +32,9 @@ export default function Login({ navigation }) {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate(screen)}
-        style={{
-          width: "80%",
-          height: 48,
-          backgroundColor: colors.mainColor,
-          marginVertical: 16,
-          borderRadius: 4,
-        }}
+        style={styles.buttonContainer}
       >
-        <LinearGradient
-          colors={[colors.mainColor, colors.secondaryColor]}
-          style={{
-            flex: 1,
-            width: "100%",
-            height: 48,
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 4,
-          }}
-        >
-          <Text style={{ fontSize: 24, color: colors.whiteColor }}>{text}</Text>
-        </LinearGradient>
+        <Text style={[styles.text, styles.buttonText]}>{text}</Text>
       </TouchableOpacity>
     );
   };
@@ -69,7 +45,7 @@ export default function Login({ navigation }) {
         backgroundColor={colors.mainColor}
         barStyle="light-content"
       />
-      <View style={{ width: "100%", height: 48, justifyContent: "center" }}>
+      <View style={styles.header}>
         <View
           style={{
             paddingLeft: 20,
@@ -85,36 +61,62 @@ export default function Login({ navigation }) {
         </View>
       </View>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior="height"
         style={{
           flex: 1,
-          justifyContent: "center",
-          marginBottom: 100,
         }}
       >
-        <View
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <View
-            style={{
-              height: 600,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              style={{ width: 128, height: 128 }}
-              source={require("../assets/LogoLogin.png")}
-            />
-            <Input name="Email" placeholder="Digite seu email" />
-            <Input name="Senha" placeholder="Digite sua senha" />
-            <Button text="Entrar" screen="Agendamento" />
-            <Button text="Registrar" screen="Agenda" />
-          </View>
+        <View style={styles.loginContainer}>
+          <Image
+            style={{ width: 128, height: 128 }}
+            source={require("../assets/LogoLogin.png")}
+          />
+          <Input name="Email" placeholder="Digite seu email" />
+          <Input name="Senha" placeholder="Digite sua senha" />
+          <Button text="Entrar" screen="Agendamento" />
+          <Button text="Registrar" screen="Agenda" />
         </View>
       </KeyboardAvoidingView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  loginContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontFamily: "Amaranth-Regular",
+    fontSize: scale(18),
+    color: colors.mainColor,
+    textAlign: "left",
+  },
+  inputContainer: { width: "80%" },
+  textInputContainer: {
+    borderRadius: scale(4),
+    borderWidth: scale(2),
+    borderColor: colors.mainColor,
+    marginBottom: scale(20),
+  },
+  textInput: {
+    marginLeft: scale(5),
+    fontSize: scale(18),
+    height: verticalScale(32),
+  },
+  buttonContainer: {
+    width: "80%",
+    height: scale(48),
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.mainColor,
+    marginVertical: verticalScale(16),
+    borderRadius: scale(4),
+  },
+  buttonLinearGradient: {},
+  buttonText: {
+    fontSize: scale(24),
+    color: colors.whiteColor,
+  },
+  header: { width: "100%", height: scale(48), justifyContent: "center" },
+});

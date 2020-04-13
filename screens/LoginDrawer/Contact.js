@@ -14,6 +14,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../constants/colors";
 
 import backgroundLogo from "../../assets/LogoHorizontal.png";
+import { verticalScale, scale } from "react-native-size-matters";
+
+const Separator = () => {
+  return <View style={{ marginTop: scale(10) }} />;
+};
 
 export default function Contact({ navigation }) {
   function openWpp(phone) {
@@ -46,10 +51,17 @@ export default function Contact({ navigation }) {
       : Linking.openURL("googlegmail:contato@solutioncenterbelem.com");
   }
 
+  function openSite() {
+    Linking.openURL("https://www.solutioncenterbelem.com/");
+  }
+
   const WppPhone = ({ phone }) => {
     return (
-      <TouchableOpacity onPress={() => openWpp(phone)}>
-        <Text style={[styles.clicableText]}>{phone}</Text>
+      <TouchableOpacity
+        style={styles.clickableArea}
+        onPress={() => openWpp(phone)}
+      >
+        <Text style={[styles.text, styles.clickableText]}>{phone}</Text>
       </TouchableOpacity>
     );
   };
@@ -63,15 +75,15 @@ export default function Contact({ navigation }) {
       <ImageBackground
         source={backgroundLogo}
         imageStyle={{
-          opacity: 0.4,
+          opacity: 0.1,
           resizeMode: "contain",
         }}
         style={styles.imageBackground}
       >
         {/*  */}
         <View style={styles.header}>
-          <View style={{ paddingLeft: 20 }} />
-          <Text style={[styles.text, { fontSize: 36 }]}>Contato</Text>
+          <View style={{ paddingLeft: verticalScale(20) }} />
+          <Text style={[styles.text, styles.headerName]}>Contato</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <MaterialCommunityIcons
               name="close"
@@ -82,69 +94,107 @@ export default function Contact({ navigation }) {
         </View>
         {/*  */}
         <View style={styles.contactContainer}>
-          <View style={styles.whatsappContainer}>
+          <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="whatsapp"
               size={48}
-              color={colors.navigationColor}
+              color={colors.mainColor}
             />
             <View style={styles.whatsappNumbers}>
-              <WppPhone phone="(91) 9118-8681" />
-              <WppPhone phone="(91) 8131-9689" />
-              <WppPhone phone="(91) 8252-0417" />
+              <WppPhone phone="(91) 99118-8681" />
+              <WppPhone phone="(91) 98131-9689" />
+              <View style={styles.lastNumber}>
+                <WppPhone phone="(91) 98252-0417" />
+              </View>
             </View>
           </View>
           {/*  */}
-          <View style={{ marginTop: 10 }} />
-          <View style={styles.instagramContainer}>
+          <Separator />
+          {/*  */}
+          <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="instagram"
               size={48}
-              color={colors.navigationColor}
+              color={colors.mainColor}
             />
             <TouchableOpacity
+              style={styles.clickableArea}
               onPress={() => {
                 openInstagram();
               }}
             >
-              <Text style={[styles.clicableText, { marginLeft: 20 }]}>
+              <Text
+                style={[
+                  styles.text,
+                  styles.clickableText,
+                  { marginLeft: verticalScale(20) },
+                ]}
+              >
                 @solutioncenterbelem
               </Text>
             </TouchableOpacity>
           </View>
           {/*  */}
-
-          <View style={{ marginTop: 10 }} />
-          <View style={styles.emailContainer}>
+          <Separator />
+          {/*  */}
+          <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="email"
               size={48}
-              color={colors.navigationColor}
+              color={colors.mainColor}
             />
-            <Text style={[styles.text, { marginLeft: 20 }]}>
-              contato@solutioncenterbelem{"\n"}.com
+            <Text style={[styles.text, { marginLeft: verticalScale(20) }]}>
+              contato@solutioncenterbelem.com
             </Text>
           </View>
+          {/*  */}
+          <Separator />
+          {/*  */}
+          <View style={styles.linksContainer}>
+            <MaterialCommunityIcons
+              name="web"
+              size={48}
+              color={colors.mainColor}
+            />
+            <TouchableOpacity
+              style={styles.clickableArea}
+              onPress={() => {
+                openSite();
+              }}
+            >
+              <Text
+                style={[
+                  styles.text,
+                  styles.clickableText,
+                  { marginLeft: verticalScale(20) },
+                ]}
+              >
+                www.solutioncenterbelem.com
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={{ marginTop: 20 }} />
-
+        {/*  */}
+        <Separator />
+        {/*  */}
         <View style={styles.localizationContainer}>
-          <Text style={[styles.text, { fontSize: 36 }]}>Localização</Text>
-          <Text style={styles.text}>
-            Localização privilegiada, próximo a supermercados, restaurantes,
-            farmácias. Temos estacionamento rotativo, com entrada pela Tv.
-            Humaitá.
-          </Text>
+          <Text style={[styles.text, styles.headerName]}>Localização</Text>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.text}>
+              Localização privilegiada, próximo a supermercados, restaurantes,
+              farmácias. Temos estacionamento rotativo, com entrada pela Tv.
+              Humaitá.
+            </Text>
+          </View>
           <View style={styles.localizationContent}>
             <MaterialCommunityIcons
               name="crosshairs-gps"
               size={48}
-              color={colors.navigationColor}
+              color={colors.mainColor}
             />
             <TouchableOpacity onPress={() => openMaps()}>
-              <Text style={[styles.clicableText, { marginLeft: 10 }]}>
-                Av. Rômulo Maiorana, nº 700,{"\n"} Ed. Vitta Office, Sala 1414,
+              <Text style={[styles.text, styles.clickableText]}>
+                Av. Rômulo Maiorana, nº 700,{"\n"}Ed. Vitta Office, Sala 1414,
                 {"\n"}Marco. CEP: 66093-672
               </Text>
             </TouchableOpacity>
@@ -161,57 +211,64 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: 56,
+    height: verticalScale(56),
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    marginTop: verticalScale(15),
+  },
+  headerName: {
+    fontWeight: "bold",
+    fontSize: scale(36),
   },
   text: {
-    fontSize: 20,
+    fontFamily: "Amaranth-Regular",
+    fontSize: scale(16),
     color: colors.mainColor,
     textAlign: "justify",
   },
-  clicableText: {
-    fontSize: 20,
+  clickableArea: {
+    padding: scale(2),
+  },
+  clickableText: {
     color: colors.accentColor,
-    textAlign: "left",
   },
   contactContainer: {
     flex: 1,
     alignItems: "flex-start",
-    marginTop: 10,
-    marginHorizontal: 10,
-    paddingLeft: 10,
+    marginTop: verticalScale(10),
+    marginHorizontal: scale(10),
+    paddingLeft: scale(10),
   },
-  whatsappContainer: {
+  linksContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
   },
   whatsappNumbers: {
-    marginLeft: 20,
-    height: 100,
-    flexDirection: "column",
-    justifyContent: "space-around",
-  },
-  instagramContainer: {
+    marginLeft: scale(20),
+    width: scale(230),
+    height: verticalScale(70),
     flexDirection: "row",
-    alignItems: "center",
+    flexWrap: "wrap",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
   },
-  emailContainer: {
+  lastNumber: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
+    marginTop: verticalScale(25),
   },
   localizationContainer: {
     flex: 1,
     alignItems: "center",
-    marginHorizontal: 20,
-    paddingBottom: 20,
+    marginHorizontal: verticalScale(20),
+    paddingBottom: verticalScale(5),
   },
   localizationContent: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginTop: verticalScale(10),
   },
 });
