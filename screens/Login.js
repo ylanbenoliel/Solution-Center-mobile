@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, createRef } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -8,6 +8,9 @@ import {
   TouchableOpacity,
   Keyboard,
   ImageBackground,
+  Platform,
+  ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
@@ -15,37 +18,38 @@ import { GeneralStatusBar } from "../components";
 import { scale, verticalScale } from "react-native-size-matters";
 
 export default function Login({ navigation }) {
-  const Input = ({ name, placeholder }) => {
-    return (
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>{name}</Text>
-        <View style={styles.textInputContainer}>
-          <TextInput
-            placeholder={placeholder}
-            style={[styles.text, styles.textInput]}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
-      </View>
-    );
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const Button = ({ text, screen }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          Keyboard.dismiss(), navigation.navigate(screen);
-        }}
-        style={styles.buttonContainer}
-      >
-        <Text style={[styles.text, styles.buttonText]}>{text}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const field2 = createRef();
+
+  function showLoadingLogin() {
+    if (loading) {
+      return <ActivityIndicator size="large" color={colors.whiteColor} />;
+    } else {
+      return <Text style={[styles.text, styles.buttonText]}>Entrar</Text>;
+    }
+  }
+
+  function handleLogin() {
+    Keyboard.dismiss();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigation.navigate("Agendamento");
+    }, 3000);
+  }
+
+  function handleRegister() {
+    Keyboard.dismiss();
+    setTimeout(() => {
+      navigation.navigate("Agenda");
+    }, 300);
+  }
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
         backgroundColor={colors.mainColor}
         barStyle="light-content"
@@ -62,7 +66,6 @@ export default function Login({ navigation }) {
               flexDirection: "row",
               alignItems: "center",
               paddingLeft: scale(20),
-              // justifyContent: "space-around",
             }}
           >
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -75,22 +78,75 @@ export default function Login({ navigation }) {
           </View>
         </View>
         <KeyboardAvoidingView
-          behavior="height"
+          behavior={Platform.select({
+            ios: "padding",
+            android: null,
+          })}
           style={{
             flex: 1,
           }}
         >
           <View style={styles.loginContainer}>
+            {/*  */}
             <Text style={[styles.text, styles.headerText]}>Agenda Fácil</Text>
-            <View style={{ margin: verticalScale(32) }} />
-            <Input name="Email" placeholder="Digite seu email" />
-            <Input name="Senha" placeholder="Digite sua senha" />
-            <Button text="Entrar" screen="Agendamento" />
-            <Button text="Registrar" screen="Agenda" />
+            <View style={{ margin: verticalScale(20) }} />
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.text}>Email</Text>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  style={[styles.text, styles.textInput]}
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                  placeholder="Digite seu email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="go"
+                  onSubmitEditing={() => field2.current.focus()}
+                  autoCorrect={false}
+                  blurOnSubmit={false}
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.text}>Senha</Text>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  ref={field2}
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  style={[styles.text, styles.textInput]}
+                  placeholder="Digite sua senha"
+                  autoCapitalize="none"
+                  onSubmitEditing={() => handleLogin()}
+                  secureTextEntry={true}
+                  autoCorrect={false}
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                handleLogin();
+              }}
+            >
+              {showLoadingLogin()}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                handleRegister();
+              }}
+            >
+              <Text style={[styles.text, styles.buttonText]}>Registrar</Text>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
 
