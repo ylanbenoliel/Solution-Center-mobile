@@ -119,13 +119,13 @@ export default function Plans({ navigation }) {
 
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              Nossos planos atendem à sua necessidade. E em todos eles, os
-              custos com recepcionista, água, café, energia elétrica, segurança,
-              internet e limpeza, estão inclusos no valor do aluguel.
+              {"\t\t"}Nossos planos atendem à sua necessidade. E em todos eles,
+              os custos com recepcionista, água, café, energia elétrica,
+              segurança, internet e limpeza, estão inclusos no valor do aluguel.
             </Text>
           </View>
 
-          <View style={{ marginVertical: verticalScale(10) }} />
+          <View style={{ marginVertical: verticalScale(20) }} />
 
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: verticalScale(15),
+    marginTop: verticalScale(40),
   },
   headerName: {
     fontWeight: "bold",

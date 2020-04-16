@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   KeyboardAvoidingView,
-  Image,
   TextInput,
   Text,
   StyleSheet,
   TouchableOpacity,
+  Keyboard,
+  ImageBackground,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
@@ -22,6 +23,8 @@ export default function Login({ navigation }) {
           <TextInput
             placeholder={placeholder}
             style={[styles.text, styles.textInput]}
+            autoCapitalize="none"
+            autoCorrect={false}
           />
         </View>
       </View>
@@ -31,7 +34,9 @@ export default function Login({ navigation }) {
   const Button = ({ text, screen }) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate(screen)}
+        onPress={() => {
+          Keyboard.dismiss(), navigation.navigate(screen);
+        }}
         style={styles.buttonContainer}
       >
         <Text style={[styles.text, styles.buttonText]}>{text}</Text>
@@ -45,46 +50,60 @@ export default function Login({ navigation }) {
         backgroundColor={colors.mainColor}
         barStyle="light-content"
       />
-      <View style={styles.header}>
-        <View
+      <ImageBackground
+        style={{ flex: 1 }}
+        imageStyle={{ opacity: 0.1 }}
+        source={require("../assets/LogoHorizontal.png")}
+        resizeMode="contain"
+      >
+        <View style={styles.header}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingLeft: scale(20),
+              // justifyContent: "space-around",
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <MaterialIcons
+                name="menu"
+                size={scale(32)}
+                color={colors.navigationColor}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <KeyboardAvoidingView
+          behavior="height"
           style={{
-            paddingLeft: 20,
+            flex: 1,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <MaterialIcons
-              name="menu"
-              size={32}
-              color={colors.navigationColor}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <KeyboardAvoidingView
-        behavior="height"
-        style={{
-          flex: 1,
-        }}
-      >
-        <View style={styles.loginContainer}>
-          <Image
-            style={{ width: 128, height: 128 }}
-            source={require("../assets/LogoLogin.png")}
-          />
-          <Input name="Email" placeholder="Digite seu email" />
-          <Input name="Senha" placeholder="Digite sua senha" />
-          <Button text="Entrar" screen="Agendamento" />
-          <Button text="Registrar" screen="Agenda" />
-        </View>
-      </KeyboardAvoidingView>
+          <View style={styles.loginContainer}>
+            <Text style={[styles.text, styles.headerText]}>Agenda Fácil</Text>
+            <View style={{ margin: verticalScale(32) }} />
+            <Input name="Email" placeholder="Digite seu email" />
+            <Input name="Senha" placeholder="Digite sua senha" />
+            <Button text="Entrar" screen="Agendamento" />
+            <Button text="Registrar" screen="Agenda" />
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   loginContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: verticalScale(30),
+  },
+  headerText: {
+    fontSize: scale(32),
+    color: colors.mainColor,
   },
   text: {
     fontFamily: "Amaranth-Regular",
@@ -105,7 +124,7 @@ const styles = StyleSheet.create({
     height: verticalScale(32),
   },
   buttonContainer: {
-    width: "80%",
+    width: "50%",
     height: scale(48),
     alignItems: "center",
     justifyContent: "center",
@@ -113,10 +132,14 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(16),
     borderRadius: scale(4),
   },
-  buttonLinearGradient: {},
   buttonText: {
     fontSize: scale(24),
     color: colors.whiteColor,
   },
-  header: { width: "100%", height: scale(48), justifyContent: "center" },
+  header: {
+    width: "100%",
+    height: verticalScale(48),
+    justifyContent: "center",
+    marginTop: verticalScale(20),
+  },
 });

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
 
 import colors from "../constants/colors";
-import VacancyModal from "../components/VacancyModal";
 import { ALL_SCHEDULE_TABLE } from "../constants/fixedValues";
-import { GeneralStatusBar } from "../components";
+import { GeneralStatusBar, VacancyModal } from "../components";
+import { LinearGradient } from "expo-linear-gradient";
+import { scale, verticalScale } from "react-native-size-matters";
 
 /* <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         {sundays[0] + sundays[1]}
@@ -19,7 +20,7 @@ export default function Agenda({ navigation }) {
   const [hours, setHours] = useState([]);
   const [users, setUsers] = useState({});
 
-  const disableSundays = (date) => {
+  function disableSundays(date) {
     const month = parseISO(date);
     const weekends = eachWeekendOfMonth(month);
     const sundaysInMonth = weekends
@@ -32,7 +33,7 @@ export default function Agenda({ navigation }) {
         return result;
       });
     setSundays(sundaysInMonth);
-  };
+  }
 
   useEffect(() => {
     const currentDate = format(new Date(), "yyyy-MM-dd");
@@ -40,9 +41,9 @@ export default function Agenda({ navigation }) {
     disableSundays(currentDate);
   }, []);
 
-  const _onDayPress = (day) => {
+  function handleDayPress(day) {
     setDaySelected(day);
-  };
+  }
 
   function handleOpenModal() {
     const data = ALL_SCHEDULE_TABLE;
@@ -54,120 +55,120 @@ export default function Agenda({ navigation }) {
     setHours(hours);
   }
 
-  function closeModal() {
+  function handleCloseModal() {
     setIsModalOpen(false);
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.mainColor,
-      }}
-    >
-      <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
-      />
-      <View
-        style={{
-          flex: 2,
-          height: 100,
-          paddingTop: 20,
-          justifyContent: "flex-start",
-          backgroundColor: colors.mainColor,
-        }}
+    <>
+      <LinearGradient
+        colors={[colors.mainColor, colors.secondaryColor]}
+        style={{ flex: 1 }}
       >
-        <Calendar
-          markingType={"custom"}
-          onMonthChange={(date) => {
-            // disableSundays(date.dateString);
+        <GeneralStatusBar
+          backgroundColor={colors.mainColor}
+          barStyle="light-content"
+        />
+
+        <View
+          style={{
+            flex: 1,
+            marginVertical: verticalScale(70),
           }}
-          minDate={"2020-03-19"}
-          maxDate={"2020-05-30"}
-          monthFormat={"MMMM yyyy"}
-          current={daySelected}
-          onDayPress={(date) => _onDayPress(date.dateString)}
-          hideExtraDays
-          markedDates={{
-            // [sundays]: { disabled: true, disableTouchEvent: true },
-            [daySelected]: {
-              disabled: false,
-              disableTouchEvent: false,
-              customStyles: {
-                container: {
-                  backgroundColor: colors.accentColor,
-                },
-                text: {
-                  color: colors.whiteColor,
-                  fontWeight: "bold",
+        >
+          <Calendar
+            markingType={"custom"}
+            onMonthChange={(date) => {
+              // disableSundays(date.dateString);
+            }}
+            minDate={"2020-03-19"}
+            maxDate={"2020-05-30"}
+            monthFormat={"MMMM yyyy"}
+            current={daySelected}
+            onDayPress={(date) => handleDayPress(date.dateString)}
+            hideExtraDays
+            markedDates={{
+              // [sundays]: { disabled: true, disableTouchEvent: true },
+              [daySelected]: {
+                disabled: false,
+                disableTouchEvent: false,
+                customStyles: {
+                  container: {
+                    backgroundColor: colors.accentColor,
+                  },
+                  text: {
+                    color: colors.whiteColor,
+                    fontWeight: "bold",
+                  },
                 },
               },
-            },
-          }}
-          style={{
-            height: 350,
-          }}
-          theme={{
-            backgroundColor: "blue",
-            calendarBackground: "rgba(0,0,0,0)",
-            textSectionTitleColor: "#b6c1cd",
-            //   selectedDayBackgroundColor: "#00adf5",
-            selectedDayTextColor: colors.whiteColor,
-            todayTextColor: colors.accentColor,
-            dayTextColor: colors.whiteColor,
-            textDisabledColor: colors.disableColor,
-            arrowColor: colors.navigationColor,
-            disabledArrowColor: colors.disableColor,
-            monthTextColor: colors.whiteColor,
-            //   indicatorColor: "blue",
-            //   textDayFontFamily: "space-mono",
-            textDayFontSize: 16,
-            textDayFontWeight: "300",
-            //   textMonthFontFamily: "space-mono",
-            textMonthFontSize: 16,
-            textMonthFontWeight: "bold",
-            //   textDayHeaderFontFamily: "space-mono",
-            textDayHeaderFontSize: 16,
-            textDayHeaderFontWeight: "300",
-          }}
-        />
-      </View>
+            }}
+            style={{
+              height: 500,
+            }}
+            theme={{
+              calendarBackground: "rgba(0,0,0,0)",
+              //   selectedDayBackgroundColor: "#00adf5",
+              selectedDayTextColor: colors.whiteColor,
+              todayTextColor: colors.accentColor,
+              dayTextColor: colors.whiteColor,
+              textDisabledColor: colors.disableColor,
+              arrowColor: colors.navigationColor,
+              disabledArrowColor: colors.disableColor,
+              monthTextColor: colors.whiteColor,
+              //   indicatorColor: "blue",
+              textDayFontFamily: "Amaranth-Regular",
+              textDayFontSize: 16,
+              // textDayFontWeight: "300",
+              textMonthFontFamily: "Amaranth-Regular",
+              textMonthFontSize: 16,
+              // textMonthFontWeight: "bold",
+              textDayHeaderFontFamily: "Amaranth-Regular",
+              textDayHeaderFontSize: 16,
+              // textDayHeaderFontWeight: "300",
+            }}
+          />
+        </View>
 
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: colors.secondaryColor,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            width: 150,
-            height: 48,
-            borderRadius: 4,
-            backgroundColor: colors.navigationColor,
-          }}
-          onPress={handleOpenModal}
-        >
-          <Text style={{ fontSize: 32, color: colors.whiteColor }}>
-            Horários
-          </Text>
-        </TouchableOpacity>
-
+        <View style={styles.modalButtonContainer}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleOpenModal}
+          >
+            <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>
+          </TouchableOpacity>
+        </View>
         <VacancyModal
           isVisible={isModalOpen}
-          onClose={closeModal}
+          onClose={handleCloseModal}
           showDate={daySelected}
           users={users}
           hours={hours}
         />
-      </View>
-    </View>
+      </LinearGradient>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {},
+  text: {
+    fontFamily: "Amaranth-Regular",
+    color: colors.whiteColor,
+    fontSize: scale(18),
+  },
+  modalButtonContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+    height: verticalScale(48),
+    borderRadius: scale(4),
+    backgroundColor: colors.navigationColor,
+  },
+  modalButtonText: { fontSize: scale(32), color: colors.whiteColor },
+});

@@ -7,17 +7,19 @@ import {
   ImageBackground,
   Linking,
   Platform,
+  Image,
+  ScrollView,
 } from "react-native";
 import { GeneralStatusBar } from "../../components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import colors from "../../constants/colors";
-
-import backgroundLogo from "../../assets/LogoHorizontal.png";
 import { verticalScale, scale } from "react-native-size-matters";
 
+import colors from "../../constants/colors";
+import backgroundLogo from "../../assets/LogoHorizontal.png";
+const ICON_SIZE = scale(24);
+
 const Separator = () => {
-  return <View style={{ marginTop: scale(10) }} />;
+  return <View style={{ marginTop: scale(8) }} />;
 };
 
 export default function Contact({ navigation }) {
@@ -87,7 +89,7 @@ export default function Contact({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <MaterialCommunityIcons
               name="close"
-              size={32}
+              size={scale(32)}
               color={colors.navigationColor}
             />
           </TouchableOpacity>
@@ -97,7 +99,7 @@ export default function Contact({ navigation }) {
           <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="whatsapp"
-              size={48}
+              size={ICON_SIZE}
               color={colors.mainColor}
             />
             <View style={styles.whatsappNumbers}>
@@ -114,7 +116,7 @@ export default function Contact({ navigation }) {
           <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="instagram"
-              size={48}
+              size={ICON_SIZE}
               color={colors.mainColor}
             />
             <TouchableOpacity
@@ -140,7 +142,7 @@ export default function Contact({ navigation }) {
           <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="email"
-              size={48}
+              size={ICON_SIZE}
               color={colors.mainColor}
             />
             <Text style={[styles.text, { marginLeft: verticalScale(20) }]}>
@@ -153,7 +155,7 @@ export default function Contact({ navigation }) {
           <View style={styles.linksContainer}>
             <MaterialCommunityIcons
               name="web"
-              size={48}
+              size={ICON_SIZE}
               color={colors.mainColor}
             />
             <TouchableOpacity
@@ -177,29 +179,41 @@ export default function Contact({ navigation }) {
         {/*  */}
         <Separator />
         {/*  */}
-        <View style={styles.localizationContainer}>
-          <Text style={[styles.text, styles.headerName]}>Localização</Text>
-          <View style={{ alignItems: "center" }}>
-            <Text style={styles.text}>
-              Localização privilegiada, próximo a supermercados, restaurantes,
-              farmácias. Temos estacionamento rotativo, com entrada pela Tv.
-              Humaitá.
-            </Text>
-          </View>
-          <View style={styles.localizationContent}>
-            <MaterialCommunityIcons
-              name="crosshairs-gps"
-              size={48}
-              color={colors.mainColor}
-            />
-            <TouchableOpacity onPress={() => openMaps()}>
-              <Text style={[styles.text, styles.clickableText]}>
-                Av. Rômulo Maiorana, nº 700,{"\n"}Ed. Vitta Office, Sala 1414,
-                {"\n"}Marco. CEP: 66093-672
+        <ScrollView style={styles.localizationScrollView}>
+          <View style={styles.localizationContainer}>
+            <Text style={[styles.text, styles.headerName]}>Localização</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.text}>
+                {"\t\t"}Localização privilegiada, bairro central e próximo a
+                grandes avenidas. Temos estacionamento rotativo, com entrada
+                pela Tv. Humaitá.
               </Text>
-            </TouchableOpacity>
+            </View>
+            {/*  */}
+            <View style={{ width: "100%" }}>
+              <View style={styles.localizationContent}>
+                <MaterialCommunityIcons
+                  name="crosshairs-gps"
+                  size={ICON_SIZE}
+                  color={colors.mainColor}
+                />
+                <TouchableOpacity onPress={() => openMaps()}>
+                  <Text style={[styles.text, styles.clickableText]}>
+                    Av. Rômulo Maiorana, nº 700,{"\n"}Ed. Vitta Office, Sala
+                    1414
+                    {/* {"\n"}Marco. CEP: 66093-672 */}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <Separator />
+            <Image
+              source={require("../../assets/Maps.jpeg")}
+              resizeMode="stretch"
+              style={{ width: scale(300), height: verticalScale(200) }}
+            />
           </View>
-        </View>
+        </ScrollView>
       </ImageBackground>
     </View>
   );
@@ -207,7 +221,8 @@ export default function Contact({ navigation }) {
 
 const styles = StyleSheet.create({
   imageBackground: {
-    flex: 1,
+    height: "100%",
+    width: "100%",
   },
   header: {
     width: "100%",
@@ -215,7 +230,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: verticalScale(15),
+    marginTop: verticalScale(40),
   },
   headerName: {
     fontWeight: "bold",
@@ -247,7 +262,7 @@ const styles = StyleSheet.create({
   whatsappNumbers: {
     marginLeft: scale(20),
     width: scale(230),
-    height: verticalScale(70),
+    height: verticalScale(55),
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-end",
@@ -256,19 +271,25 @@ const styles = StyleSheet.create({
   lastNumber: {
     width: "100%",
     flexDirection: "row",
-    marginTop: verticalScale(25),
+    marginTop: verticalScale(5),
+  },
+  localizationScrollView: {
+    flex: 1,
+    marginTop: verticalScale(-180),
+    marginBottom: verticalScale(30),
   },
   localizationContainer: {
-    flex: 1,
+    flex: 2,
     alignItems: "center",
-    marginHorizontal: verticalScale(20),
-    paddingBottom: verticalScale(5),
+    marginHorizontal: scale(20),
+    // marginVertical: verticalScale(10),
   },
   localizationContent: {
-    width: "100%",
+    width: "80%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginLeft: 0,
     marginTop: verticalScale(10),
   },
 });

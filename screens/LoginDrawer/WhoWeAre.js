@@ -14,7 +14,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../../constants/colors";
 
 import background from "../../assets/whoweare.png";
-import logo from "../../assets/LogoHorizontal.png";
 
 export default function WhoWeAre({ navigation }) {
   return (
@@ -37,37 +36,31 @@ export default function WhoWeAre({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            alignItems: "center",
-            marginVertical: verticalScale(-110),
-            zIndex: 1,
-          }}
-        >
-          <Image source={logo} resizeMode="contain" width={64} height={64} />
-        </View>
-
-        <ScrollView>
+        <View style={{ flex: 1, justifyContent: "space-around" }}>
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              {"    "}O <Text style={styles.textStrong}>Solution Center</Text>{" "}
+              {"\t\t"}O <Text style={styles.textStrong}>Solution Center</Text>{" "}
               foi idealizado pensando em você! Somos profissionais liberais e
               entendemos a dinâmica de trabalho que o cenário mundial, cada vez
               mais, nos traz.
             </Text>
             <Text style={styles.text}>
-              {"    "}Por isso, nossa missão é proporcionar ao profissional o
+              {"\n\t\t"}Por isso, nossa missão é proporcionar ao profissional o
               espaço perfeito para o desenvolvimento de seu trabalho, com uma
               estrutura de alto padrão. Nossos ambientes são sofisticados,
               confortáveis e privados.
             </Text>
             <Text style={styles.text}>
-              {"    "}Assim, nós oferecemos segurança, conforto e praticidade ao
-              seu atendi-{"\n"}mento. Tudo isso sem custo fixo ou burocracia.
-              Aqui você paga somente quando usar.
+              {"\n\t\t"}Assim, nós oferecemos segurança, conforto e praticidade
+              ao seu atendimento. Tudo isso sem custo fixo ou burocracia. Aqui
+              você paga somente quando usar.
             </Text>
           </View>
-        </ScrollView>
+
+          <View style={styles.logoContainer}>
+            <Image source={require("../../assets/LogoHorizontal.png")} />
+          </View>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -87,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: verticalScale(15),
+    marginTop: verticalScale(40),
   },
   headerName: {
     fontWeight: "bold",
@@ -98,11 +91,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Amaranth-Regular",
-    fontSize: scale(18),
+    fontSize: scale(16),
     color: colors.mainColor,
-    textAlign: "left",
+    textAlign: "justify",
   },
   textStrong: {
     fontWeight: "bold",
   },
+  logoContainer: { alignItems: "center", marginBottom: verticalScale(30) },
 });

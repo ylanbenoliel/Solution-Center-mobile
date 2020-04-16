@@ -10,9 +10,11 @@ import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
 import { Separator, StatusButton, GeneralStatusBar } from "../components";
 import colors from "../constants/colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
+import { scale, verticalScale } from "react-native-size-matters";
+
 import moment from "moment";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Schedule() {
   let datesWhitelist = [
@@ -38,21 +40,12 @@ export default function Schedule() {
   const Room = ({ name }) => {
     return (
       <TouchableOpacity
-        style={{
-          width: "45%",
-          height: 120,
-          backgroundColor: colors.whiteColor,
-          alignItems: "flex-start",
-          justifyContent: "flex-end",
-          margin: 10,
-        }}
+        style={styles.roomButton}
         onPress={() => {
           bottomSheetRef.current.snapTo(1);
         }}
       >
-        <Text style={{ margin: 5, fontSize: 24, color: colors.mainColor }}>
-          {name}
-        </Text>
+        <Text style={[styles.text, styles.roomText]}>{name}</Text>
       </TouchableOpacity>
     );
   };
@@ -63,7 +56,7 @@ export default function Schedule() {
         key={id}
         style={{
           width: "100%",
-          height: 70,
+          height: verticalScale(70),
           flexDirection: "row",
           alignItems: "center",
         }}
@@ -77,9 +70,9 @@ export default function Schedule() {
         >
           <Text
             style={{
-              marginHorizontal: 10,
+              marginHorizontal: scale(10),
               color: colors.mainColor,
-              fontSize: 22,
+              fontSize: scale(22),
             }}
           >
             {hour}h
@@ -155,129 +148,144 @@ export default function Schedule() {
   return (
     <>
       <GeneralStatusBar
-        backgroundColor={colors.secondaryColor}
+        backgroundColor={colors.mainColor}
         barStyle="light-content"
       />
-      <View style={{ flex: 2, backgroundColor: colors.secondaryColor }}>
-        <View style={styles.container}>
-          <CalendarStrip
-            calendarAnimation={{ type: "sequence", duration: 30 }}
-            daySelectionAnimation={{
-              type: "border",
-              duration: 200,
-              borderWidth: 3,
-              borderHighlightColor: colors.accentColor,
-            }}
-            style={{ height: 100, margin: "3%" }}
-            calendarHeaderStyle={{ color: "white" }}
-            calendarColor={colors.secondaryColor}
-            dateNumberStyle={{ color: "white" }}
-            dateNameStyle={{ color: "white" }}
-            highlightDateNumberStyle={{
-              color: colors.whiteColor,
-            }}
-            highlightDateNameStyle={{ color: colors.whiteColor }}
-            disabledDateNameStyle={{ color: colors.disableColor }}
-            disabledDateNumberStyle={{ color: colors.disableColor }}
-            iconContainer={{ flex: 0.1 }}
-            datesBlacklist={datesBlacklist}
-            datesWhitelist={datesWhitelist}
-            // iconLeft={}
-            // iconRight={<Icon name="chevron-right" />}
-          />
-        </View>
-
-        <View
-          style={{
-            flex: 4,
-            backgroundColor: colors.mainColor,
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{ fontSize: 24, color: colors.whiteColor, marginTop: 5 }}
-          >
-            Selecione a sala
-          </Text>
-
-          <View style={{ flex: 1, marginTop: 10, width: "100%" }}>
-            <FlatList
-              data={ROOM_DATA}
-              numColumns={2}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <Room {...item} />}
+      <LinearGradient
+        colors={[colors.mainColor, colors.secondaryColor]}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.calendarContainer}>
+          <View style={styles.container}>
+            <CalendarStrip
+              calendarAnimation={{ type: "sequence", duration: 30 }}
+              daySelectionAnimation={{
+                type: "border",
+                duration: 100,
+                borderWidth: 3,
+                borderHighlightColor: colors.accentColor,
+              }}
+              style={styles.calendarStyle}
+              calendarHeaderStyle={styles.text}
+              dateNumberStyle={styles.dateStyle}
+              dateNameStyle={styles.dateStyle}
+              highlightDateNumberStyle={styles.highlightDateStyle}
+              highlightDateNameStyle={styles.highlightDateStyle}
+              disabledDateNameStyle={styles.disabledDateStyle}
+              disabledDateNumberStyle={styles.disabledDateStyle}
+              iconContainer={{ flex: 0.1 }}
+              datesBlacklist={datesBlacklist}
+              datesWhitelist={datesWhitelist}
+              // iconLeft={}
+              // iconRight={<Icon name="chevron-right" />}
             />
           </View>
 
-          <BSheet />
+          <View style={styles.roomsContainer}>
+            <Text style={[styles.text, styles.selectRoomText]}>
+              Selecione a sala
+            </Text>
+
+            <View style={styles.flatListContainer}>
+              <FlatList
+                data={ROOM_DATA}
+                numColumns={2}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <Room {...item} />}
+              />
+            </View>
+
+            <BSheet />
+          </View>
         </View>
-      </View>
+      </LinearGradient>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: "10%" },
-  // box: {
-  //   width: 200,
-  //   height: 200
-  // },
-  // panelContainer: {
-  //   position: "absolute",
-  //   top: 0,
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0
-  // },
+  container: {
+    flex: 1,
+    marginTop: "10%",
+  },
+  calendarContainer: {
+    flex: 2,
+  },
+  roomsContainer: {
+    flex: 4,
+    alignItems: "center",
+  },
+  roomButton: {
+    width: "45%",
+    height: verticalScale(120),
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    backgroundColor: colors.whiteColor,
+    borderRadius: scale(16),
+    margin: scale(10),
+  },
+  roomText: {
+    margin: scale(5),
+    fontSize: scale(18),
+    color: colors.mainColor,
+  },
+  text: {
+    fontFamily: "Amaranth-Regular",
+    fontSize: scale(16),
+    color: colors.whiteColor,
+  },
   panel:
     //bottomsheet
     {
-      height: 72 * 14,
-      padding: 10,
+      height: verticalScale(72 * 14),
+      padding: scale(10),
       backgroundColor: colors.whiteColor,
-      paddingTop: 20,
+      paddingTop: verticalScale(20),
       marginBottom: -5,
     },
   header: {
     width: "100%",
-    height: 50,
-    paddingTop: 10,
+    height: verticalScale(50),
+    paddingTop: verticalScale(10),
     backgroundColor: colors.whiteColor,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: scale(16),
+    borderTopRightRadius: scale(16),
   },
   panelHeader: {
     alignItems: "center",
   },
   panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
+    width: scale(40),
+    height: verticalScale(8),
+    borderRadius: scale(4),
     backgroundColor: colors.disableColor,
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
   },
   panelTitle: {
-    fontSize: 24,
-    width: 100,
+    fontSize: scale(24),
+    width: scale(100),
     color: colors.disableColor,
   },
-  // panelSubtitle: {
-  //   fontSize: 14,
-  //   color: "gray",
-  //   height: 30,
-  //   marginBottom: 10
-  // },
-
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "white",
+  calendarStyle: { height: verticalScale(100), margin: "3%" },
+  dateStyle: {
+    color: colors.whiteColor,
+    fontFamily: "Amaranth-Regular",
   },
-  photo: {
-    width: "100%",
-    height: 225,
-    marginTop: 30,
+  highlightDateStyle: {
+    color: colors.whiteColor,
+  },
+  disabledDateStyle: {
+    color: colors.disableColor,
+  },
+  selectRoomText: {
+    color: colors.whiteColor,
+    fontSize: 24,
+    marginTop: 5,
+  },
+  flatListContainer: {
+    flex: 1,
+    width: "95%",
+    justifyContent: "center",
+    marginTop: verticalScale(10),
   },
 });
