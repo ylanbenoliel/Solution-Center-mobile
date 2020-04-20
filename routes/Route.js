@@ -6,6 +6,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Login from "../screens/Login";
 import Schedule from "../screens/Schedule";
 import Agenda from "../screens/Agenda";
+import Register from "../screens/Register";
 
 import {
   WhoWeAre,
@@ -44,6 +45,7 @@ export default function Route() {
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="LoginDrawer" component={LoginDrawer} />
         <Stack.Screen name="Agendamento" component={Schedule} />
+        <Stack.Screen name="Registro" component={Register} />
         <Stack.Screen name="Agenda" component={Agenda} />
       </Stack.Navigator>
     </NavigationContainer>

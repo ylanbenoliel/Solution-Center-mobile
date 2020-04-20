@@ -35,16 +35,23 @@ export default function Login({ navigation }) {
   function handleLogin() {
     Keyboard.dismiss();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("Agendamento");
-    }, 3000);
+    if (email.includes("admin")) {
+      setTimeout(() => {
+        setLoading(false);
+        navigation.navigate("Agenda");
+      }, 3000);
+    } else {
+      setTimeout(() => {
+        setLoading(false);
+        navigation.navigate("Agendamento");
+      }, 3000);
+    }
   }
 
   function handleRegister() {
     Keyboard.dismiss();
     setTimeout(() => {
-      navigation.navigate("Agenda");
+      navigation.navigate("Registro");
     }, 300);
   }
 
@@ -99,6 +106,7 @@ export default function Login({ navigation }) {
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                   placeholder="Digite seu email"
+                  placeholderTextColor={colors.placeholderColor}
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="go"
@@ -118,6 +126,7 @@ export default function Login({ navigation }) {
                   onChangeText={(text) => setPassword(text)}
                   style={[styles.text, styles.textInput]}
                   placeholder="Digite sua senha"
+                  placeholderTextColor={colors.placeholderColor}
                   autoCapitalize="none"
                   onSubmitEditing={() => handleLogin()}
                   secureTextEntry={true}
