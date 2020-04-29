@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -14,11 +14,13 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { GeneralStatusBar } from "../components";
+import { GeneralStatusBar, ShowErrors } from "../components";
+import { TextInputMask } from "react-native-masked-text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale } from "react-native-size-matters";
 import colors from "../constants/colors";
+import { api } from "../services/api";
 
 export default function Register({ navigation }) {
   const [name, setName] = useState("");
@@ -30,6 +32,7 @@ export default function Register({ navigation }) {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
+  const [error, setError] = useState("");
 
   const field2 = useRef();
   const field3 = useRef();
@@ -38,13 +41,69 @@ export default function Register({ navigation }) {
   const field6 = useRef();
   const field7 = useRef();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [error]);
+
   function handleRegister() {
     setLoading(true);
     Keyboard.dismiss();
-    setTimeout(() => {
+    if (
+      name == "" ||
+      email == "" ||
+      password == "" ||
+      address == "" ||
+      cpf == "" ||
+      rg == "" ||
+      phone == ""
+    ) {
+      setError("Preencha todos os campos.");
       setLoading(false);
-      navigation.navigate("LoginDrawer");
-    }, 1000);
+      return null;
+    }
+    api
+      .post("/users", {
+        name: name,
+        email: email,
+        password: password,
+        address: address,
+        cpf: cpf,
+        rg: rg,
+        phone: phone,
+      })
+      // .then((response) => {
+      //   const uploadData = new FormData();
+      //     uploadData.append("avatar", {
+      //       name: `${name}.jpg`,
+      //       type: "image/jpeg",
+      //       uri:
+      //         Platform.OS === "android" ? image : image.replace("file://", ""),
+      //     });
+        
+      //   api
+      //     .post(`/users/${response.data.id}/avatar`, {
+      //       uploadData,
+      //     })
+      //     .then(() => {
+      //       setLoading(false);
+      //       navigation.push("LoginDrawer");
+      //     })
+      //     .catch((e) => {
+      //       setError("Não foi possível enviar a foto.");
+      //     });
+      //   setLoading(false);
+      //   // navigation.push("LoginDrawer");
+      // })
+      .then(()=>{
+          setLoading(false);
+        navigation.push("LoginDrawer");
+      })
+      .catch((e) => {
+        console.log(e)
+      });
   }
 
   showLoadingRegister = () => {
@@ -163,7 +222,7 @@ export default function Register({ navigation }) {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 style={[styles.text, styles.textInput]}
-                placeholder="Letras e números"
+                placeholder="Mínimo 8 caracteres"
                 placeholderTextColor={colors.placeholderColor}
                 autoCapitalize="none"
                 returnKeyType="next"
@@ -252,7 +311,7 @@ export default function Register({ navigation }) {
                   keyboardType="number-pad"
                   onChangeText={(text) => setPhone(text)}
                   style={[styles.text, styles.textInput]}
-                  placeholder="(91) 99999-9999"
+                  placeholder="91 99999-9999"
                   placeholderTextColor={colors.placeholderColor}
                   autoCapitalize="none"
                   onSubmitEditing={() => handleRegister()}
@@ -262,7 +321,7 @@ export default function Register({ navigation }) {
               </View>
             </View>
             {/*  */}
-
+            <ShowErrors error={error} />
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => {
