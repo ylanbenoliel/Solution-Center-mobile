@@ -1,4 +1,4 @@
-import React, { useState, createRef } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -11,18 +11,29 @@ import {
   Platform,
   ActivityIndicator,
   SafeAreaView,
+  AsyncStorage,
 } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
-import { GeneralStatusBar } from "../components";
+import { GeneralStatusBar, ShowErrors } from "../components";
 import { scale, verticalScale } from "react-native-size-matters";
+import { api } from "../services/api";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const field2 = createRef();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [error]);
 
   function showLoadingLogin() {
     if (loading) {
@@ -33,26 +44,53 @@ export default function Login({ navigation }) {
   }
 
   function handleLogin() {
-    Keyboard.dismiss();
     setLoading(true);
-    if (email.includes("admin")) {
-      setTimeout(() => {
-        setLoading(false);
-        navigation.navigate("Agenda");
-      }, 3000);
-    } else {
-      setTimeout(() => {
-        setLoading(false);
-        navigation.navigate("Agendamento");
-      }, 3000);
+    Keyboard.dismiss();
+    if (email === "" || password === "") {
+      setError("Preencha todos os campos.");
+      return setLoading(false);
     }
+    api
+      .post("/authenticate", {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        AsyncStorage.setItem("@SC:token", response.data.token);
+        AsyncStorage.setItem("@SC:name", response.data.name);
+        AsyncStorage.setItem(
+          "@SC:admin",
+          JSON.stringify(response.data.is_admin)
+        );
+        if (response.data.is_admin) {
+          setLoading(false);
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [{ name: "AdminDrawer" }],
+          //   })
+          // );
+          navigation.navigate("AdminDrawer");
+        } else {
+          setLoading(false);
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [{ name: "UserDrawer" }],
+          //   })
+          // );
+          navigation.navigate("UserDrawer");
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+        setError("Usuário não encontrado.");
+      });
   }
 
   function handleRegister() {
     Keyboard.dismiss();
-    setTimeout(() => {
-      navigation.navigate("Registro");
-    }, 300);
+    navigation.navigate("Registro");
   }
 
   return (
@@ -152,6 +190,7 @@ export default function Login({ navigation }) {
             >
               <Text style={[styles.text, styles.buttonText]}>Registrar</Text>
             </TouchableOpacity>
+            <ShowErrors error={error} />
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>

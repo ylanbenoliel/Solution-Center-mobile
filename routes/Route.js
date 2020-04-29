@@ -1,5 +1,4 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
@@ -39,15 +38,42 @@ function LoginDrawer() {
   );
 }
 
-export default function Route() {
+export function UserDrawer() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator headerMode="none">
-        <Stack.Screen name="LoginDrawer" component={LoginDrawer} />
-        <Stack.Screen name="Agendamento" component={Schedule} />
-        <Stack.Screen name="Registro" component={Register} />
-        <Stack.Screen name="Agenda" component={Agenda} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Drawer.Navigator
+      drawerStyle={{
+        backgroundColor: colors.whiteColor,
+        width: scale(180),
+      }}
+    >
+      <Drawer.Screen name="Agendamento" component={Schedule} />
+    </Drawer.Navigator>
+  );
+}
+
+export function AdminDrawer() {
+  return (
+    <Drawer.Navigator
+      drawerStyle={{
+        backgroundColor: colors.whiteColor,
+        width: scale(180),
+      }}
+    >
+      <Drawer.Screen name="Agenda" component={Agenda} />
+    </Drawer.Navigator>
+  );
+}
+
+export default function Route({ admin }) {
+  if (admin == "0") return <UserDrawer />;
+  if (admin == "1") return <AdminDrawer />;
+
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="LoginDrawer" component={LoginDrawer} />
+      <Stack.Screen name="Registro" component={Register} />
+      <Stack.Screen name="UserDrawer" component={UserDrawer} />
+      <Stack.Screen name="AdminDrawer" component={AdminDrawer} />
+    </Stack.Navigator>
   );
 }
