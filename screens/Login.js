@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   AsyncStorage,
+  Dimensions,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -101,9 +102,9 @@ export default function Login({ navigation }) {
       />
       <ImageBackground
         style={{ flex: 1 }}
-        imageStyle={{ opacity: 0.1 }}
+        imageStyle={styles.imageBackground}
         source={require("../assets/LogoHorizontal.png")}
-        resizeMode="contain"
+        resizeMode="center"
       >
         <View style={styles.header}>
           <View
@@ -204,6 +205,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingTop: verticalScale(30),
+  },
+  imageBackground: {
+    opacity: 0.1,
+    position: "absolute",
+    left: 0,
+    top: 0,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
   },
   headerText: {
     fontSize: scale(32),
