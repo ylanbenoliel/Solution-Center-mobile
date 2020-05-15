@@ -3,12 +3,12 @@ import { TouchableOpacity, Text, Alert, StyleSheet } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 import colors from "../constants/colors";
 
-const StatusButton = ({ code, onChange }) => {
+const StatusButton = ({ code, onCheckIn, onDismiss }) => {
   if (code == 1) {
     return (
       <>
         <TouchableOpacity
-          onLongPress={() => onChange()}
+          onLongPress={() => onCheckIn()}
           style={styles.availableButton}
         >
           <Text style={styles.text}>Pressione para reservar</Text>
@@ -19,7 +19,7 @@ const StatusButton = ({ code, onChange }) => {
   if (code == 2) {
     return (
       <TouchableOpacity
-        onLongPress={() => onChange()}
+        onLongPress={() => onDismiss()}
         style={[styles.defaultButton, styles.reservedButton]}
       >
         <Text style={styles.text}>Sua reserva</Text>

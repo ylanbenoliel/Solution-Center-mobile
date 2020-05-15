@@ -1,48 +1,227 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
+  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   Text,
   FlatList,
+  Dimensions,
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
-import { Separator, StatusButton, GeneralStatusBar } from "../components";
+import {
+  GeneralStatusBar,
+  ShowErrors,
+  Separator,
+  StatusButton
+} from "../components";
 import colors from "../constants/colors";
-import { ROOM_SCHEDULE, ROOM_DATA } from "../constants/fixedValues";
+import { ROOM_DATA } from "../constants/fixedValues";
 import { scale, verticalScale } from "react-native-size-matters";
-
-import moment from "moment";
+import {
+  format,
+  parseISO,
+  eachWeekendOfInterval,
+  isSunday,
+  isSaturday,
+  formatISO,
+  add,
+} from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
+import { api } from "../services/api";
+
+const INITIALDATERANGE = [
+  {
+    start: formatISO(new Date()),
+    end: formatISO(add(new Date(), { days: 5 })),
+  },
+];
 
 export default function Schedule() {
-  let datesWhitelist = [
-    {
-      start: moment(),
-      end: moment().add(5, "days"),
-    },
-  ];
-  let datesBlacklist = [moment().add(6, "days")];
+  const bottomSheetRef = useRef();
+  const calendarRef = useRef();
 
-  const [scheduleList, setScheduleList] = useState(ROOM_SCHEDULE);
+  const [datesBlacklist, setDatesBlacklist] = useState([
+    formatISO(add(new Date(), { days: 10 })),
+  ]);
+  const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
+  const [scheduleList, setScheduleList] = useState([]);
+  const [error, setError] = useState("");
+  const [hours, setHours] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [calendarDate, setCalendarDate] = useState('')
+  const [loading, setLoading] = useState(false);
 
-  function changeReserve(id) {
-    const newSchedule = scheduleList.map((item) => {
-      if (item.id === id) {
-        item.code === 2 ? (item.code = 1) : (item.code = 2);
-      }
-      return item;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  useEffect(() => {
+    api
+      .get("/dates")
+      .then((response) => {
+        let rangeData = [];
+        const { maxDate, minDate } = response.data;
+        if (!!minDate && !!maxDate) {
+          rangeData = INITIALDATERANGE.map(() => {
+            return {
+              start: parseISO(minDate),
+              end: parseISO(maxDate),
+            };
+          });
+        }
+        setDatesWhitelist(rangeData);
+        setDatesBlacklist(
+          disableSundays(datesWhitelist[0]["start"], datesWhitelist[0]["end"])
+        );
+      })
+      .catch((e) => {
+        // setError('Erro ao buscar horários');
+      });
+  }, []);
+
+  function disableSundays(startDate, endDate) {
+    const weekends = eachWeekendOfInterval({
+      start: parseISO(startDate),
+      end: parseISO(endDate),
     });
-    setScheduleList(newSchedule);
+    const sundays = weekends.filter((day) => isSunday(day));
+    return sundays;
   }
 
-  const Room = ({ name }) => {
+  function reserveRoom(room, date, time) {
+    api.post('/events/new', {
+      room: room,
+      date: date,
+      time: time
+    })
+      .then((response) => {
+        const newList = scheduleList.map(evt => {
+          if (response.data.event.time === evt.time) {
+            const { id, date, room, time, user_id } = response.data.event
+            return {
+              code: '2',
+              date: date,
+              event: id,
+              room: room,
+              time: time,
+              user: user_id
+            }
+          }
+          return evt
+        })
+        setScheduleList(newList)
+        bottomSheetRef.current.snapTo(0)
+      })
+      .catch((error) => {
+        bottomSheetRef.current.snapTo(2)
+        setError('Erro ao salvar horário.')
+      })
+  }
+
+  function dismissRoom(eventID) {
+    api.delete(`/events/${eventID}`)
+      .then((response) => {
+        const newList = scheduleList.map(evt => {
+          if (evt.event == eventID) {
+            return {
+              ...evt,
+              user: '',
+              code: '1',
+              event: `${Math.random()}`
+            }
+          }
+          return evt
+        })
+        setScheduleList(newList)
+        bottomSheetRef.current.snapTo(0)
+      })
+      .catch(() => {
+        bottomSheetRef.current.snapTo(2)
+        setError('Erro ao excluir horário')
+      })
+  }
+
+  function removeDuplicates(array, key) {
+    const cache = new Set()
+    return array.filter(
+      (object) => !cache.has(object[key]) && cache.add(object[key])
+    )
+  }
+
+  function transformEventToSchedule(hrs, evts, room, date) {
+    if (evts.length == 0) {
+      evts.push({
+        event: '',
+        user: '',
+        room: '',
+        date: '',
+        time: '',
+        code: ''
+      })
+    }
+    const eventRawList = hrs.flatMap((hour) => {
+      return evts
+        .flatMap((event) => {
+          if (event.time.includes(hour) && event.user) {
+            return {
+              ...event,
+            }
+          }
+          const emptyEvent = {
+            event: `${Math.random()}`,
+            user: '',
+            room: `${room}`,
+            date: `${date}`,
+            time: `${hour}:00:00`,
+            code: '1'
+
+          }
+          return emptyEvent
+        })
+        .sort((prev, next) => next.event - prev.event)
+    })
+    const eventList = removeDuplicates(eventRawList, 'time')
+    setScheduleList(eventList)
+  }
+
+  function getEventsByDate(room) {
+    setLoading(true);
+    bottomSheetRef.current.snapTo(2);
+
+    const calendarRaw = calendarRef.current.getSelectedDate();
+    const calendarDateFormatted = format(new Date(calendarRaw), "yyyy-MM-dd");
+    setCalendarDate(calendarDateFormatted)
+
+    api
+      .post("/events/list", {
+        date: calendarDateFormatted,
+        room: room,
+      })
+      .then((response) => {
+        const { hoursInterval, validEvents } = response.data;
+        transformEventToSchedule(hoursInterval, validEvents, room, calendarDate)
+      })
+      .catch(() => {
+        setError("Erro na busca.");
+      })
+      .finally(() => {
+        setLoading(false);
+        bottomSheetRef.current.snapTo(0);
+      });
+  }
+
+  const Room = ({ name, onClick }) => {
     return (
       <TouchableOpacity
         style={styles.roomButton}
         onPress={() => {
-          bottomSheetRef.current.snapTo(1);
+          onClick();
         }}
       >
         <Text style={[styles.text, styles.roomText]}>{name}</Text>
@@ -50,10 +229,10 @@ export default function Schedule() {
     );
   };
 
-  const Schedule = ({ id, hour, code }) => {
+  const ScheduleItem = ({ event, date, room, time, code }) => {
     return (
       <View
-        key={id}
+        key={event}
         style={{
           width: "100%",
           height: verticalScale(70),
@@ -75,7 +254,7 @@ export default function Schedule() {
               fontSize: scale(22),
             }}
           >
-            {hour}h
+            {time.split(':')[0]}h
           </Text>
         </View>
 
@@ -89,35 +268,44 @@ export default function Schedule() {
             justifyContent: "center",
           }}
         >
-          <StatusButton code={code} onChange={() => changeReserve(id)} />
+          <StatusButton
+            code={code}
+            onCheckIn={() => reserveRoom(room, date, time)}
+            onDismiss={() => dismissRoom(event)}
+          />
         </View>
       </View>
     );
   };
 
+  const ScheduleItemMemoized = React.memo(ScheduleItem)
+
   // Start of BottomSheet
-  const bottomSheetRef = createRef();
 
   function renderHeader() {
     return (
       <View style={styles.header}>
         <View style={styles.panelHeader}>
-          <View style={styles.panelHandle}>
-            {/* <Text ref={roomTitle} style={styles.panelTitle}></Text> */}
-          </View>
+          <View style={styles.panelHandle} />
         </View>
       </View>
     );
   }
 
   function renderInner() {
+    function setPanelHeight() {
+      const dateParsed = parseISO(calendarDate)
+      return isSaturday(dateParsed)
+        ? styles.panelSaturday : styles.panel
+    }
     return (
-      <View style={styles.panel}>
+      <View style={setPanelHeight()}>
         <FlatList
           data={scheduleList}
-          keyExtractor={(item) => item.id.toString()}
+          extraData={scheduleList}
+          keyExtractor={(item) => `${item.event}`}
           renderItem={({ item }) => {
-            return <Schedule {...item} />;
+            return <ScheduleItemMemoized {...item} />;
           }}
         />
       </View>
@@ -135,7 +323,7 @@ export default function Schedule() {
       >
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={["75%", "50%", "0%"]}
+          snapPoints={["85%", "35%", "0%"]}
           renderContent={renderInner}
           renderHeader={renderHeader}
           initialSnap={2}
@@ -146,19 +334,24 @@ export default function Schedule() {
   // End of BottomSheet
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
         backgroundColor={colors.mainColor}
         barStyle="light-content"
       />
       <LinearGradient
         colors={[colors.mainColor, colors.secondaryColor]}
-        style={{ flex: 1 }}
+        style={{
+          flex: 1,
+          width: Dimensions.get("window").width,
+          height: Dimensions.get("window").height,
+        }}
       >
         <View style={styles.calendarContainer}>
           <View style={styles.container}>
             <CalendarStrip
-              calendarAnimation={{ type: "sequence", duration: 30 }}
+              ref={calendarRef}
+              calendarAnimation={{ type: "sequence", duration: 300 }}
               daySelectionAnimation={{
                 type: "border",
                 duration: 100,
@@ -173,33 +366,36 @@ export default function Schedule() {
               highlightDateNameStyle={styles.highlightDateStyle}
               disabledDateNameStyle={styles.disabledDateStyle}
               disabledDateNumberStyle={styles.disabledDateStyle}
-              iconContainer={{ flex: 0.1 }}
               datesBlacklist={datesBlacklist}
               datesWhitelist={datesWhitelist}
-              // iconLeft={}
-              // iconRight={<Icon name="chevron-right" />}
+              iconLeft={require('../assets/chevron_left.png')}
+              iconRight={require('../assets/chevron_right.png')}
             />
+          </View>
+
+          <View style={{ alignItems: 'center' }}>
+            <ShowErrors error={error} />
           </View>
 
           <View style={styles.roomsContainer}>
             <Text style={[styles.text, styles.selectRoomText]}>
               Selecione a sala
             </Text>
-
             <View style={styles.flatListContainer}>
               <FlatList
                 data={ROOM_DATA}
                 numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <Room {...item} />}
+                renderItem={({ item }) => (
+                  <Room {...item} onClick={() => getEventsByDate(item.id)} />
+                )}
               />
             </View>
-
-            <BSheet />
+            {calendarRef === undefined ? null : <BSheet />}
           </View>
         </View>
       </LinearGradient>
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -235,14 +431,21 @@ const styles = StyleSheet.create({
     color: colors.whiteColor,
   },
   panel:
-    //bottomsheet
-    {
-      height: verticalScale(72 * 14),
-      padding: scale(10),
-      backgroundColor: colors.whiteColor,
-      paddingTop: verticalScale(20),
-      marginBottom: -5,
-    },
+  //bottomsheet
+  {
+    height: verticalScale(72 * 14),
+    padding: scale(10),
+    backgroundColor: colors.whiteColor,
+    paddingTop: verticalScale(20),
+    marginBottom: -5,
+  },
+  panelSaturday: {
+    height: verticalScale(72 * 7.5),
+    padding: scale(10),
+    backgroundColor: colors.whiteColor,
+    paddingTop: verticalScale(20),
+    marginBottom: -5,
+  },
   header: {
     width: "100%",
     height: verticalScale(50),
