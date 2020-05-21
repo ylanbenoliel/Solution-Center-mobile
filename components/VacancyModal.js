@@ -128,7 +128,12 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: "#fff"
+  },
   head: {
     height: 40,
     backgroundColor: colors.mainColor,
@@ -137,7 +142,12 @@ const styles = StyleSheet.create({
   wrapper: { flexDirection: "row" },
   title: { flex: 1, backgroundColor: colors.mainColor },
   row: { height: 66, backgroundColor: colors.whiteColor },
-  text: { textAlign: "center", fontSize: 14, color: colors.whiteColor },
+  text: {
+    textAlign: "center",
+    // fontFamily: 'Amaranth-Regular',
+    fontSize: 14, 
+    color: colors.whiteColor
+  },
 });
 
 export default VacancyModal;
