@@ -47,8 +47,8 @@ export default function Register({ navigation }) {
     return () => clearTimeout(timer);
   }, [error]);
 
-  function sendAvatarImage(userId) {
-    const apiUrl = `https://d34e7d67.ngrok.io/users/${userId}/avatar`
+  async function sendAvatarImage(userId) {
+    const apiUrl = `https://906bc5d9e437.ngrok.io/users/${userId}/avatar`
     const uriParts = image.uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
     const uploadAvatarImage = new FormData();
@@ -56,7 +56,7 @@ export default function Register({ navigation }) {
       name: `avatar.${fileType}`,
       type: `image/${fileType}`,
       uri:
-        Platform.OS === "android" ? image.uri : image.uri.replace("file://", ""),
+        image.uri
     });
 
     const options = {
@@ -67,11 +67,7 @@ export default function Register({ navigation }) {
         'Content-Type': 'multipart/form-data',
       },
     };
-    fetch(apiUrl, options).then((res) => {
-      return res
-    }).catch((e) => {
-      return console.log(e)
-    })
+    return await fetch(apiUrl, options)
   }
 
   function handleRegister() {
@@ -101,24 +97,12 @@ export default function Register({ navigation }) {
       phone: phone,
     })
       .then((response) => {
-        // const uploadResponse =  sendAvatarImage(response.data.id)
-        // console.log(uploadResponse.json())
-        api
-          .post(`/users/${response.data.id}/avatar`, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            },
-            data: uploadAvatarImage
-          })
-          .then((response) => {
-            navigation.push("LoginDrawer");
-          })
-          .catch((e) => {
-            setError(`${e.response.status}`);
-          });
-      }).catch((e) => {
-        setError(`${e.status}`)
+        sendAvatarImage(response.data.id).then(res => {
+          navigation.push("LoginDrawer");
+        })
+      })
+      .catch((e) => {
+        setError(`Erro ao salvar usuário`);
       })
       .finally(() => {
         setLoading(false)
@@ -138,7 +122,7 @@ export default function Register({ navigation }) {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 4],
-        quality: 0,
+        quality: 1,
       });
       if (!result.cancelled) {
         setImage(result);
@@ -372,13 +356,13 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(20),
   },
   avatarContainer: {
-    width: "30%",
+    width: "32%",
     flexDirection: "row",
   },
   avatarImageContainer: {
     backgroundColor: colors.disableColor,
-    width: scale(85),
-    height: verticalScale(95),
+    width: scale(100),
+    height: verticalScale(115),
     borderRadius: scale(60),
   },
   avatarImage: {
