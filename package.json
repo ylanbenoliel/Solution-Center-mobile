@@ -15,6 +15,7 @@
     "@use-expo/font": "^2.0.0",
     "axios": "^0.19.2",
     "date-fns": "^2.11.0",
+    "date-fns-tz": "^1.0.10",
     "expo": "~36.0.0",
     "expo-camera": "~8.0.0",
     "expo-image-picker": "~8.0.1",
