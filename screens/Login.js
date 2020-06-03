@@ -63,6 +63,7 @@ export default function Login({ navigation }) {
           "@SC:admin",
           JSON.stringify(response.data.is_admin)
         );
+        setLoading(false)
         if (response.data.is_admin) {
           // navigation.dispatch(
           //   CommonActions.reset({
@@ -82,9 +83,8 @@ export default function Login({ navigation }) {
         }
       })
       .catch(() => {
-        setError("Usuário não encontrado.");
-      }).finally(() => {
         setLoading(false)
+        setError("Usuário não encontrado.");
       })
   }
 
