@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   Dimensions,
+  ActivityIndicator
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
@@ -27,8 +28,10 @@ import {
   isSaturday,
   formatISO,
   add,
+  isAfter
 } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
+import { removeDuplicates } from '../helpers/functions'
 import { api } from "../services/api";
 
 const INITIALDATERANGE = [
@@ -48,11 +51,8 @@ export default function Schedule() {
   const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState("");
-  const [hours, setHours] = useState([]);
-  const [events, setEvents] = useState([]);
   const [calendarDate, setCalendarDate] = useState('')
-  const [loading, setLoading] = useState(false);
-
+  const [responseRoom, setResponseRoom] = useState('')
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -101,22 +101,8 @@ export default function Schedule() {
       time: time
     })
       .then((response) => {
-        const newList = scheduleList.map(evt => {
-          if (response.data.event.time === evt.time) {
-            const { id, date, room, time, user_id } = response.data.event
-            return {
-              code: '2',
-              date: date,
-              event: id,
-              room: room,
-              time: time,
-              user: user_id
-            }
-          }
-          return evt
-        })
-        setScheduleList(newList)
-        bottomSheetRef.current.snapTo(0)
+        bottomSheetRef.current.snapTo(2)
+        // getEventsByDate(room)
       })
       .catch((error) => {
         bottomSheetRef.current.snapTo(2)
@@ -126,32 +112,14 @@ export default function Schedule() {
 
   function dismissRoom(eventID) {
     api.delete(`/events/${eventID}`)
-      .then((response) => {
-        const newList = scheduleList.map(evt => {
-          if (evt.event == eventID) {
-            return {
-              ...evt,
-              user: '',
-              code: '1',
-              event: `${Math.random()}`
-            }
-          }
-          return evt
-        })
-        setScheduleList(newList)
-        bottomSheetRef.current.snapTo(0)
+      .then((res) => {
+        setError(res.data.message)
+        bottomSheetRef.current.snapTo(2)
       })
       .catch(() => {
         bottomSheetRef.current.snapTo(2)
         setError('Erro ao excluir horário')
       })
-  }
-
-  function removeDuplicates(array, key) {
-    const cache = new Set()
-    return array.filter(
-      (object) => !cache.has(object[key]) && cache.add(object[key])
-    )
   }
 
   function transformEventToSchedule(hrs, evts, room, date) {
@@ -165,6 +133,17 @@ export default function Schedule() {
         code: ''
       })
     }
+
+    const currDate = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate(),
+      Number(new Date().getHours()),
+      new Date().getMinutes()
+    )
+
+    const dateArray = date.split('-')
+
     const eventRawList = hrs.flatMap((hour) => {
       return evts
         .flatMap((event) => {
@@ -173,16 +152,46 @@ export default function Schedule() {
               ...event,
             }
           }
-          const emptyEvent = {
+
+          const noEvent = {
             event: `${Math.random()}`,
             user: '',
             room: `${room}`,
             date: `${date}`,
             time: `${hour}:00:00`,
-            code: '1'
-
           }
-          return emptyEvent
+
+          const eventDate = new Date(
+            Number(dateArray[0]),
+            Number(dateArray[1]) - 1,
+            Number(dateArray[2]),
+            Number(hour))
+
+          if ((eventDate.toDateString() == currDate.toDateString())) {
+            if (eventDate.getHours() > currDate.getHours()) {
+              return {
+                ...noEvent,
+                code: '1'
+              }
+            } else {
+              return {
+                ...noEvent,
+                code: '4'
+              }
+            }
+          } else {
+            if (isAfter(eventDate, currDate)) {
+              return {
+                ...noEvent,
+                code: '1'
+              }
+            } else {
+              return {
+                ...noEvent,
+                code: '4'
+              }
+            }
+          }
         })
         .sort((prev, next) => next.event - prev.event)
     })
@@ -191,12 +200,11 @@ export default function Schedule() {
   }
 
   function getEventsByDate(room) {
-    setLoading(true);
-    bottomSheetRef.current.snapTo(2);
+    setScheduleList([])
+    setCalendarDate('')
 
     const calendarRaw = calendarRef.current.getSelectedDate();
     const calendarDateFormatted = format(new Date(calendarRaw), "yyyy-MM-dd");
-    setCalendarDate(calendarDateFormatted)
 
     api
       .post("/events/list", {
@@ -205,13 +213,15 @@ export default function Schedule() {
       })
       .then((response) => {
         const { hoursInterval, validEvents } = response.data;
-        transformEventToSchedule(hoursInterval, validEvents, room, calendarDate)
+        transformEventToSchedule(hoursInterval, validEvents, room, calendarDateFormatted)
+        setCalendarDate(calendarDateFormatted)
+
       })
       .catch(() => {
         setError("Erro na busca.");
+        bottomSheetRef.current.snapTo(2)
       })
       .finally(() => {
-        setLoading(false);
         bottomSheetRef.current.snapTo(0);
       });
   }
@@ -282,17 +292,18 @@ export default function Schedule() {
 
   // Start of BottomSheet
 
-  function renderHeader() {
+  const renderHeader = () => {
     return (
       <View style={styles.header}>
         <View style={styles.panelHeader}>
           <View style={styles.panelHandle} />
+          {/* <Text style={[styles.text, { color: 'black' }]}>{responseRoom}</Text> */}
         </View>
       </View>
     );
   }
 
-  function renderInner() {
+  const renderInner = () => {
     function setPanelHeight() {
       const dateParsed = parseISO(calendarDate)
       return isSaturday(dateParsed)
@@ -332,7 +343,6 @@ export default function Schedule() {
     );
   };
   // End of BottomSheet
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
