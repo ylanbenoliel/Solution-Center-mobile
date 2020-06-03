@@ -64,7 +64,6 @@ export default function Login({ navigation }) {
           JSON.stringify(response.data.is_admin)
         );
         if (response.data.is_admin) {
-          setLoading(false);
           // navigation.dispatch(
           //   CommonActions.reset({
           //     index: 0,
@@ -73,7 +72,6 @@ export default function Login({ navigation }) {
           // );
           navigation.navigate("AdminDrawer");
         } else {
-          setLoading(false);
           // navigation.dispatch(
           //   CommonActions.reset({
           //     index: 0,
@@ -84,9 +82,10 @@ export default function Login({ navigation }) {
         }
       })
       .catch(() => {
-        setLoading(false);
         setError("Usuário não encontrado.");
-      });
+      }).finally(() => {
+        setLoading(false)
+      })
   }
 
   function handleRegister() {
