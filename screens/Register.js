@@ -15,7 +15,6 @@ import {
   Alert,
 } from "react-native";
 import { GeneralStatusBar, ShowErrors } from "../components";
-import { TextInputMask } from "react-native-masked-text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale } from "react-native-size-matters";
@@ -31,7 +30,7 @@ export default function Register({ navigation }) {
   const [rg, setRg] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState({});
   const [error, setError] = useState("");
 
   const field2 = useRef();
@@ -48,9 +47,36 @@ export default function Register({ navigation }) {
     return () => clearTimeout(timer);
   }, [error]);
 
+  function sendAvatarImage(userId) {
+    const apiUrl = `https://d34e7d67.ngrok.io/users/${userId}/avatar`
+    const uriParts = image.uri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+    const uploadAvatarImage = new FormData();
+    uploadAvatarImage.append("avatar", {
+      name: `avatar.${fileType}`,
+      type: `image/${fileType}`,
+      uri:
+        Platform.OS === "android" ? image.uri : image.uri.replace("file://", ""),
+    });
+
+    const options = {
+      method: 'POST',
+      body: uploadAvatarImage,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    fetch(apiUrl, options).then((res) => {
+      return res
+    }).catch((e) => {
+      return console.log(e)
+    })
+  }
+
   function handleRegister() {
-    setLoading(true);
     Keyboard.dismiss();
+    setLoading(true);
     if (
       name == "" ||
       email == "" ||
@@ -64,46 +90,39 @@ export default function Register({ navigation }) {
       setLoading(false);
       return null;
     }
-    api
-      .post("/users", {
-        name: name,
-        email: email,
-        password: password,
-        address: address,
-        cpf: cpf,
-        rg: rg,
-        phone: phone,
+
+    api.post("/users", {
+      name: name,
+      email: email,
+      password: password,
+      address: address,
+      cpf: cpf,
+      rg: rg,
+      phone: phone,
+    })
+      .then((response) => {
+        // const uploadResponse =  sendAvatarImage(response.data.id)
+        // console.log(uploadResponse.json())
+        api
+          .post(`/users/${response.data.id}/avatar`, {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+            data: uploadAvatarImage
+          })
+          .then((response) => {
+            navigation.push("LoginDrawer");
+          })
+          .catch((e) => {
+            setError(`${e.response.status}`);
+          });
+      }).catch((e) => {
+        setError(`${e.status}`)
       })
-      // .then((response) => {
-      //   const uploadData = new FormData();
-      //     uploadData.append("avatar", {
-      //       name: `${name}.jpg`,
-      //       type: "image/jpeg",
-      //       uri:
-      //         Platform.OS === "android" ? image : image.replace("file://", ""),
-      //     });
-        
-      //   api
-      //     .post(`/users/${response.data.id}/avatar`, {
-      //       uploadData,
-      //     })
-      //     .then(() => {
-      //       setLoading(false);
-      //       navigation.push("LoginDrawer");
-      //     })
-      //     .catch((e) => {
-      //       setError("Não foi possível enviar a foto.");
-      //     });
-      //   setLoading(false);
-      //   // navigation.push("LoginDrawer");
-      // })
-      .then(()=>{
-          setLoading(false);
-        navigation.push("LoginDrawer");
+      .finally(() => {
+        setLoading(false)
       })
-      .catch((e) => {
-        console.log(e)
-      });
   }
 
   showLoadingRegister = () => {
@@ -117,13 +136,12 @@ export default function Register({ navigation }) {
   async function handlePickImage() {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [3, 4],
-        quality: 1,
+        quality: 0,
       });
       if (!result.cancelled) {
-        setImage(result.uri);
+        setImage(result);
       }
     } catch (error) {
       Alert.alert("Erro", "Não foi possível carregar a galeria.");
@@ -159,7 +177,7 @@ export default function Register({ navigation }) {
           <View style={styles.avatarContainer}>
             <View style={styles.avatarImageContainer}>
               {image && (
-                <Image source={{ uri: image }} style={styles.avatarImage} />
+                <Image source={{ uri: image.uri }} style={styles.avatarImage} />
               )}
             </View>
             <View style={styles.galleryButtonContainer}>
