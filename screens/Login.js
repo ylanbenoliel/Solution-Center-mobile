@@ -75,7 +75,7 @@ export default function Login({ navigation }) {
           //     routes: [{ name: "AdminDrawer" }],
           //   })
           // );
-          navigation.navigate("AdminDrawer");
+          navigation.navigate("Admin");
         } else {
           // navigation.dispatch(
           //   CommonActions.reset({
@@ -106,8 +106,8 @@ export default function Login({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={'rgba(255,255,255,0.1)'}
+        barStyle="dark-content"
       />
       <ImageBackground
         style={{ flex: 1 }}
@@ -250,9 +250,9 @@ const styles = StyleSheet.create({
     height: scale(48),
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.mainColor,
+    backgroundColor: colors.secondaryColor,
     marginVertical: verticalScale(16),
-    borderRadius: scale(4),
+    borderRadius: scale(24),
   },
   buttonText: {
     fontSize: scale(24),
