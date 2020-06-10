@@ -2,9 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
+import { Admin } from './admin.routes'
+
 import Login from "../screens/Login";
 import Schedule from "../screens/Schedule";
-import Agenda from "../screens/Agenda";
 import Register from "../screens/Register";
 
 import {
@@ -51,29 +52,18 @@ export function UserDrawer() {
   );
 }
 
-export function AdminDrawer() {
-  return (
-    <Drawer.Navigator
-      drawerStyle={{
-        backgroundColor: colors.whiteColor,
-        width: scale(180),
-      }}
-    >
-      <Drawer.Screen name="Agenda" component={Agenda} />
-    </Drawer.Navigator>
-  );
-}
+
 
 export default function Route({ admin }) {
   if (admin == "0") return <UserDrawer />;
-  if (admin == "1") return <AdminDrawer />;
+  if (admin == "1") return <Admin />;
 
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="LoginDrawer" component={LoginDrawer} />
       <Stack.Screen name="Registro" component={Register} />
       <Stack.Screen name="UserDrawer" component={UserDrawer} />
-      <Stack.Screen name="AdminDrawer" component={AdminDrawer} />
+      <Stack.Screen name="Admin" component={Admin} />
     </Stack.Navigator>
   );
 }

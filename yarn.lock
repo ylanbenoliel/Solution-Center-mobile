@@ -1156,6 +1156,14 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-4.6.0.tgz#fc0b79a226da78371158f885a2f798ff07c926be"
   integrity sha512-wz39BUpExDU1kTpLlBkDwwb0Efg+uuwixToosTSarZgpzG/CmcRvWdD786TMiE5tLDd+Mpi2xh3w4FrVM8zjoA==
 
+"@react-navigation/bottom-tabs@^5.5.2":
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.5.2.tgz#b3d95e2a05eba47f7aa34fb9f2331ddede0ee4d5"
+  integrity sha512-unopBnv8i3hcjhp2qdhgSwF6GFnhkdtPwGbvJMOG8Na19oPscT8UQDUbHZKs9wiJMk2Q0usEz2PbFh8GQGAf7w==
+  dependencies:
+    color "^3.1.2"
+    react-native-iphone-x-helper "^1.2.1"
+
 "@react-navigation/core@^5.9.0":
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.9.0.tgz#013bcfad898d8cf3bfb7cab3bf796afb660285a9"
