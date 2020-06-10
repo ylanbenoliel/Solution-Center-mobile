@@ -64,6 +64,9 @@ export default function Login({ navigation }) {
           JSON.stringify(response.data.is_admin)
         );
         setLoading(false)
+        if (response.data.active == 0) {
+          return setError('Usuário pendente de liberação.')
+        }
         if (response.data.is_admin) {
           // navigation.dispatch(
           //   CommonActions.reset({
