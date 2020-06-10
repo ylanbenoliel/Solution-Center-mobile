@@ -51,6 +51,7 @@ export default function Login({ navigation }) {
       setError("Preencha todos os campos.");
       return setLoading(false);
     }
+   
     api
       .post("/authenticate", {
         email: email,
@@ -85,9 +86,15 @@ export default function Login({ navigation }) {
           navigation.navigate("UserDrawer");
         }
       })
-      .catch(() => {
+      .catch((e) => {
         setLoading(false)
-        setError("Usuário não encontrado.");
+        if (e.response) {
+          return setError('Usuário não encontrado')
+        }
+        else if (e.request) {
+          setLoading(false)
+          return setError('Erro na conexão.')
+        }
       })
   }
 
