@@ -83,7 +83,7 @@ export default function Login({ navigation }) {
           //     routes: [{ name: "UserDrawer" }],
           //   })
           // );
-          navigation.navigate("UserDrawer");
+          navigation.navigate("User");
         }
       })
       .catch((e) => {
