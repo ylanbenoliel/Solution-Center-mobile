@@ -19,7 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale } from "react-native-size-matters";
 import colors from "../constants/colors";
-import { api } from "../services/api";
+import { api, url } from "../services/api";
 
 export default function Register({ navigation }) {
   const [name, setName] = useState("");
@@ -48,7 +48,7 @@ export default function Register({ navigation }) {
   }, [error]);
 
   async function sendAvatarImage(userId) {
-    const apiUrl = `https://906bc5d9e437.ngrok.io/users/${userId}/avatar`
+    const apiUrl = `${url}/users/${userId}/avatar`
     const uriParts = image.uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
     const uploadAvatarImage = new FormData();
