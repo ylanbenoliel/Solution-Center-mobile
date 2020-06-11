@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { eachWeekendOfMonth, parseISO, isSunday, format } from "date-fns";
+import { format } from "date-fns";
 import colors from "../constants/colors";
 import { api } from '../services/api'
 import { ROOM_IDS } from "../constants/fixedValues";
@@ -16,39 +16,21 @@ import { GeneralStatusBar, VacancyModal } from "../components";
 import { removeDuplicates, chunkArray } from '../helpers/functions'
 import { LinearGradient } from "expo-linear-gradient";
 import { scale, verticalScale } from "react-native-size-matters";
+import { CommonActions } from "@react-navigation/native";
+import AuthContext from '../contexts/auth'
 
-/* <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {sundays[0] + sundays[1]}
-      </Text> */
-
-export default function Agenda() {
+export default function Agenda({ navigation }) {
+  const { signOut } = useContext(AuthContext)
   const [daySelected, setDaySelected] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sundays, setSundays] = useState([]);
   const [hours, setHours] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // function disableSundays(date) {
-  //   const month = parseISO(date);
-  //   const weekends = eachWeekendOfMonth(month);
-  //   const sundaysInMonth = weekends
-  //     .filter((day) => {
-  //       let sunday = isSunday(day);
-  //       return sunday;
-  //     })
-  //     .map((day) => {
-  //       let result = format(day, "yyyy-MM-dd");
-  //       return result;
-  //     });
-  //   setSundays(sundaysInMonth);
-  // }
-
   useEffect(() => {
     const currentDate = format(new Date(), "yyyy-MM-dd");
     setDaySelected(currentDate);
-    // disableSundays(currentDate);
   }, []);
 
   function handleDayPress(day) {
@@ -155,19 +137,24 @@ export default function Agenda() {
             marginVertical: verticalScale(70),
           }}
         >
+          {/* <TouchableOpacity onPress={() => {
+            signOut()
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: "LoginDrawer" }]
+              }))
+          }}>
+            <Text>Sair</Text>
+          </TouchableOpacity> */}
+
           <Calendar
             markingType={"custom"}
-            onMonthChange={(date) => {
-              // disableSundays(date.dateString);
-            }}
-            // minDate={"2020-03-19"}
-            // maxDate={"2020-05-30"}
             monthFormat={"MMMM yyyy"}
             current={daySelected}
             onDayPress={(date) => handleDayPress(date.dateString)}
             hideExtraDays
             markedDates={{
-              // [sundays]: { disabled: true, disableTouchEvent: true },
               [daySelected]: {
                 disabled: false,
                 disableTouchEvent: false,

@@ -6,6 +6,8 @@ import { useFonts } from "@use-expo/font";
 import { AppLoading } from "expo";
 import { api } from "./services/api";
 
+import { AuthProvider } from "./contexts/auth"
+
 export default function App() {
   const [user, setUser] = useState("");
   const [admin, setAdmin] = useState("");
@@ -24,7 +26,7 @@ export default function App() {
         }
       });
     }
-    async function getUser() {
+    async function getPrivilegies() {
       try {
         const is_admin = await AsyncStorage.getItem("@SC:admin");
         setAdmin(is_admin);
@@ -33,7 +35,7 @@ export default function App() {
       }
     }
     getToken();
-    // getUser();
+    getPrivilegies();
   }, []);
   let [fontsLoaded] = useFonts({
     "Amaranth-Regular": require("./assets/fonts/Amaranth-Regular.ttf"),
@@ -43,7 +45,9 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Route admin={admin} />
+        <AuthProvider>
+          <Route admin={admin} />
+        </AuthProvider>
       </NavigationContainer>
     );
   }

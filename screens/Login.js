@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, createRef, useContext } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -11,7 +11,6 @@ import {
   Platform,
   ActivityIndicator,
   SafeAreaView,
-  AsyncStorage,
   Dimensions,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
@@ -21,7 +20,12 @@ import { GeneralStatusBar, ShowErrors } from "../components";
 import { scale, verticalScale } from "react-native-size-matters";
 import { api } from "../services/api";
 
+import AuthContext from '../contexts/auth'
+
 export default function Login({ navigation }) {
+
+  const { signIn } = useContext(AuthContext)
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,39 +55,30 @@ export default function Login({ navigation }) {
       setError("Preencha todos os campos.");
       return setLoading(false);
     }
-   
+
     api
       .post("/authenticate", {
         email: email,
         password: password,
       })
       .then((response) => {
-        AsyncStorage.setItem("@SC:token", response.data.token);
-        AsyncStorage.setItem("@SC:name", response.data.name);
-        AsyncStorage.setItem(
-          "@SC:admin",
-          JSON.stringify(response.data.is_admin)
-        );
         setLoading(false)
         if (response.data.active == 0) {
           return setError('Usuário pendente de liberação.')
         }
+        signIn(response)
         if (response.data.is_admin) {
-          // navigation.dispatch(
-          //   CommonActions.reset({
-          //     index: 0,
-          //     routes: [{ name: "AdminDrawer" }],
-          //   })
-          // );
-          navigation.navigate("Admin");
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "Admin" }]
+            }))
         } else {
-          // navigation.dispatch(
-          //   CommonActions.reset({
-          //     index: 0,
-          //     routes: [{ name: "UserDrawer" }],
-          //   })
-          // );
-          navigation.navigate("User");
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "User" }],
+            }));
         }
       })
       .catch((e) => {
