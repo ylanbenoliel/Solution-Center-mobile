@@ -15,7 +15,8 @@ import {
   GeneralStatusBar,
   ShowErrors,
   Separator,
-  StatusButton
+  StatusButton,
+  Loading
 } from "../components";
 import colors from "../constants/colors";
 import { ROOM_DATA } from "../constants/fixedValues";
@@ -52,7 +53,7 @@ export default function Schedule() {
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState("");
   const [calendarDate, setCalendarDate] = useState('')
-  const [responseRoom, setResponseRoom] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -80,8 +81,7 @@ export default function Schedule() {
           disableSundays(datesWhitelist[0]["start"], datesWhitelist[0]["end"])
         );
       })
-      .catch((e) => {
-        // setError('Erro ao buscar horários');
+      .catch(() => {
       });
   }, []);
 
@@ -102,7 +102,6 @@ export default function Schedule() {
     })
       .then((response) => {
         bottomSheetRef.current.snapTo(2)
-        // getEventsByDate(room)
       })
       .catch((error) => {
         bottomSheetRef.current.snapTo(2)
@@ -113,7 +112,6 @@ export default function Schedule() {
   function dismissRoom(eventID) {
     api.delete(`/events/${eventID}`)
       .then((res) => {
-        setError(res.data.message)
         bottomSheetRef.current.snapTo(2)
       })
       .catch(() => {
@@ -200,6 +198,7 @@ export default function Schedule() {
   }
 
   function getEventsByDate(room) {
+    setLoading(true)
     setScheduleList([])
     setCalendarDate('')
 
@@ -215,15 +214,14 @@ export default function Schedule() {
         const { hoursInterval, validEvents } = response.data;
         transformEventToSchedule(hoursInterval, validEvents, room, calendarDateFormatted)
         setCalendarDate(calendarDateFormatted)
-
+        setLoading(false)
+        bottomSheetRef.current.snapTo(0);
       })
       .catch(() => {
+        setLoading(false)
         setError("Erro na busca.");
         bottomSheetRef.current.snapTo(2)
       })
-      .finally(() => {
-        bottomSheetRef.current.snapTo(0);
-      });
   }
 
   const Room = ({ name, onClick }) => {
@@ -343,8 +341,19 @@ export default function Schedule() {
     );
   };
   // End of BottomSheet
+
+  const renderLoading = () => {
+    if (loading) {
+      return (
+        <View style={styles.conditionalLoading}>
+          <Loading loading={loading} />
+        </View>
+      )
+    }
+    return null
+  }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
         backgroundColor={colors.mainColor}
         barStyle="light-content"
@@ -358,7 +367,7 @@ export default function Schedule() {
         }}
       >
         <View style={styles.calendarContainer}>
-          <View style={styles.container}>
+          <View style={styles.calendarStrip}>
             <CalendarStrip
               ref={calendarRef}
               calendarAnimation={{ type: "sequence", duration: 300 }}
@@ -387,6 +396,8 @@ export default function Schedule() {
             <ShowErrors error={error} />
           </View>
 
+          {renderLoading()}
+
           <View style={styles.roomsContainer}>
             <Text style={[styles.text, styles.selectRoomText]}>
               Selecione a sala
@@ -394,7 +405,6 @@ export default function Schedule() {
             <View style={styles.flatListContainer}>
               <FlatList
                 data={ROOM_DATA}
-                numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                   <Room {...item} onClick={() => getEventsByDate(item.id)} />
@@ -412,26 +422,30 @@ export default function Schedule() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: "10%",
+    zIndex: 1,
+    position: 'absolute',
   },
   calendarContainer: {
     flex: 2,
+  },
+  calendarStrip: {
+    flex: 1,
   },
   roomsContainer: {
     flex: 4,
     alignItems: "center",
   },
   roomButton: {
-    width: "45%",
+    width: "95%",
     height: verticalScale(120),
-    alignItems: "flex-start",
+    alignItems: "flex-end",
     justifyContent: "flex-end",
     backgroundColor: colors.whiteColor,
     borderRadius: scale(16),
     margin: scale(10),
   },
   roomText: {
-    margin: scale(5),
+    margin: scale(10),
     fontSize: scale(18),
     color: colors.mainColor,
   },
@@ -447,14 +461,15 @@ const styles = StyleSheet.create({
     padding: scale(10),
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
-    marginBottom: -5,
+    paddingBottom: verticalScale(10),
+    marginBottom:verticalScale(10) ,
   },
   panelSaturday: {
     height: verticalScale(72 * 7.5),
     padding: scale(10),
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
-    marginBottom: -5,
+    marginBottom: verticalScale(-15),
   },
   header: {
     width: "100%",
@@ -479,7 +494,10 @@ const styles = StyleSheet.create({
     width: scale(100),
     color: colors.disableColor,
   },
-  calendarStyle: { height: verticalScale(100), margin: "3%" },
+  calendarStyle: {
+    height: verticalScale(100),
+    margin: "3%"
+  },
   dateStyle: {
     color: colors.whiteColor,
     fontFamily: "Amaranth-Regular",
@@ -495,10 +513,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 5,
   },
+  conditionalLoading: {
+    zIndex: 10,
+    position: 'absolute',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)'
+  },
   flatListContainer: {
     flex: 1,
     width: "95%",
     justifyContent: "center",
     marginTop: verticalScale(10),
+    marginBottom:verticalScale(20)
   },
 });
