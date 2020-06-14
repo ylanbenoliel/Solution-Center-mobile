@@ -14,7 +14,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { GeneralStatusBar, ShowErrors } from "../components";
+import { GeneralStatusBar, ShowInfo } from "../components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale } from "react-native-size-matters";
@@ -323,7 +323,7 @@ export default function Register({ navigation }) {
               </View>
             </View>
             {/*  */}
-            <ShowErrors error={error} />
+            <ShowInfo error={error} />
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => {

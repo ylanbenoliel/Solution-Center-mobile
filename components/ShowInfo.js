@@ -3,15 +3,22 @@ import { View, Text, StyleSheet } from "react-native";
 import { verticalScale, scale } from "react-native-size-matters";
 import colors from '../constants/colors'
 
-const ShowErrors = ({ error }) => {
+const ShowInfo = ({ error, success }) => {
   if (!!error) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.errorBackground]}>
         <Text style={styles.text}>{error}</Text>
       </View>
     );
   }
-  else{
+  else if (!!success) {
+    return (
+      <View style={[styles.container, styles.successBackground]}>
+        <Text style={styles.text}>{success}</Text>
+      </View>
+    );
+  }
+  else {
     return null
   }
 };
@@ -23,7 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: scale(4),
-    backgroundColor: colors.errorColor,
   },
   text: {
     fontFamily: "Amaranth-Regular",
@@ -32,6 +38,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.whiteColor,
   },
+  errorBackground: {
+    backgroundColor: colors.errorColor,
+  },
+  successBackground: {
+    backgroundColor: colors.accentColor
+  },
 });
 
-export default ShowErrors;
+export default ShowInfo;

@@ -2,7 +2,7 @@ import Separator from "./Separator";
 import StatusButton from "./StatusButton";
 import GeneralStatusBar from "./GeneralStatusBar";
 import VacancyModal from "./VacancyModal";
-import ShowErrors from "./ShowErrors";
+import ShowInfo from "./ShowInfo";
 import Loading from "./Loading";
 
 export {
@@ -10,6 +10,6 @@ export {
   StatusButton,
   GeneralStatusBar,
   VacancyModal,
-  ShowErrors,
+  ShowInfo,
   Loading
 };

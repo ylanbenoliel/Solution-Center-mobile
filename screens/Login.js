@@ -16,7 +16,7 @@ import {
 import { CommonActions } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
-import { GeneralStatusBar, ShowErrors } from "../components";
+import { GeneralStatusBar, ShowInfo } from "../components";
 import { scale, verticalScale } from "react-native-size-matters";
 import { api } from "../services/api";
 
@@ -195,7 +195,7 @@ export default function Login({ navigation }) {
             >
               <Text style={[styles.text, styles.buttonText]}>Registrar</Text>
             </TouchableOpacity>
-            <ShowErrors error={error} />
+            <ShowInfo error={error} />
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>

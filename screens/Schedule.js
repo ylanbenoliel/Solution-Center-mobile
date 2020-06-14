@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -13,7 +13,7 @@ import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
 import {
   GeneralStatusBar,
-  ShowErrors,
+  ShowInfo,
   Separator,
   StatusButton,
   Loading
@@ -35,54 +35,85 @@ import { LinearGradient } from "expo-linear-gradient";
 import { removeDuplicates } from '../helpers/functions'
 import { api } from "../services/api";
 
+const INITIALDATE = isSunday(new Date()) === true
+  ? add(new Date(), { days: 1 })
+  : new Date()
+
 const INITIALDATERANGE = [
   {
-    start: formatISO(new Date()),
-    end: formatISO(add(new Date(), { days: 5 })),
+    start: formatISO(INITIALDATE),
+    end: formatISO(add(new Date(), { days: 6 })),
   },
 ];
+
+
 
 export default function Schedule() {
   const bottomSheetRef = useRef();
   const calendarRef = useRef();
 
+  const [isFirstRun, setIsFirstRun] = useState(true)
   const [datesBlacklist, setDatesBlacklist] = useState([
-    formatISO(add(new Date(), { days: 10 })),
+    formatISO(add(new Date(), { days: 8 })),
   ]);
   const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState('')
   const [calendarDate, setCalendarDate] = useState('')
   const [loading, setLoading] = useState(false)
 
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setError("");
-    }, 2200);
-    return () => clearTimeout(timer);
+    if (isFirstRun) {
+      return setIsFirstRun(false)
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isFirstRun) {
+      const timer = setTimeout(() => {
+        setError("");
+        bottomSheetRef.current.snapTo(0)
+      }, 2200);
+      return () => {
+        clearTimeout(timer);
+      }
+    }
   }, [error]);
+
+  useEffect(() => {
+    if (!isFirstRun) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        bottomSheetRef.current.snapTo(0)
+      }, 2200);
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+  }, [success]);
 
   useEffect(() => {
     api
       .get("/dates")
       .then((response) => {
-        let rangeData = [];
         const { maxDate, minDate } = response.data;
-        if (!!minDate && !!maxDate) {
-          rangeData = INITIALDATERANGE.map(() => {
-            return {
-              start: parseISO(minDate),
-              end: parseISO(maxDate),
-            };
-          });
-        }
+        const rangeData = [
+          {
+            start: parseISO(minDate),
+            end: parseISO(maxDate),
+          }
+        ]
         setDatesWhitelist(rangeData);
         setDatesBlacklist(
-          disableSundays(datesWhitelist[0]["start"], datesWhitelist[0]["end"])
+          disableSundays(minDate, maxDate)
         );
       })
       .catch(() => {
-      });
+        setError('Erro ao buscar horários disponíveis.')
+      })
+
   }, []);
 
   function disableSundays(startDate, endDate) {
@@ -100,23 +131,52 @@ export default function Schedule() {
       date: date,
       time: time
     })
-      .then((response) => {
-        bottomSheetRef.current.snapTo(2)
+      .then((res) => {
+        const vacEvt = scheduleList.find((evt) => evt.time)
+        const userEvt = {
+          event: res.data.event.id,
+          code: '2',
+          ...res.data.event,
+        }
+        const newEvtList = scheduleList
+          .filter(evt => { return evt.time != vacEvt.time })
+          .concat(userEvt)
+          .sort((prev, next) => {
+            return prev.time.localeCompare(next.time)
+          })
+        setScheduleList(newEvtList)
+        setSuccess('Horário salvo.')
       })
-      .catch((error) => {
-        bottomSheetRef.current.snapTo(2)
+      .catch(() => {
         setError('Erro ao salvar horário.')
       })
+
   }
 
   function dismissRoom(eventID) {
     api.delete(`/events/${eventID}`)
-      .then((res) => {
-        bottomSheetRef.current.snapTo(2)
+      .then(() => {
+
+        const deletedEvt = scheduleList.find(evt => evt.event == eventID)
+        const noEvt = {
+          event: `${Math.random()}`,
+          user: '',
+          room: `${deletedEvt.room}`,
+          date: `${deletedEvt.date.split('T')[0]}`,
+          time: `${deletedEvt.time}`,
+          code: '1'
+        }
+        const newEvtList = scheduleList
+          .filter(evt => evt.event != eventID)
+          .concat(noEvt)
+          .sort((prev, next) => {
+            return prev.time.localeCompare(next.time)
+          })
+        setScheduleList(newEvtList)
+        setSuccess('Horário excluído.')
       })
-      .catch(() => {
-        bottomSheetRef.current.snapTo(2)
-        setError('Erro ao excluir horário')
+      .catch((err) => {
+        setError('Erro ao excluir horário.')
       })
   }
 
@@ -163,7 +223,8 @@ export default function Schedule() {
             Number(dateArray[0]),
             Number(dateArray[1]) - 1,
             Number(dateArray[2]),
-            Number(hour))
+            Number(hour)
+          )
 
           if ((eventDate.toDateString() == currDate.toDateString())) {
             if (eventDate.getHours() > currDate.getHours()) {
@@ -295,7 +356,6 @@ export default function Schedule() {
       <View style={styles.header}>
         <View style={styles.panelHeader}>
           <View style={styles.panelHandle} />
-          {/* <Text style={[styles.text, { color: 'black' }]}>{responseRoom}</Text> */}
         </View>
       </View>
     );
@@ -332,7 +392,7 @@ export default function Schedule() {
       >
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={["85%", "35%", "0%"]}
+          snapPoints={["90%", "35%", "0%"]}
           renderContent={renderInner}
           renderHeader={renderHeader}
           initialSnap={2}
@@ -352,6 +412,7 @@ export default function Schedule() {
     }
     return null
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -370,6 +431,8 @@ export default function Schedule() {
           <View style={styles.calendarStrip}>
             <CalendarStrip
               ref={calendarRef}
+              selectedDate={INITIALDATE}
+              startingDate={INITIALDATE}
               calendarAnimation={{ type: "sequence", duration: 300 }}
               daySelectionAnimation={{
                 type: "border",
@@ -393,7 +456,7 @@ export default function Schedule() {
           </View>
 
           <View style={{ alignItems: 'center' }}>
-            <ShowErrors error={error} />
+            <ShowInfo error={error} success={success} />
           </View>
 
           {renderLoading()}
@@ -405,9 +468,9 @@ export default function Schedule() {
             <View style={styles.flatListContainer}>
               <FlatList
                 data={ROOM_DATA}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.room.toString()}
                 renderItem={({ item }) => (
-                  <Room {...item} onClick={() => getEventsByDate(item.id)} />
+                  <Room {...item} onClick={() => getEventsByDate(item.room)} />
                 )}
               />
             </View>
@@ -462,7 +525,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
     paddingBottom: verticalScale(10),
-    marginBottom:verticalScale(10) ,
+    marginBottom: verticalScale(10),
   },
   panelSaturday: {
     height: verticalScale(72 * 7.5),
@@ -527,6 +590,6 @@ const styles = StyleSheet.create({
     width: "95%",
     justifyContent: "center",
     marginTop: verticalScale(10),
-    marginBottom:verticalScale(20)
+    marginBottom: verticalScale(20)
   },
 });
