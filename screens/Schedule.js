@@ -7,7 +7,6 @@ import {
   Text,
   FlatList,
   Dimensions,
-  ActivityIndicator
 } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import BottomSheet from "reanimated-bottom-sheet";
@@ -34,6 +33,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { removeDuplicates } from '../helpers/functions'
 import { api } from "../services/api";
+import LOCALE from '../constants/localeCalendarStrip'
 
 const INITIALDATE = isSunday(new Date()) === true
   ? add(new Date(), { days: 1 })
@@ -433,6 +433,7 @@ export default function Schedule() {
               ref={calendarRef}
               selectedDate={INITIALDATE}
               startingDate={INITIALDATE}
+              locale={LOCALE}
               calendarAnimation={{ type: "sequence", duration: 300 }}
               daySelectionAnimation={{
                 type: "border",

@@ -19,6 +19,7 @@ import { scale, verticalScale } from "react-native-size-matters";
 import { CommonActions } from "@react-navigation/native";
 import AuthContext from '../contexts/auth'
 
+
 export default function Agenda({ navigation }) {
   const { signOut } = useContext(AuthContext)
   const [daySelected, setDaySelected] = useState("");
@@ -170,7 +171,7 @@ export default function Agenda({ navigation }) {
               },
             }}
             style={{
-              height: 500,
+              height: 600,
             }}
             theme={{
               calendarBackground: "rgba(0,0,0,0)",

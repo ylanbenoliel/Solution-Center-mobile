@@ -35,7 +35,7 @@ export default function App() {
       }
     }
     getToken();
-    getPrivilegies();
+    // getPrivilegies();
   }, []);
   let [fontsLoaded] = useFonts({
     "Amaranth-Regular": require("./assets/fonts/Amaranth-Regular.ttf"),
