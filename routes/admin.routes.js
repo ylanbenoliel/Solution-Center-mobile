@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Agenda from '@screens/Agenda';
+import UsersList from '@screens/UsersList';
 
 import colors from '@constants/colors';
 
@@ -21,6 +22,9 @@ export default function Admin() {
           if (route.name === 'Agenda') {
             iconName = 'ios-calendar';
           }
+          if (route.name === 'Usuários') {
+            iconName = 'ios-contacts';
+          }
           // else if (route.name === 'Settings') {
           //   iconName = focused ? 'ios-list-box' : 'ios-list';
           // }
@@ -31,9 +35,11 @@ export default function Admin() {
       tabBarOptions={{
         activeTintColor: colors.navigationColor,
         inactiveTintColor: colors.disableColor,
+        keyboardHidesTabBar: true,
       }}
     >
       <Tab.Screen name="Agenda" component={Agenda} />
+      <Tab.Screen name="Usuários" component={UsersList} />
     </Tab.Navigator>
   );
 }

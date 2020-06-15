@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React, { useEffect, useState } from 'react';
 import { AsyncStorage } from 'react-native';
 
@@ -19,6 +20,7 @@ export default function App() {
         try {
           const token = await AsyncStorage.getItem('@SC:token');
           if (token) {
+            // eslint-disable-next-line no-param-reassign
             config.headers.Authorization = `Bearer ${token}`;
           }
           return config;
@@ -29,8 +31,8 @@ export default function App() {
     }
     async function getPrivilegies() {
       try {
-        const is_admin = await AsyncStorage.getItem('@SC:admin');
-        setAdmin(is_admin);
+        const isAdmin = await AsyncStorage.getItem('@SC:admin');
+        setAdmin(isAdmin);
       } catch (error) {
         setAdmin(null);
       }

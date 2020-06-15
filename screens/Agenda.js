@@ -135,10 +135,7 @@ export default function Agenda() {
         style={{ flex: 1 }}
       >
         <View
-          style={{
-            flex: 1,
-            marginVertical: verticalScale(70),
-          }}
+          style={styles.container}
         >
           {/* <TouchableOpacity onPress={() => {
             signOut()
@@ -216,7 +213,10 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    marginVertical: verticalScale(70),
+  },
   text: {
     fontFamily: 'Amaranth-Regular',
     color: colors.whiteColor,

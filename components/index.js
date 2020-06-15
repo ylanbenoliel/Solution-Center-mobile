@@ -3,7 +3,7 @@ import Loading from './Loading';
 import Separator from './Separator';
 import ShowInfo from './ShowInfo';
 import StatusButton from './StatusButton';
-import UserList from './UserList';
+import UserItem from './UserItem';
 import VacancyModal from './VacancyModal';
 
 export {
@@ -13,5 +13,5 @@ export {
   VacancyModal,
   ShowInfo,
   Loading,
-  UserList,
+  UserItem,
 };
