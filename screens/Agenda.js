@@ -154,6 +154,7 @@ export default function Agenda() {
           <Calendar
             markingType="custom"
             monthFormat="MMMM yyyy"
+            LocaleConfig
             current={daySelected}
             onDayPress={(date) => handleDayPress(date.dateString)}
             hideExtraDays

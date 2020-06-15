@@ -7,3 +7,5 @@ LocaleConfig.locales['pt-br'] = {
   dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
 };
 LocaleConfig.defaultLocale = 'pt-br';
+
+export default LocaleConfig;
