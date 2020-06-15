@@ -5,7 +5,7 @@ import { LoginDrawer } from './login.routes'
 import { User } from './user.routes'
 import { Admin } from './admin.routes'
 
-import Register from "../screens/Register";
+import Register from "@screens/Register";
 
 const Stack = createStackNavigator();
 const LoggedStack = createStackNavigator()

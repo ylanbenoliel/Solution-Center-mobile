@@ -16,9 +16,9 @@ import {
   Separator,
   StatusButton,
   Loading
-} from "../components";
-import colors from "../constants/colors";
-import { ROOM_DATA } from "../constants/fixedValues";
+} from "@components";
+import colors from "@constants/colors";
+import { ROOM_DATA } from "@constants/fixedValues";
 import { scale, verticalScale } from "react-native-size-matters";
 import {
   format,
@@ -31,9 +31,9 @@ import {
   isAfter
 } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
-import { removeDuplicates } from '../helpers/functions'
-import { api } from "../services/api";
-import LOCALE from '../constants/localeCalendarStrip'
+import { removeDuplicates } from '@helpers/functions'
+import { api } from "@services/api";
+import LOCALE from '@constants/localeCalendarStrip'
 
 const INITIALDATE = isSunday(new Date()) === true
   ? add(new Date(), { days: 1 })

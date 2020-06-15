@@ -15,7 +15,7 @@ import {
   Rows,
   Col,
 } from "react-native-table-component";
-import colors from "../constants/colors";
+import colors from "@constants/colors";
 
 const tableHead = [
   "",

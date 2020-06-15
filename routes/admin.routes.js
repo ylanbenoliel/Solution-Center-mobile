@@ -1,7 +1,7 @@
 import React from "react";
-import Agenda from "../screens/Agenda";
+import Agenda from "@screens/Agenda";
 import { scale } from "react-native-size-matters";
-import colors from "../constants/colors";
+import colors from "@constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";

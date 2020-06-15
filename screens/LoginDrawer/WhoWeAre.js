@@ -9,11 +9,11 @@ import {
   ScrollView,
 } from "react-native";
 import { verticalScale, scale } from "react-native-size-matters";
-import { GeneralStatusBar } from "../../components";
+import { GeneralStatusBar } from "@components";
 import { MaterialIcons } from "@expo/vector-icons";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 
-import background from "../../assets/whoweare.png";
+import background from "@assets/whoweare.png";
 
 export default function WhoWeAre({ navigation }) {
   return (

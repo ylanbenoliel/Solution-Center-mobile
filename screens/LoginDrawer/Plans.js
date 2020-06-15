@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { GeneralStatusBar } from "../../components";
+import { GeneralStatusBar } from "@components";
 import { scale, verticalScale } from "react-native-size-matters";
 import { MaterialIcons } from "@expo/vector-icons";
-import colors from "../../constants/colors";
+import colors from "@constants/colors";
 
-import backgroundLogo from "../../assets/LogoHorizontal.png";
+import backgroundLogo from "@assets/LogoHorizontal.png";
 
 export default function Plans({ navigation }) {
   const [plan, setPlan] = useState(0);

@@ -4,6 +4,7 @@ import GeneralStatusBar from "./GeneralStatusBar";
 import VacancyModal from "./VacancyModal";
 import ShowInfo from "./ShowInfo";
 import Loading from "./Loading";
+import UserList from "./UserList";
 
 export {
   Separator,
@@ -11,5 +12,6 @@ export {
   GeneralStatusBar,
   VacancyModal,
   ShowInfo,
-  Loading
+  Loading,
+  UserList,
 };

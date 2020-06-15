@@ -1,14 +1,14 @@
 import React from "react";
-import Login from "../screens/Login";
+import Login from "@screens/Login";
 import {
   WhoWeAre,
   Ambients,
   Plans,
   Partners,
   Contact,
-} from "../screens/LoginDrawer/index";
+} from "@screens/LoginDrawer/index";
 import { scale } from "react-native-size-matters";
-import colors from "../constants/colors";
+import colors from "@constants/colors";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Drawer = createDrawerNavigator();

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
-import colors from '../constants/colors'
+import colors from '@constants/colors'
 import { scale } from 'react-native-size-matters'
 
 

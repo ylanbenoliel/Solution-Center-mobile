@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, Alert, StyleSheet } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
-import colors from "../constants/colors";
+import colors from "@constants/colors";
 
 const StatusButton = ({ code, onCheckIn, onDismiss }) => {
   if (code == 1) {

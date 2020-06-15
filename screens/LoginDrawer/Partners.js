@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { GeneralStatusBar } from "../../components";
-import colors from "../../constants/colors";
+import { GeneralStatusBar } from "@components";
+import colors from "@constants/colors";
 
 // import { Container } from './styles';
 

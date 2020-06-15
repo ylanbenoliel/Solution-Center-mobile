@@ -9,15 +9,15 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
-import colors from "../constants/colors";
-import { api } from '../services/api'
-import { ROOM_IDS } from "../constants/fixedValues";
-import { GeneralStatusBar, VacancyModal } from "../components";
-import { removeDuplicates, chunkArray } from '../helpers/functions'
+import colors from "@constants/colors";
+import { api } from '@services/api'
+import { ROOM_IDS } from "@constants/fixedValues";
+import { GeneralStatusBar, VacancyModal } from "@components";
+import { removeDuplicates, chunkArray } from '@helpers/functions'
 import { LinearGradient } from "expo-linear-gradient";
 import { scale, verticalScale } from "react-native-size-matters";
 import { CommonActions } from "@react-navigation/native";
-import AuthContext from '../contexts/auth'
+import AuthContext from '@contexts/auth'
 
 
 export default function Agenda({ navigation }) {

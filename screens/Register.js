@@ -14,12 +14,12 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { GeneralStatusBar, ShowInfo } from "../components";
+import { GeneralStatusBar, ShowInfo } from "@components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale } from "react-native-size-matters";
-import colors from "../constants/colors";
-import { api, url } from "../services/api";
+import colors from "@constants/colors";
+import { api, url } from "@services/api";
 
 export default function Register({ navigation }) {
   const [name, setName] = useState("");

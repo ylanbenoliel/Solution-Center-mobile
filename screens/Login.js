@@ -15,12 +15,12 @@ import {
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import colors from "../constants/colors";
-import { GeneralStatusBar, ShowInfo } from "../components";
+import colors from "@constants/colors";
+import { GeneralStatusBar, ShowInfo } from "@components";
 import { scale, verticalScale } from "react-native-size-matters";
-import { api } from "../services/api";
+import { api } from "@services/api";
 
-import AuthContext from '../contexts/auth'
+import AuthContext from '@contexts/auth'
 
 export default function Login({ navigation }) {
 

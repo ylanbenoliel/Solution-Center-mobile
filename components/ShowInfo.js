@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { verticalScale, scale } from "react-native-size-matters";
-import colors from '../constants/colors'
+import colors from '@constants/colors'
 
 const ShowInfo = ({ error, success }) => {
   if (!!error) {

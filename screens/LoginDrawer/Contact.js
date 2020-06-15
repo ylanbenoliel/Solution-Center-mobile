@@ -10,12 +10,12 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { GeneralStatusBar } from "../../components";
+import { GeneralStatusBar } from "@components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { verticalScale, scale } from "react-native-size-matters";
 
-import colors from "../../constants/colors";
-import backgroundLogo from "../../assets/LogoHorizontal.png";
+import colors from "@constants/colors";
+import backgroundLogo from "@assets/LogoHorizontal.png";
 const ICON_SIZE = scale(24);
 
 const Separator = () => {
