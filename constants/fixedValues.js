@@ -11,4 +11,4 @@ export const ROOM_DATA = [
   { room: 10, name: "Sala de reunião" },
 ];
 
-export const ROOM_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+export const ROOM_IDS = ROOM_DATA.map(data => { return data.room });
