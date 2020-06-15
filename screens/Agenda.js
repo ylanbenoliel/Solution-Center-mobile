@@ -1,36 +1,48 @@
-import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable no-nested-ternary */
+/* eslint-disable eqeqeq */
+import React, {
+  useState,
+  useEffect,
+  // useContext,
+} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  ActivityIndicator
-} from "react-native";
-import { Calendar } from "react-native-calendars";
-import { format } from "date-fns";
-import colors from "@constants/colors";
-import { api } from '@services/api'
-import { ROOM_IDS } from "@constants/fixedValues";
-import { GeneralStatusBar, VacancyModal } from "@components";
-import { removeDuplicates, chunkArray } from '@helpers/functions'
-import { LinearGradient } from "expo-linear-gradient";
-import { scale, verticalScale } from "react-native-size-matters";
-import { CommonActions } from "@react-navigation/native";
-import AuthContext from '@contexts/auth'
+  ActivityIndicator,
+} from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import { scale, verticalScale } from 'react-native-size-matters';
 
+// import { CommonActions } from '@react-navigation/native';
+import { format } from 'date-fns';
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default function Agenda({ navigation }) {
-  const { signOut } = useContext(AuthContext)
-  const [daySelected, setDaySelected] = useState("");
+import { GeneralStatusBar, VacancyModal } from '@components';
+
+// import AuthContext from '@contexts/auth';
+
+import { removeDuplicates, chunkArray } from '@helpers/functions';
+
+import { api } from '@services/api';
+
+import colors from '@constants/colors';
+import { ROOM_IDS } from '@constants/fixedValues';
+
+export default function Agenda() {
+  // const { signOut } = useContext(AuthContext);
+  const [daySelected, setDaySelected] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hours, setHours] = useState([]);
   const [users, setUsers] = useState([]);
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const currentDate = format(new Date(), "yyyy-MM-dd");
+    const currentDate = format(new Date(), 'yyyy-MM-dd');
     setDaySelected(currentDate);
   }, []);
 
@@ -39,75 +51,66 @@ export default function Agenda({ navigation }) {
   }
 
   function handleOpenModal() {
-    setLoading(true)
+    setLoading(true);
     api.post('/events/list', {
-      date: daySelected
+      date: daySelected,
     }).then((response) => {
-      const { hoursInterval, validEvents } = response.data
+      const { hoursInterval, validEvents } = response.data;
       if (validEvents.length === 0) {
-        const nonUsers = new Array(hoursInterval.length * 10).fill('')
-        const chunkNonUsers = chunkArray(nonUsers, 10)
-        setUsers(chunkNonUsers)
-      }
-      else {
-        const rawList = hoursInterval.flatMap(hour => {
-          return ROOM_IDS.flatMap(place => {
-            const list = { hour, place }
-            return list
-          })
-        })
+        const nonUsers = new Array(hoursInterval.length * 10).fill('');
+        const chunkNonUsers = chunkArray(nonUsers, 10);
+        setUsers(chunkNonUsers);
+      } else {
+        const rawList = hoursInterval.flatMap((hour) => ROOM_IDS.flatMap((place) => {
+          const list = { hour, place };
+          return list;
+        }));
 
-        const usersList = validEvents.flatMap(evt => {
-          return rawList.flatMap((container, index) => {
-            if (evt.time.includes(container.hour) && container.place == evt.room) {
-              const fullName = evt.name.split(' ')
-              const name =
-                `${fullName[0]} ${fullName[fullName.length - 1].split('')[0]}`
-              const user = {
-                index,
-                hour: container.hour,
-                place: container.place,
-                name
-              }
-              return user
-            }
-            const withoutUser = {
+        const usersList = validEvents.flatMap((evt) => rawList.flatMap((container, index) => {
+          if (evt.time.includes(container.hour) && container.place == evt.room) {
+            const fullName = evt.name.split(' ');
+            const name = `${fullName[0]} ${fullName[fullName.length - 1].split('')[0]}`;
+            const user = {
               index,
               hour: container.hour,
               place: container.place,
-              name: ''
-            }
-            return withoutUser
-          })
-        })
+              name,
+            };
+            return user;
+          }
+          const withoutUser = {
+            index,
+            hour: container.hour,
+            place: container.place,
+            name: '',
+          };
+          return withoutUser;
+        }));
 
         const sortedList = usersList
           .sort((a, b) => {
-            if (a.name === "") {
+            if (a.name === '') {
               return 1;
-            } else if (b.name === "") {
+            } if (b.name === '') {
               return -1;
-            } else {
-              return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
             }
-          })
+            return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+          });
 
-        const withoutDuplicates = removeDuplicates(sortedList, 'index')
+        const withoutDuplicates = removeDuplicates(sortedList, 'index');
         const totalUsers = withoutDuplicates
-          .sort((a, b) => {
-            return a.index - b.index
-          })
-          .map(el => el.name)
-        const chunkUsers = chunkArray(totalUsers, 10)
+          .sort((a, b) => a.index - b.index)
+          .map((el) => el.name);
+        const chunkUsers = chunkArray(totalUsers, 10);
         setUsers(chunkUsers);
       }
       setHours(hoursInterval);
       setIsModalOpen(true);
-    }).catch((e) => {
-      setError('Erro ao buscar registros')
+    }).catch(() => {
+      setError('Erro ao buscar registros');
     }).finally(() => {
-      setLoading(false)
-    })
+      setLoading(false);
+    });
   }
 
   function handleCloseModal() {
@@ -117,9 +120,8 @@ export default function Agenda({ navigation }) {
   function showFetchLoading() {
     if (loading) {
       return <ActivityIndicator size="large" color={colors.whiteColor} />;
-    } else {
-      return <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>;
     }
+    return <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>;
   }
 
   return (
@@ -150,8 +152,8 @@ export default function Agenda({ navigation }) {
           </TouchableOpacity> */}
 
           <Calendar
-            markingType={"custom"}
-            monthFormat={"MMMM yyyy"}
+            markingType="custom"
+            monthFormat="MMMM yyyy"
             current={daySelected}
             onDayPress={(date) => handleDayPress(date.dateString)}
             hideExtraDays
@@ -165,7 +167,7 @@ export default function Agenda({ navigation }) {
                   },
                   text: {
                     color: colors.whiteColor,
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   },
                 },
               },
@@ -174,7 +176,7 @@ export default function Agenda({ navigation }) {
               height: 600,
             }}
             theme={{
-              calendarBackground: "rgba(0,0,0,0)",
+              calendarBackground: 'rgba(0,0,0,0)',
               selectedDayTextColor: colors.whiteColor,
               todayTextColor: colors.accentColor,
               dayTextColor: colors.whiteColor,
@@ -182,11 +184,11 @@ export default function Agenda({ navigation }) {
               arrowColor: colors.navigationColor,
               disabledArrowColor: colors.disableColor,
               monthTextColor: colors.whiteColor,
-              textDayFontFamily: "Amaranth-Regular",
+              textDayFontFamily: 'Amaranth-Regular',
               textDayFontSize: 16,
-              textMonthFontFamily: "Amaranth-Regular",
+              textMonthFontFamily: 'Amaranth-Regular',
               textMonthFontSize: 16,
-              textDayHeaderFontFamily: "Amaranth-Regular",
+              textDayHeaderFontFamily: 'Amaranth-Regular',
               textDayHeaderFontSize: 16,
             }}
           />
@@ -215,19 +217,19 @@ export default function Agenda({ navigation }) {
 const styles = StyleSheet.create({
   container: {},
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     color: colors.whiteColor,
     fontSize: scale(18),
   },
   modalButtonContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "80%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
     height: verticalScale(48),
     borderRadius: scale(4),
     backgroundColor: colors.navigationColor,

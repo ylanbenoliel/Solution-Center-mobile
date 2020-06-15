@@ -1,4 +1,7 @@
-import React from "react";
+/* eslint-disable global-require */
+/* eslint-disable react/prop-types */
+/* eslint-disable import/no-extraneous-dependencies */
+import React from 'react';
 import {
   View,
   Text,
@@ -6,14 +9,16 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
-  ScrollView,
-} from "react-native";
-import { verticalScale, scale } from "react-native-size-matters";
-import { GeneralStatusBar } from "@components";
-import { MaterialIcons } from "@expo/vector-icons";
-import colors from "@constants/colors";
+} from 'react-native';
+import { verticalScale, scale } from 'react-native-size-matters';
 
-import background from "@assets/whoweare.png";
+import { MaterialIcons } from '@expo/vector-icons';
+
+import { GeneralStatusBar } from '@components';
+
+import background from '@assets/whoweare.png';
+
+import colors from '@constants/colors';
 
 export default function WhoWeAre({ navigation }) {
   return (
@@ -27,7 +32,7 @@ export default function WhoWeAre({ navigation }) {
         <View style={styles.header}>
           <View style={{ paddingLeft: scale(20) }} />
           <Text style={[styles.text, styles.headerName]}>Sobre nós</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <MaterialIcons
               name="close"
               size={32}
@@ -36,29 +41,35 @@ export default function WhoWeAre({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={{ flex: 1, justifyContent: "space-around" }}>
+        <View style={{ flex: 1, justifyContent: 'space-around' }}>
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              {"\t\t"}O <Text style={styles.textStrong}>Solution Center</Text>{" "}
+              {'\t\t'}
+              O
+              {' '}
+              <Text style={styles.textStrong}>Solution Center</Text>
+              {' '}
               foi idealizado pensando em você! Somos profissionais liberais e
               entendemos a dinâmica de trabalho que o cenário mundial, cada vez
               mais, nos traz.
             </Text>
             <Text style={styles.text}>
-              {"\n\t\t"}Por isso, nossa missão é proporcionar ao profissional o
+              {'\n\t\t'}
+              Por isso, nossa missão é proporcionar ao profissional o
               espaço perfeito para o desenvolvimento de seu trabalho, com uma
               estrutura de alto padrão. Nossos ambientes são sofisticados,
               confortáveis e privados.
             </Text>
             <Text style={styles.text}>
-              {"\n\t\t"}Assim, nós oferecemos segurança, conforto e praticidade
+              {'\n\t\t'}
+              Assim, nós oferecemos segurança, conforto e praticidade
               ao seu atendimento. Tudo isso sem custo fixo ou burocracia. Aqui
               você paga somente quando usar.
             </Text>
           </View>
 
           <View style={styles.logoContainer}>
-            <Image source={require("../../assets/LogoHorizontal.png")} />
+            <Image source={require('../../assets/LogoHorizontal.png')} />
           </View>
         </View>
       </ImageBackground>
@@ -69,34 +80,34 @@ export default function WhoWeAre({ navigation }) {
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   header: {
     zIndex: 2,
-    width: "100%",
+    width: '100%',
     height: verticalScale(56),
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     marginTop: verticalScale(40),
   },
   headerName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: scale(36),
   },
   textContainer: {
     marginHorizontal: scale(20),
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
-    textAlign: "justify",
+    textAlign: 'justify',
   },
   textStrong: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-  logoContainer: { alignItems: "center", marginBottom: verticalScale(30) },
+  logoContainer: { alignItems: 'center', marginBottom: verticalScale(30) },
 });

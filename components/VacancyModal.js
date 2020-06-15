@@ -1,45 +1,52 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   ScrollView,
-} from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import Modal from "react-native-modal";
+} from 'react-native';
+import Modal from 'react-native-modal';
 import {
   Table,
   TableWrapper,
   Row,
   Rows,
   Col,
-} from "react-native-table-component";
-import colors from "@constants/colors";
+} from 'react-native-table-component';
+
+import { MaterialIcons } from '@expo/vector-icons';
+
+import colors from '@constants/colors';
 
 const tableHead = [
-  "",
-  "Sala 1",
-  "Sala 2",
-  "Sala 3",
-  "Sala 4",
-  "Sala 5",
-  "Sala 6",
-  "Sala 7",
-  "Sala 8",
-  "Sala 9",
-  "Sala de reunião",
+  '',
+  'Sala 1',
+  'Sala 2',
+  'Sala 3',
+  'Sala 4',
+  'Sala 5',
+  'Sala 6',
+  'Sala 7',
+  'Sala 8',
+  'Sala 9',
+  'Sala de reunião',
 ];
-const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
+
+const VacancyModal = ({
+  hours, users, isVisible, showDate, onClose,
+}) => {
   const tableTitle = hours;
   const tableData = users;
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState('');
 
   useEffect(() => {
-    const formatedDate = showDate.split("-").reverse().join("-");
+    const formatedDate = showDate.split('-').reverse().join('-');
     setDate(formatedDate);
     return () => {
-      setDate("");
+      setDate('');
     };
   }, [isVisible === true]);
 
@@ -55,9 +62,9 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
         {/*  */}
         <View
           style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             padding: 10,
           }}
         >
@@ -70,7 +77,7 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
           </Text>
 
           <TouchableOpacity
-            style={{ justifyContent: "flex-end" }}
+            style={{ justifyContent: 'flex-end' }}
             onPress={() => {
               onClose();
             }}
@@ -84,7 +91,7 @@ const VacancyModal = ({ hours, users, isVisible, showDate, onClose }) => {
         </View>
         {/*  */}
         <ScrollView
-          style={{ margin: "3%" }}
+          style={{ margin: '3%' }}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
@@ -132,21 +139,21 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     paddingTop: 30,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   head: {
     height: 40,
     backgroundColor: colors.mainColor,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
-  wrapper: { flexDirection: "row" },
+  wrapper: { flexDirection: 'row' },
   title: { flex: 1, backgroundColor: colors.mainColor },
   row: { height: 66, backgroundColor: colors.whiteColor },
   text: {
-    textAlign: "center",
+    textAlign: 'center',
     // fontFamily: 'Amaranth-Regular',
-    fontSize: 14, 
-    color: colors.whiteColor
+    fontSize: 14,
+    color: colors.whiteColor,
   },
 });
 

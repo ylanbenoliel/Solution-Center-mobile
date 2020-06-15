@@ -1,10 +1,14 @@
-import React from "react";
-import { TouchableOpacity, Text, Alert, StyleSheet } from "react-native";
-import { scale, verticalScale } from "react-native-size-matters";
-import colors from "@constants/colors";
+/* eslint-disable react/prop-types */
+import React from 'react';
+import {
+  TouchableOpacity, Text, Alert, StyleSheet,
+} from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
+
+import colors from '@constants/colors';
 
 const StatusButton = ({ code, onCheckIn, onDismiss }) => {
-  if (code == 1) {
+  if (code === '1') {
     return (
       <>
         <TouchableOpacity
@@ -16,7 +20,7 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
       </>
     );
   }
-  if (code == 2) {
+  if (code === '2') {
     return (
       <TouchableOpacity
         onLongPress={() => onDismiss()}
@@ -26,21 +30,19 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
       </TouchableOpacity>
     );
   }
-  if (code == 3) {
+  if (code === '3') {
     return (
       <TouchableOpacity
-        onLongPress={() =>
-          Alert.alert("Erro", "Não é possível cancelar esse horário", [
-            { text: "Ok" },
-          ])
-        }
+        onLongPress={() => Alert.alert('Erro', 'Não é possível cancelar esse horário', [
+          { text: 'Ok' },
+        ])}
         style={[styles.defaultButton, styles.disabledButton]}
       >
         <Text style={styles.text}>Sua reserva</Text>
       </TouchableOpacity>
     );
   }
-  if (code == 4) {
+  if (code === '4') {
     return (
       <TouchableOpacity
         style={[styles.defaultButton, styles.unavailableButton]}
@@ -50,21 +52,22 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
       </TouchableOpacity>
     );
   }
+  return null;
 };
 
 const styles = StyleSheet.create({
   defaultButton: {
-    width: "95%",
-    height: "80%",
+    width: '95%',
+    height: '80%',
     borderRadius: verticalScale(8),
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   availableButton: {
-    width: "80%",
-    height: "65%",
+    width: '80%',
+    height: '65%',
     borderRadius: 8,
     paddingVertical: 4,
-    justifyContent: "center",
+    justifyContent: 'center',
     backgroundColor: colors.accentColor,
   },
   reservedButton: {
@@ -77,9 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorColor,
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(18),
-    textAlign: "center",
+    textAlign: 'center',
     color: colors.whiteColor,
   },
 });

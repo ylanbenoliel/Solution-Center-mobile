@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import Route from "./routes/Route";
-import { AsyncStorage } from "react-native";
-import { useFonts } from "@use-expo/font";
-import { AppLoading } from "expo";
-import { api } from "./services/api";
+import React, { useEffect, useState } from 'react';
+import { AsyncStorage } from 'react-native';
 
-import { AuthProvider } from "./contexts/auth"
+import { NavigationContainer } from '@react-navigation/native';
+import { useFonts } from '@use-expo/font';
+import { AppLoading } from 'expo';
+
+import { AuthProvider } from './contexts/auth';
+import Route from './routes/Route';
+import { api } from './services/api';
 
 export default function App() {
-  const [user, setUser] = useState("");
-  const [admin, setAdmin] = useState("");
+  const [user, setUser] = useState('');
+  const [admin, setAdmin] = useState('');
 
   useEffect(() => {
     async function getToken() {
       api.interceptors.request.use(async (config) => {
         try {
-          const token = await AsyncStorage.getItem("@SC:token");
+          const token = await AsyncStorage.getItem('@SC:token');
           if (token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
           }
           return config;
         } catch (error) {
@@ -28,7 +29,7 @@ export default function App() {
     }
     async function getPrivilegies() {
       try {
-        const is_admin = await AsyncStorage.getItem("@SC:admin");
+        const is_admin = await AsyncStorage.getItem('@SC:admin');
         setAdmin(is_admin);
       } catch (error) {
         setAdmin(null);
@@ -37,18 +38,17 @@ export default function App() {
     getToken();
     // getPrivilegies();
   }, []);
-  let [fontsLoaded] = useFonts({
-    "Amaranth-Regular": require("./assets/fonts/Amaranth-Regular.ttf"),
+  const [fontsLoaded] = useFonts({
+    'Amaranth-Regular': require('./assets/fonts/Amaranth-Regular.ttf'),
   });
   if (!fontsLoaded) {
     return <AppLoading />;
-  } else {
-    return (
-      <NavigationContainer>
-        <AuthProvider>
-          <Route admin={admin} />
-        </AuthProvider>
-      </NavigationContainer>
-    );
   }
+  return (
+    <NavigationContainer>
+      <AuthProvider>
+        <Route admin={admin} />
+      </AuthProvider>
+    </NavigationContainer>
+  );
 }

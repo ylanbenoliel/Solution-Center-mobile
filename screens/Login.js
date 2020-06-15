@@ -1,4 +1,9 @@
-import React, { useState, useEffect, createRef, useContext } from "react";
+/* eslint-disable global-require */
+/* eslint-disable react/prop-types */
+/* eslint-disable import/no-extraneous-dependencies */
+import React, {
+  useState, useEffect, createRef, useContext,
+} from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -12,30 +17,33 @@ import {
   ActivityIndicator,
   SafeAreaView,
   Dimensions,
-} from "react-native";
-import { CommonActions } from "@react-navigation/native";
-import { MaterialIcons } from "@expo/vector-icons";
-import colors from "@constants/colors";
-import { GeneralStatusBar, ShowInfo } from "@components";
-import { scale, verticalScale } from "react-native-size-matters";
-import { api } from "@services/api";
+} from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
 
-import AuthContext from '@contexts/auth'
+import { MaterialIcons } from '@expo/vector-icons';
+import { CommonActions } from '@react-navigation/native';
+
+import { GeneralStatusBar, ShowInfo } from '@components';
+
+import AuthContext from '@contexts/auth';
+
+import { api } from '@services/api';
+
+import colors from '@constants/colors';
 
 export default function Login({ navigation }) {
+  const { signIn } = useContext(AuthContext);
 
-  const { signIn } = useContext(AuthContext)
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const field2 = createRef();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setError("");
+      setError('');
     }, 2200);
     return () => clearTimeout(timer);
   }, [error]);
@@ -43,78 +51,82 @@ export default function Login({ navigation }) {
   function showLoadingLogin() {
     if (loading) {
       return <ActivityIndicator size="large" color={colors.whiteColor} />;
-    } else {
-      return <Text style={[styles.text, styles.buttonText]}>Entrar</Text>;
     }
+    return <Text style={[styles.text, styles.buttonText]}>Entrar</Text>;
   }
 
   function handleLogin() {
     setLoading(true);
     Keyboard.dismiss();
-    if (email === "" || password === "") {
-      setError("Preencha todos os campos.");
+    if (email === '' || password === '') {
+      setError('Preencha todos os campos.');
       return setLoading(false);
     }
 
     api
-      .post("/authenticate", {
-        email: email,
-        password: password,
+      .post('/authenticate', {
+        email,
+        password,
       })
       .then((response) => {
-        setLoading(false)
-        if (response.data.active == 0) {
-          return setError('Usuário pendente de liberação.')
+        setLoading(false);
+        if (response.data.active === '0') {
+          return setError('Usuário pendente de liberação.');
         }
-        signIn(response)
+        signIn(response);
         if (response.data.is_admin) {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: "Admin" }]
-            }))
+              routes: [{ name: 'Admin' }],
+            }),
+          );
         } else {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: "User" }],
-            }));
+              routes: [{ name: 'User' }],
+            }),
+          );
         }
+        return null;
       })
       .catch((e) => {
-        setLoading(false)
+        setLoading(false);
         if (e.response) {
-          return setError('Usuário não encontrado')
+          return setError('Usuário não encontrado');
         }
-        else if (e.request) {
-          setLoading(false)
-          return setError('Erro na conexão.')
+        if (e.request) {
+          setLoading(false);
+          return setError('Erro na conexão.');
         }
-      })
+        return null;
+      });
+    return null;
   }
 
   function handleRegister() {
     Keyboard.dismiss();
-    navigation.navigate("Registro");
+    navigation.navigate('Registro');
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
-        backgroundColor={'rgba(255,255,255,0.1)'}
+        backgroundColor="rgba(255,255,255,0.1)"
         barStyle="dark-content"
       />
       <ImageBackground
         style={{ flex: 1 }}
         imageStyle={styles.imageBackground}
-        source={require("../assets/LogoHorizontal.png")}
+        source={require('../assets/LogoHorizontal.png')}
         resizeMode="center"
       >
         <View style={styles.header}>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
               paddingLeft: scale(20),
             }}
           >
@@ -129,7 +141,7 @@ export default function Login({ navigation }) {
         </View>
         <KeyboardAvoidingView
           behavior={Platform.select({
-            ios: "padding",
+            ios: 'padding',
             android: null,
           })}
           style={{
@@ -172,7 +184,7 @@ export default function Login({ navigation }) {
                   placeholderTextColor={colors.placeholderColor}
                   autoCapitalize="none"
                   onSubmitEditing={() => handleLogin()}
-                  secureTextEntry={true}
+                  secureTextEntry
                   autoCorrect={false}
                 />
               </View>
@@ -206,29 +218,29 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: verticalScale(30),
   },
   imageBackground: {
     opacity: 0.1,
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     top: 0,
-    height: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   },
   headerText: {
     fontSize: scale(32),
     color: colors.mainColor,
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(18),
     color: colors.mainColor,
-    textAlign: "left",
+    textAlign: 'left',
   },
-  inputContainer: { width: "80%" },
+  inputContainer: { width: '80%' },
   textInputContainer: {
     borderRadius: scale(4),
     borderWidth: scale(2),
@@ -241,10 +253,10 @@ const styles = StyleSheet.create({
     height: verticalScale(32),
   },
   buttonContainer: {
-    width: "50%",
+    width: '50%',
     height: scale(48),
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.secondaryColor,
     marginVertical: verticalScale(16),
     borderRadius: scale(24),
@@ -254,9 +266,9 @@ const styles = StyleSheet.create({
     color: colors.whiteColor,
   },
   header: {
-    width: "100%",
+    width: '100%',
     height: verticalScale(48),
-    justifyContent: "center",
+    justifyContent: 'center',
     marginTop: verticalScale(20),
   },
 });

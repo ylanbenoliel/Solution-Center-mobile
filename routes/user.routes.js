@@ -1,14 +1,15 @@
+import React from 'react';
+import { scale } from 'react-native-size-matters';
 
-import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import Schedule from "@screens/Schedule";
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { scale } from "react-native-size-matters";
-import colors from "@constants/colors";
+import Schedule from '@screens/Schedule';
+
+import colors from '@constants/colors';
 
 const Drawer = createDrawerNavigator();
 
-export function User() {
+export default function User() {
   return (
     <Drawer.Navigator
       drawerStyle={{

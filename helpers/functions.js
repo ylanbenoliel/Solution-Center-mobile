@@ -1,18 +1,18 @@
 function removeDuplicates(array, key) {
-  const cache = new Set()
+  const cache = new Set();
   return array.filter(
-    (object) => !cache.has(object[key]) && cache.add(object[key])
-  )
+    (object) => !cache.has(object[key]) && cache.add(object[key]),
+  );
 }
 
 function chunkArray(array, chunkSize) {
-  let results = []
+  const results = [];
   while (array.length) {
-    results.push(array.splice(0, chunkSize))
+    results.push(array.splice(0, chunkSize));
   }
-  return results
+  return results;
 }
 
 export {
-  removeDuplicates, chunkArray
-}
+  removeDuplicates, chunkArray,
+};

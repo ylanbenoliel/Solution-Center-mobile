@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,25 +16,29 @@ import {
   Image,
   ActivityIndicator,
   Alert,
-} from "react-native";
-import { GeneralStatusBar, ShowInfo } from "@components";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { scale, verticalScale } from "react-native-size-matters";
-import colors from "@constants/colors";
-import { api, url } from "@services/api";
+} from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+
+import { GeneralStatusBar, ShowInfo } from '@components';
+
+import { api, url } from '@services/api';
+
+import colors from '@constants/colors';
 
 export default function Register({ navigation }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [address, setAddress] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [rg, setRg] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [rg, setRg] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState({});
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const field2 = useRef();
   const field3 = useRef();
@@ -42,21 +49,22 @@ export default function Register({ navigation }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setError("");
+      setError('');
     }, 2200);
     return () => clearTimeout(timer);
   }, [error]);
 
   async function sendAvatarImage(userId) {
-    const apiUrl = `${url}/users/${userId}/avatar`
+    const apiUrl = `${url}/users/${userId}/avatar`;
     const uriParts = image.uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
+    // eslint-disable-next-line no-undef
     const uploadAvatarImage = new FormData();
-    uploadAvatarImage.append("avatar", {
+    uploadAvatarImage.append('avatar', {
       name: `avatar.${fileType}`,
       type: `image/${fileType}`,
       uri:
-        image.uri
+        image.uri,
     });
 
     const options = {
@@ -67,59 +75,60 @@ export default function Register({ navigation }) {
         'Content-Type': 'multipart/form-data',
       },
     };
-    return await fetch(apiUrl, options)
+    // eslint-disable-next-line no-return-await
+    // eslint-disable-next-line no-undef
+    await fetch(apiUrl, options);
   }
 
   function handleRegister() {
     Keyboard.dismiss();
     setLoading(true);
     if (
-      name == "" ||
-      email == "" ||
-      password == "" ||
-      address == "" ||
-      cpf == "" ||
-      rg == "" ||
-      phone == ""
+      name === ''
+      || email === ''
+      || password === ''
+      || address === ''
+      || cpf === ''
+      || rg === ''
+      || phone === ''
     ) {
-      setError("Preencha todos os campos.");
+      setError('Preencha todos os campos.');
       setLoading(false);
       return null;
     }
 
-    api.post("/users", {
-      name: name,
-      email: email,
-      password: password,
-      address: address,
-      cpf: cpf,
-      rg: rg,
-      phone: phone,
+    api.post('/users', {
+      name,
+      email,
+      password,
+      address,
+      cpf,
+      rg,
+      phone,
     })
       .then((response) => {
-        sendAvatarImage(response.data.id).then(res => {
-          navigation.push("LoginDrawer");
-        })
+        sendAvatarImage(response.data.id).then(() => {
+          navigation.push('LoginDrawer');
+        });
       })
-      .catch((e) => {
-        setError(`Erro ao salvar usuário`);
+      .catch(() => {
+        setError('Erro ao salvar usuário');
       })
       .finally(() => {
-        setLoading(false)
-      })
+        setLoading(false);
+      });
   }
 
-  showLoadingRegister = () => {
+  const showLoadingRegister = () => {
     if (loading) {
       return <ActivityIndicator size="large" color={colors.whiteColor} />;
-    } else {
-      return <Text style={[styles.text, styles.buttonText]}>Registrar</Text>;
     }
+    return <Text style={[styles.text, styles.buttonText]}>Registrar</Text>;
   };
 
   async function handlePickImage() {
     try {
-      let result = await ImagePicker.launchImageLibraryAsync({
+      const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 4],
         quality: 1,
@@ -127,8 +136,8 @@ export default function Register({ navigation }) {
       if (!result.cancelled) {
         setImage(result);
       }
-    } catch (error) {
-      Alert.alert("Erro", "Não foi possível carregar a galeria.");
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível carregar a galeria.');
     }
   }
 
@@ -141,11 +150,11 @@ export default function Register({ navigation }) {
       <View style={styles.header}>
         <TouchableOpacity
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             paddingLeft: scale(20),
           }}
-          onPress={() => navigation.push("LoginDrawer")}
+          onPress={() => navigation.push('LoginDrawer')}
         >
           <MaterialCommunityIcons
             name="chevron-left"
@@ -229,7 +238,7 @@ export default function Register({ navigation }) {
                 autoCapitalize="none"
                 returnKeyType="next"
                 onSubmitEditing={() => field4.current.focus()}
-                secureTextEntry={true}
+                secureTextEntry
                 autoCorrect={false}
                 blurOnSubmit={false}
               />
@@ -276,13 +285,13 @@ export default function Register({ navigation }) {
 
           <KeyboardAvoidingView
             behavior={Platform.select({
-              ios: "padding",
+              ios: 'padding',
               android: null,
             })}
             style={{
               flex: 1,
-              width: "100%",
-              alignItems: "center",
+              width: '100%',
+              alignItems: 'center',
             }}
           >
             <View style={styles.inputContainer}>
@@ -342,22 +351,22 @@ export default function Register({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(18),
     color: colors.mainColor,
-    textAlign: "left",
+    textAlign: 'left',
   },
   header: {
     height: verticalScale(48),
-    justifyContent: "center",
+    justifyContent: 'center',
     marginTop: verticalScale(20),
   },
   avatarContainer: {
-    width: "32%",
-    flexDirection: "row",
+    width: '32%',
+    flexDirection: 'row',
   },
   avatarImageContainer: {
     backgroundColor: colors.disableColor,
@@ -366,13 +375,13 @@ const styles = StyleSheet.create({
     borderRadius: scale(60),
   },
   avatarImage: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     borderRadius: 50,
   },
   galleryButtonContainer: {
     zIndex: 2,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     left: scale(-20),
   },
   galleryButton: {
@@ -380,16 +389,16 @@ const styles = StyleSheet.create({
     width: scale(30),
     height: scale(30),
     borderRadius: scale(15),
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   registerContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: verticalScale(30),
   },
-  inputContainer: { width: "80%" },
+  inputContainer: { width: '80%' },
   textInputContainer: {
     borderRadius: scale(4),
     borderWidth: scale(2),
@@ -402,10 +411,10 @@ const styles = StyleSheet.create({
     height: verticalScale(32),
   },
   buttonContainer: {
-    width: "50%",
+    width: '50%',
     height: scale(48),
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.mainColor,
     marginVertical: verticalScale(16),
     borderRadius: scale(4),

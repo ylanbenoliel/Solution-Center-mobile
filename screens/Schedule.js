@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+/* eslint-disable global-require */
+/* eslint-disable react/prop-types */
+/* eslint-disable consistent-return */
+import React, {
+  useState, useEffect, useRef,
+} from 'react';
 import {
   View,
   SafeAreaView,
@@ -7,19 +12,10 @@ import {
   Text,
   FlatList,
   Dimensions,
-} from "react-native";
-import CalendarStrip from "react-native-calendar-strip";
-import BottomSheet from "reanimated-bottom-sheet";
-import {
-  GeneralStatusBar,
-  ShowInfo,
-  Separator,
-  StatusButton,
-  Loading
-} from "@components";
-import colors from "@constants/colors";
-import { ROOM_DATA } from "@constants/fixedValues";
-import { scale, verticalScale } from "react-native-size-matters";
+} from 'react-native';
+import CalendarStrip from 'react-native-calendar-strip';
+import { scale, verticalScale } from 'react-native-size-matters';
+
 import {
   format,
   parseISO,
@@ -28,16 +24,30 @@ import {
   isSaturday,
   formatISO,
   add,
-  isAfter
-} from "date-fns";
-import { LinearGradient } from "expo-linear-gradient";
-import { removeDuplicates } from '@helpers/functions'
-import { api } from "@services/api";
-import LOCALE from '@constants/localeCalendarStrip'
+  isAfter,
+} from 'date-fns';
+import { LinearGradient } from 'expo-linear-gradient';
+import BottomSheet from 'reanimated-bottom-sheet';
+
+import {
+  GeneralStatusBar,
+  ShowInfo,
+  Separator,
+  StatusButton,
+  Loading,
+} from '@components';
+
+import { removeDuplicates } from '@helpers/functions';
+
+import { api } from '@services/api';
+
+import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
+import LOCALE from '@constants/localeCalendarStrip';
 
 const INITIALDATE = isSunday(new Date()) === true
   ? add(new Date(), { days: 1 })
-  : new Date()
+  : new Date();
 
 const INITIALDATERANGE = [
   {
@@ -46,74 +56,70 @@ const INITIALDATERANGE = [
   },
 ];
 
-
-
 export default function Schedule() {
   const bottomSheetRef = useRef();
   const calendarRef = useRef();
 
-  const [isFirstRun, setIsFirstRun] = useState(true)
+  const [isFirstRun, setIsFirstRun] = useState(true);
   const [datesBlacklist, setDatesBlacklist] = useState([
     formatISO(add(new Date(), { days: 8 })),
   ]);
   const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState('')
-  const [calendarDate, setCalendarDate] = useState('')
-  const [loading, setLoading] = useState(false)
-
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [calendarDate, setCalendarDate] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isFirstRun) {
-      return setIsFirstRun(false)
+      return setIsFirstRun(false);
     }
   }, []);
 
   useEffect(() => {
     if (!isFirstRun) {
       const timer = setTimeout(() => {
-        setError("");
-        bottomSheetRef.current.snapTo(0)
+        setError('');
+        bottomSheetRef.current.snapTo(0);
       }, 2200);
       return () => {
         clearTimeout(timer);
-      }
+      };
     }
   }, [error]);
 
   useEffect(() => {
     if (!isFirstRun) {
       const timer = setTimeout(() => {
-        setSuccess("");
-        bottomSheetRef.current.snapTo(0)
+        setSuccess('');
+        bottomSheetRef.current.snapTo(0);
       }, 2200);
       return () => {
-        clearTimeout(timer)
-      }
+        clearTimeout(timer);
+      };
     }
   }, [success]);
 
   useEffect(() => {
     api
-      .get("/dates")
+      .get('/dates')
       .then((response) => {
         const { maxDate, minDate } = response.data;
         const rangeData = [
           {
             start: parseISO(minDate),
             end: parseISO(maxDate),
-          }
-        ]
+          },
+        ];
         setDatesWhitelist(rangeData);
         setDatesBlacklist(
-          disableSundays(minDate, maxDate)
+          disableSundays(minDate, maxDate),
         );
       })
       .catch(() => {
-        setError('Erro ao buscar horários disponíveis.')
-      })
-
+        setError('Erro ao buscar horários disponíveis.');
+      });
   }, []);
 
   function disableSundays(startDate, endDate) {
@@ -127,69 +133,65 @@ export default function Schedule() {
 
   function reserveRoom(room, date, time) {
     api.post('/events/new', {
-      room: room,
-      date: date,
-      time: time
+      room,
+      date,
+      time,
     })
       .then((res) => {
-        const vacEvt = scheduleList.find((evt) => evt.time)
+        const vacEvt = scheduleList.find((evt) => evt.time);
         const userEvt = {
           event: res.data.event.id,
           code: '2',
           ...res.data.event,
-        }
+        };
         const newEvtList = scheduleList
-          .filter(evt => { return evt.time != vacEvt.time })
+          .filter((evt) => evt.time !== vacEvt.time)
           .concat(userEvt)
-          .sort((prev, next) => {
-            return prev.time.localeCompare(next.time)
-          })
-        setScheduleList(newEvtList)
-        setSuccess('Horário salvo.')
+          .sort((prev, next) => prev.time.localeCompare(next.time));
+        setScheduleList(newEvtList);
+        setSuccess('Horário salvo.');
       })
       .catch(() => {
-        setError('Erro ao salvar horário.')
-      })
-
+        setError('Erro ao salvar horário.');
+      });
   }
 
   function dismissRoom(eventID) {
     api.delete(`/events/${eventID}`)
       .then(() => {
-
-        const deletedEvt = scheduleList.find(evt => evt.event == eventID)
+        // eslint-disable-next-line eqeqeq
+        const deletedEvt = scheduleList.find((evt) => evt.event == eventID);
         const noEvt = {
           event: `${Math.random()}`,
           user: '',
           room: `${deletedEvt.room}`,
           date: `${deletedEvt.date.split('T')[0]}`,
           time: `${deletedEvt.time}`,
-          code: '1'
-        }
+          code: '1',
+        };
         const newEvtList = scheduleList
-          .filter(evt => evt.event != eventID)
+          // eslint-disable-next-line eqeqeq
+          .filter((evt) => evt.event != eventID)
           .concat(noEvt)
-          .sort((prev, next) => {
-            return prev.time.localeCompare(next.time)
-          })
-        setScheduleList(newEvtList)
-        setSuccess('Horário excluído.')
+          .sort((prev, next) => prev.time.localeCompare(next.time));
+        setScheduleList(newEvtList);
+        setSuccess('Horário excluído.');
       })
-      .catch((err) => {
-        setError('Erro ao excluir horário.')
-      })
+      .catch(() => {
+        setError('Erro ao excluir horário.');
+      });
   }
 
   function transformEventToSchedule(hrs, evts, room, date) {
-    if (evts.length == 0) {
+    if (evts.length === 0) {
       evts.push({
         event: '',
         user: '',
         room: '',
         date: '',
         time: '',
-        code: ''
-      })
+        code: '',
+      });
     }
 
     const currDate = new Date(
@@ -197,175 +199,167 @@ export default function Schedule() {
       new Date().getMonth(),
       new Date().getDate(),
       Number(new Date().getHours()),
-      new Date().getMinutes()
-    )
+      new Date().getMinutes(),
+    );
 
-    const dateArray = date.split('-')
+    const dateArray = date.split('-');
 
-    const eventRawList = hrs.flatMap((hour) => {
-      return evts
-        .flatMap((event) => {
-          if (event.time.includes(hour) && event.user) {
+    const eventRawList = hrs.flatMap((hour) => evts
+      .flatMap((event) => {
+        if (event.time.includes(hour) && event.user) {
+          return {
+            ...event,
+          };
+        }
+
+        const noEvent = {
+          event: `${Math.random()}`,
+          user: '',
+          room: `${room}`,
+          date: `${date}`,
+          time: `${hour}:00:00`,
+        };
+
+        const eventDate = new Date(
+          Number(dateArray[0]),
+          Number(dateArray[1]) - 1,
+          Number(dateArray[2]),
+          Number(hour),
+        );
+
+        if ((eventDate.toDateString() === currDate.toDateString())) {
+          if (eventDate.getHours() > currDate.getHours()) {
             return {
-              ...event,
-            }
+              ...noEvent,
+              code: '1',
+            };
           }
-
-          const noEvent = {
-            event: `${Math.random()}`,
-            user: '',
-            room: `${room}`,
-            date: `${date}`,
-            time: `${hour}:00:00`,
-          }
-
-          const eventDate = new Date(
-            Number(dateArray[0]),
-            Number(dateArray[1]) - 1,
-            Number(dateArray[2]),
-            Number(hour)
-          )
-
-          if ((eventDate.toDateString() == currDate.toDateString())) {
-            if (eventDate.getHours() > currDate.getHours()) {
-              return {
-                ...noEvent,
-                code: '1'
-              }
-            } else {
-              return {
-                ...noEvent,
-                code: '4'
-              }
-            }
-          } else {
-            if (isAfter(eventDate, currDate)) {
-              return {
-                ...noEvent,
-                code: '1'
-              }
-            } else {
-              return {
-                ...noEvent,
-                code: '4'
-              }
-            }
-          }
-        })
-        .sort((prev, next) => next.event - prev.event)
-    })
-    const eventList = removeDuplicates(eventRawList, 'time')
-    setScheduleList(eventList)
+          return {
+            ...noEvent,
+            code: '4',
+          };
+        }
+        if (isAfter(eventDate, currDate)) {
+          return {
+            ...noEvent,
+            code: '1',
+          };
+        }
+        return {
+          ...noEvent,
+          code: '4',
+        };
+      })
+      .sort((prev, next) => next.event - prev.event));
+    const eventList = removeDuplicates(eventRawList, 'time');
+    setScheduleList(eventList);
   }
 
   function getEventsByDate(room) {
-    setLoading(true)
-    setScheduleList([])
-    setCalendarDate('')
+    setLoading(true);
+    setScheduleList([]);
+    setCalendarDate('');
 
     const calendarRaw = calendarRef.current.getSelectedDate();
-    const calendarDateFormatted = format(new Date(calendarRaw), "yyyy-MM-dd");
+    const calendarDateFormatted = format(new Date(calendarRaw), 'yyyy-MM-dd');
 
     api
-      .post("/events/list", {
+      .post('/events/list', {
         date: calendarDateFormatted,
-        room: room,
+        room,
       })
       .then((response) => {
         const { hoursInterval, validEvents } = response.data;
-        transformEventToSchedule(hoursInterval, validEvents, room, calendarDateFormatted)
-        setCalendarDate(calendarDateFormatted)
-        setLoading(false)
+        transformEventToSchedule(hoursInterval, validEvents, room, calendarDateFormatted);
+        setCalendarDate(calendarDateFormatted);
+        setLoading(false);
         bottomSheetRef.current.snapTo(0);
       })
       .catch(() => {
-        setLoading(false)
-        setError("Erro na busca.");
-        bottomSheetRef.current.snapTo(2)
-      })
+        setLoading(false);
+        setError('Erro na busca.');
+        bottomSheetRef.current.snapTo(2);
+      });
   }
 
-  const Room = ({ name, onClick }) => {
-    return (
-      <TouchableOpacity
-        style={styles.roomButton}
-        onPress={() => {
-          onClick();
-        }}
-      >
-        <Text style={[styles.text, styles.roomText]}>{name}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const Room = ({ name, onClick }) => (
+    <TouchableOpacity
+      style={styles.roomButton}
+      onPress={() => {
+        onClick();
+      }}
+    >
+      <Text style={[styles.text, styles.roomText]}>{name}</Text>
+    </TouchableOpacity>
+  );
 
-  const ScheduleItem = ({ event, date, room, time, code }) => {
-    return (
+  const ScheduleItem = ({
+    event, date, room, time, code,
+  }) => (
+    <View
+      key={event}
+      style={{
+        width: '100%',
+        height: verticalScale(70),
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+    >
+      {/*  */}
       <View
-        key={event}
         style={{
-          width: "100%",
-          height: verticalScale(70),
-          flexDirection: "row",
-          alignItems: "center",
+          height: '100%',
+          justifyContent: 'center',
         }}
       >
-        {/*  */}
-        <View
+        <Text
           style={{
-            height: "100%",
-            justifyContent: "center",
+            marginHorizontal: scale(10),
+            color: colors.mainColor,
+            fontSize: scale(22),
           }}
         >
-          <Text
-            style={{
-              marginHorizontal: scale(10),
-              color: colors.mainColor,
-              fontSize: scale(22),
-            }}
-          >
-            {time.split(':')[0]}h
-          </Text>
-        </View>
-
-        <Separator vertical />
-
-        <View
-          style={{
-            flex: 1,
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <StatusButton
-            code={code}
-            onCheckIn={() => reserveRoom(room, date, time)}
-            onDismiss={() => dismissRoom(event)}
-          />
-        </View>
+          {time.split(':')[0]}
+          h
+        </Text>
       </View>
-    );
-  };
 
-  const ScheduleItemMemoized = React.memo(ScheduleItem)
+      <Separator vertical />
+
+      <View
+        style={{
+          flex: 1,
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <StatusButton
+          code={code}
+          onCheckIn={() => reserveRoom(room, date, time)}
+          onDismiss={() => dismissRoom(event)}
+        />
+      </View>
+    </View>
+  );
+
+  const ScheduleItemMemoized = React.memo(ScheduleItem);
 
   // Start of BottomSheet
 
-  const renderHeader = () => {
-    return (
-      <View style={styles.header}>
-        <View style={styles.panelHeader}>
-          <View style={styles.panelHandle} />
-        </View>
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
       </View>
-    );
-  }
+    </View>
+  );
 
   const renderInner = () => {
     function setPanelHeight() {
-      const dateParsed = parseISO(calendarDate)
+      const dateParsed = parseISO(calendarDate);
       return isSaturday(dateParsed)
-        ? styles.panelSaturday : styles.panel
+        ? styles.panelSaturday : styles.panel;
     }
     return (
       <View style={setPanelHeight()}>
@@ -373,33 +367,29 @@ export default function Schedule() {
           data={scheduleList}
           extraData={scheduleList}
           keyExtractor={(item) => `${item.event}`}
-          renderItem={({ item }) => {
-            return <ScheduleItemMemoized {...item} />;
-          }}
-        />
-      </View>
-    );
-  }
-
-  const BSheet = () => {
-    return (
-      <View
-        style={{
-          flex: 0.01,
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <BottomSheet
-          ref={bottomSheetRef}
-          snapPoints={["90%", "35%", "0%"]}
-          renderContent={renderInner}
-          renderHeader={renderHeader}
-          initialSnap={2}
+          renderItem={({ item }) => <ScheduleItemMemoized {...item} />}
         />
       </View>
     );
   };
+
+  const BSheet = () => (
+    <View
+      style={{
+        flex: 0.01,
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={['90%', '35%', '0%']}
+        renderContent={renderInner}
+        renderHeader={renderHeader}
+        initialSnap={2}
+      />
+    </View>
+  );
   // End of BottomSheet
 
   const renderLoading = () => {
@@ -408,10 +398,10 @@ export default function Schedule() {
         <View style={styles.conditionalLoading}>
           <Loading loading={loading} />
         </View>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -423,8 +413,8 @@ export default function Schedule() {
         colors={[colors.mainColor, colors.secondaryColor]}
         style={{
           flex: 1,
-          width: Dimensions.get("window").width,
-          height: Dimensions.get("window").height,
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
         }}
       >
         <View style={styles.calendarContainer}>
@@ -434,9 +424,9 @@ export default function Schedule() {
               selectedDate={INITIALDATE}
               startingDate={INITIALDATE}
               locale={LOCALE}
-              calendarAnimation={{ type: "sequence", duration: 300 }}
+              calendarAnimation={{ type: 'sequence', duration: 300 }}
               daySelectionAnimation={{
-                type: "border",
+                type: 'border',
                 duration: 100,
                 borderWidth: 3,
                 borderHighlightColor: colors.accentColor,
@@ -497,13 +487,13 @@ const styles = StyleSheet.create({
   },
   roomsContainer: {
     flex: 4,
-    alignItems: "center",
+    alignItems: 'center',
   },
   roomButton: {
-    width: "95%",
+    width: '95%',
     height: verticalScale(120),
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
     backgroundColor: colors.whiteColor,
     borderRadius: scale(16),
     margin: scale(10),
@@ -514,12 +504,12 @@ const styles = StyleSheet.create({
     color: colors.mainColor,
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.whiteColor,
   },
   panel:
-  //bottomsheet
+  // bottomsheet
   {
     height: verticalScale(72 * 14),
     padding: scale(10),
@@ -536,7 +526,7 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(-15),
   },
   header: {
-    width: "100%",
+    width: '100%',
     height: verticalScale(50),
     paddingTop: verticalScale(10),
     backgroundColor: colors.whiteColor,
@@ -544,7 +534,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: scale(16),
   },
   panelHeader: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   panelHandle: {
     width: scale(40),
@@ -560,11 +550,11 @@ const styles = StyleSheet.create({
   },
   calendarStyle: {
     height: verticalScale(100),
-    margin: "3%"
+    margin: '3%',
   },
   dateStyle: {
     color: colors.whiteColor,
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
   },
   highlightDateStyle: {
     color: colors.whiteColor,
@@ -584,13 +574,13 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)'
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   flatListContainer: {
     flex: 1,
-    width: "95%",
-    justifyContent: "center",
+    width: '95%',
+    justifyContent: 'center',
     marginTop: verticalScale(10),
-    marginBottom: verticalScale(20)
+    marginBottom: verticalScale(20),
   },
 });

@@ -1,18 +1,20 @@
-import React from "react";
-import Agenda from "@screens/Agenda";
-import { scale } from "react-native-size-matters";
-import colors from "@constants/colors";
-import { Ionicons } from "@expo/vector-icons";
+import React from 'react';
 
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-const Drawer = createDrawerNavigator();
-const Tab = createBottomTabNavigator()
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export function Admin() {
+import Agenda from '@screens/Agenda';
+
+import colors from '@constants/colors';
+
+const Tab = createBottomTabNavigator();
+
+export default function Admin() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        // eslint-disable-next-line react/prop-types
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
@@ -31,16 +33,7 @@ export function Admin() {
         inactiveTintColor: colors.disableColor,
       }}
     >
-      <Tab.Screen name='Agenda' component={Agenda} />
+      <Tab.Screen name="Agenda" component={Agenda} />
     </Tab.Navigator>
-
-    // <Drawer.Navigator
-    //   drawerStyle={{
-    //     backgroundColor: colors.whiteColor,
-    //     width: scale(180),
-    //   }}
-    // >
-    //   <Drawer.Screen name="Agenda" component={Agenda} />
-    // </Drawer.Navigator>
   );
 }

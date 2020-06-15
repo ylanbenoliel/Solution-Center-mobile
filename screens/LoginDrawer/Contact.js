@@ -1,4 +1,7 @@
-import React from "react";
+/* eslint-disable global-require */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react/prop-types */
+import React from 'react';
 import {
   View,
   Text,
@@ -9,18 +12,21 @@ import {
   Platform,
   Image,
   ScrollView,
-} from "react-native";
-import { GeneralStatusBar } from "@components";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { verticalScale, scale } from "react-native-size-matters";
+} from 'react-native';
+import { verticalScale, scale } from 'react-native-size-matters';
 
-import colors from "@constants/colors";
-import backgroundLogo from "@assets/LogoHorizontal.png";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import { GeneralStatusBar } from '@components';
+
+import backgroundLogo from '@assets/LogoHorizontal.png';
+
+import colors from '@constants/colors';
+
 const ICON_SIZE = scale(24);
 
-const Separator = () => {
-  return <View style={{ marginTop: scale(8) }} />;
-};
+const Separator = () => <View style={{ marginTop: scale(8) }} />;
 
 export default function Contact({ navigation }) {
   function openWpp(phone) {
@@ -29,16 +35,16 @@ export default function Contact({ navigation }) {
   }
 
   function openInstagram() {
-    Linking.openURL("instagram://user?username=solutioncenterbelem");
+    Linking.openURL('instagram://user?username=solutioncenterbelem');
   }
 
   function openMaps() {
     const scheme = Platform.select({
-      ios: "maps:0,0?q=",
-      android: "geo:0,0?q=",
+      ios: 'maps:0,0?q=',
+      android: 'geo:0,0?q=',
     });
     const latLng = `${-1.4405587},${-48.4647}`;
-    const label = "Solution Center Belém";
+    const label = 'Solution Center Belém';
     const url = Platform.select({
       ios: `${scheme}${label}@${latLng}`,
       android: `${scheme}${latLng}(${label})`,
@@ -47,26 +53,18 @@ export default function Contact({ navigation }) {
     Linking.openURL(url);
   }
 
-  function sendMail() {
-    Platform.OS === "ios"
-      ? Linking.openURL("mailto:contato@solutioncenterbelem.com")
-      : Linking.openURL("googlegmail:contato@solutioncenterbelem.com");
-  }
-
   function openSite() {
-    Linking.openURL("https://www.solutioncenterbelem.com/");
+    Linking.openURL('https://www.solutioncenterbelem.com/');
   }
 
-  const WppPhone = ({ phone }) => {
-    return (
-      <TouchableOpacity
-        style={styles.clickableArea}
-        onPress={() => openWpp(phone)}
-      >
-        <Text style={[styles.text, styles.clickableText]}>{phone}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const WppPhone = ({ phone }) => (
+    <TouchableOpacity
+      style={styles.clickableArea}
+      onPress={() => openWpp(phone)}
+    >
+      <Text style={[styles.text, styles.clickableText]}>{phone}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -78,7 +76,7 @@ export default function Contact({ navigation }) {
         source={backgroundLogo}
         imageStyle={{
           opacity: 0.1,
-          resizeMode: "contain",
+          resizeMode: 'contain',
         }}
         style={styles.imageBackground}
       >
@@ -86,7 +84,7 @@ export default function Contact({ navigation }) {
         <View style={styles.header}>
           <View style={{ paddingLeft: verticalScale(20) }} />
           <Text style={[styles.text, styles.headerName]}>Contato</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <MaterialCommunityIcons
               name="close"
               size={scale(32)}
@@ -182,15 +180,16 @@ export default function Contact({ navigation }) {
         <ScrollView style={styles.localizationScrollView}>
           <View style={styles.localizationContainer}>
             <Text style={[styles.text, styles.headerName]}>Localização</Text>
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: 'center' }}>
               <Text style={styles.text}>
-                {"\t\t"}Localização privilegiada, bairro central e próximo a
+                {'\t\t'}
+                Localização privilegiada, bairro central e próximo a
                 grandes avenidas. Temos estacionamento rotativo, com entrada
                 pela Tv. Humaitá.
               </Text>
             </View>
             {/*  */}
-            <View style={{ width: "100%" }}>
+            <View style={{ width: '100%' }}>
               <View style={styles.localizationContent}>
                 <MaterialCommunityIcons
                   name="crosshairs-gps"
@@ -199,7 +198,9 @@ export default function Contact({ navigation }) {
                 />
                 <TouchableOpacity onPress={() => openMaps()}>
                   <Text style={[styles.text, styles.clickableText]}>
-                    Av. Rômulo Maiorana, nº 700,{"\n"}Ed. Vitta Office, Sala
+                    Av. Rômulo Maiorana, nº 700,
+                    {'\n'}
+                    Ed. Vitta Office, Sala
                     1414
                     {/* {"\n"}Marco. CEP: 66093-672 */}
                   </Text>
@@ -208,7 +209,7 @@ export default function Contact({ navigation }) {
             </View>
             <Separator />
             <Image
-              source={require("../../assets/Maps.jpeg")}
+              source={require('../../assets/Maps.jpeg')}
               resizeMode="stretch"
               style={{ width: scale(300), height: verticalScale(200) }}
             />
@@ -221,26 +222,26 @@ export default function Contact({ navigation }) {
 
 const styles = StyleSheet.create({
   imageBackground: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
   },
   header: {
-    width: "100%",
+    width: '100%',
     height: verticalScale(56),
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     marginTop: verticalScale(40),
   },
   headerName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: scale(36),
   },
   text: {
-    fontFamily: "Amaranth-Regular",
+    fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
-    textAlign: "justify",
+    textAlign: 'justify',
   },
   clickableArea: {
     padding: scale(2),
@@ -250,27 +251,27 @@ const styles = StyleSheet.create({
   },
   contactContainer: {
     flex: 1,
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
     marginTop: verticalScale(10),
     marginHorizontal: scale(10),
     paddingLeft: scale(10),
   },
   linksContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   whatsappNumbers: {
     marginLeft: scale(20),
     width: scale(230),
     height: verticalScale(55),
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
   },
   lastNumber: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     marginTop: verticalScale(5),
   },
   localizationScrollView: {
@@ -280,15 +281,15 @@ const styles = StyleSheet.create({
   },
   localizationContainer: {
     flex: 2,
-    alignItems: "center",
+    alignItems: 'center',
     marginHorizontal: scale(20),
     // marginVertical: verticalScale(10),
   },
   localizationContent: {
-    width: "80%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: '80%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginLeft: 0,
     marginTop: verticalScale(10),
   },

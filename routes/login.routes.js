@@ -1,19 +1,22 @@
-import React from "react";
-import Login from "@screens/Login";
+import React from 'react';
+import { scale } from 'react-native-size-matters';
+
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+import Login from '@screens/Login';
 import {
   WhoWeAre,
   Ambients,
   Plans,
   Partners,
   Contact,
-} from "@screens/LoginDrawer/index";
-import { scale } from "react-native-size-matters";
-import colors from "@constants/colors";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+} from '@screens/LoginDrawer/index';
+
+import colors from '@constants/colors';
 
 const Drawer = createDrawerNavigator();
 
-export function LoginDrawer() {
+export default function LoginDrawer() {
   return (
     <Drawer.Navigator
       drawerStyle={{

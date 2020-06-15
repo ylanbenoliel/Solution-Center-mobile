@@ -1,58 +1,61 @@
-import React from 'react'
-import { View, Text } from 'react-native'
-import { Separator, StatusButton } from './index'
-import { scale, verticalScale } from 'react-native-size-matters'
+/* eslint-disable react/prop-types */
+/* eslint-disable no-undef */
+import React from 'react';
+import { View, Text } from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
 
-const ScheduleItem = ({ event, date, room, time, code }) => {
+import { Separator, StatusButton } from './index';
 
-  return (
+const ScheduleItem = ({
+  event, date, room, time, code,
+}) => (
+  <View
+    key={event}
+    style={{
+      width: '100%',
+      height: verticalScale(70),
+      flexDirection: 'row',
+      alignItems: 'center',
+    }}
+  >
+    {/*  */}
     <View
-      key={event}
       style={{
-        width: "100%",
-        height: verticalScale(70),
-        flexDirection: "row",
-        alignItems: "center",
+        height: '100%',
+        justifyContent: 'center',
       }}
     >
-      {/*  */}
-      <View
+      <Text
         style={{
-          height: "100%",
-          justifyContent: "center",
+          marginHorizontal: scale(10),
+          color: colors.mainColor,
+          fontSize: scale(22),
         }}
       >
-        <Text
-          style={{
-            marginHorizontal: scale(10),
-            color: colors.mainColor,
-            fontSize: scale(22),
-          }}
-        >
-          {time.split(':')[0]}h
-        </Text>
-      </View>
-
-      <Separator vertical />
-
-      <View
-        style={{
-          flex: 1,
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <StatusButton
-          code={code}
-          onCheckIn={() => reserveRoom(room, date, time)}
-          onDismiss={() => dismissRoom(event)}
-        />
-      </View>
+        {time.split(':')[0]}
+        h
+      </Text>
     </View>
-  );
-};
 
-const ScheduleItemMemoized = React.memo(ScheduleItem)
+    <Separator vertical />
 
-export default ScheduleItemMemoized
+    <View
+      style={{
+        flex: 1,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <StatusButton
+        code={code}
+        onCheckIn={() => reserveRoom(room, date, time)}
+        onDismiss={() => dismissRoom(event)}
+      />
+    </View>
+  </View>
+);
+
+const ScheduleItemMemoized = React.memo(ScheduleItem);
+
+export default ScheduleItemMemoized;

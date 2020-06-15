@@ -4,18 +4,18 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       [
-        "module-resolver",
+        'module-resolver',
         {
-          "root": ["./"],
-          "alias": {
-            "@components": "./components",
-            "@screens": "./screens",
-            "@contexts": "./contexts",
-            "@helpers": "./helpers",
-            "@services": "./services",
-            "@assets": "./assets",
-            "@constants": "./constants"
-          }
+          root: ['./'],
+          alias: {
+            '@components': './components',
+            '@screens': './screens',
+            '@contexts': './contexts',
+            '@helpers': './helpers',
+            '@services': './services',
+            '@assets': './assets',
+            '@constants': './constants',
+          },
         },
       ],
     ],
