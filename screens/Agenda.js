@@ -30,6 +30,8 @@ import { api } from '@services/api';
 
 import colors from '@constants/colors';
 import { ROOM_IDS } from '@constants/fixedValues';
+// eslint-disable-next-line no-unused-vars
+import LocaleConfig from '@constants/localeWixCalendar';
 
 export default function Agenda() {
   // const { signOut } = useContext(AuthContext);

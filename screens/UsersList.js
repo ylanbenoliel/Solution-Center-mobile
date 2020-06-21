@@ -14,22 +14,42 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { UserItem } from '@components';
+import {
+  UserItem, ShowInfo, AdminUserModal, Loading,
+} from '@components';
+
+import { sanitazeString } from '@helpers/functions';
+
+import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
-import { sanitazeString } from '../helpers/functions';
-import { api } from '../services/api';
-
 const UsersList = () => {
-  const [totalUsers, setTotalUsers] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(null);
   const [error, setError] = useState('');
   const [nameInput, setNameInput] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [eventList, setEventList] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
+    return () => {
+      setTotalUsers(null);
+      setFilteredUsers(null);
+      setUserInfo(null);
+      setEventList(null);
+    };
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [!!error]);
 
   useEffect(() => {
     setFilteredUsers(null);
@@ -48,9 +68,7 @@ const UsersList = () => {
         });
         setTotalUsers(users);
       })
-      .catch(() => setError('Erro ao buscar usuários.'))
-      .finally(() => {
-      });
+      .catch(() => setError('Erro ao buscar usuários.'));
   }
 
   function handleSearch() {
@@ -65,31 +83,57 @@ const UsersList = () => {
     setFilteredUsers(searchUsers);
   }
 
-  function renderSearchedUsers() {
-    if (filteredUsers) {
-      return (
-        <FlatList
-          data={filteredUsers}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <UserItem avatar={item.avatarUrl} name={item.name} />
-          )}
-        />
-      );
-    }
+  function handleOpenModal(user) {
+    setUserInfo(user);
+    setLoading(true);
+    api.post('/admin/events/list/user', {
+      user: user.id,
+    })
+      .then((res) => {
+        const { events } = res.data;
+        setLoading(false);
+        setEventList(events);
+        setIsModalOpen(true);
+      })
+      .catch(() => {
+        setLoading(false);
+        setError('Erro ao carregar dados');
+      });
+  }
 
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    fetchUsers();
+  }
+
+  function renderSearchedUsers() {
+    const hasFilteredUsers = filteredUsers !== null ? filteredUsers : totalUsers;
     return (
       <FlatList
-        data={totalUsers}
+        data={hasFilteredUsers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <UserItem avatar={item.avatarUrl} name={item.name} />
+          <UserItem
+            {...item}
+            onClick={() => handleOpenModal(item)}
+          />
         )}
       />
     );
   }
+
+  const renderLoading = () => {
+    if (loading) {
+      return (
+        <View style={styles.conditionalLoading}>
+          <Loading loading={loading} />
+        </View>
+      );
+    }
+    return null;
+  };
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: verticalScale(35) }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
 
         <View style={styles.inputContainer}>
@@ -105,32 +149,52 @@ const UsersList = () => {
             autoCorrect={false}
             placeholderTextColor={colors.placeholderColor}
           />
-          <TouchableOpacity onPress={() => setNameInput('')}>
 
+          <TouchableOpacity onPress={() => setNameInput('')}>
             <MaterialCommunityIcons
               name="close"
               size={scale(32)}
               color={colors.placeholderColor}
             />
           </TouchableOpacity>
-
         </View>
+
         <Button
           title="Buscar"
           color={colors.mainColor}
           onPress={() => handleSearch()}
         />
+
+        <View style={{ alignItems: 'center' }}>
+          <ShowInfo error={error} />
+        </View>
+
         {renderSearchedUsers()}
+
+        {!!userInfo && (
+        <AdminUserModal
+          userInfo={userInfo}
+          userEvents={eventList}
+          isVisible={isModalOpen}
+          onClose={() => handleCloseModal()}
+        />
+        )}
+
       </View>
+      {renderLoading()}
     </SafeAreaView>
 
   );
 };
 
 const styles = StyleSheet.create({
-  container: { marginHorizontal: scale(10) },
+  container: {
+    marginHorizontal: scale(10),
+    marginTop: verticalScale(40),
+  },
   inputContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: verticalScale(20),
     borderRadius: scale(4),
@@ -144,9 +208,18 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   textInput: {
-    marginLeft: scale(5),
+    marginLeft: scale(15),
     fontSize: scale(18),
     height: verticalScale(42),
+  },
+  conditionalLoading: {
+    zIndex: 10,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
 });
 

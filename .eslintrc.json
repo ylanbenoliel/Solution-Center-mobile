@@ -29,7 +29,7 @@
       "error",
       {
         "functions": false,
-        "variables":false
+        "variables": false
       }
     ],
     "react/jsx-filename-extension": [
@@ -71,6 +71,15 @@
           "order": "asc",
           "ignoreCase": true
         }
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "warn",
+      {
+        "devDependencies": false, 
+       "optionalDependencies": false, 
+       "peerDependencies": false,
+        "packageDir": "./"
       }
     ]
   }

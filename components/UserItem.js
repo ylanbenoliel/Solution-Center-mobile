@@ -1,23 +1,25 @@
 /* eslint-disable global-require */
 import React from 'react';
 import {
-  View, Image, Text, StyleSheet,
+  View, Image, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import colors from '@constants/colors';
 
 // eslint-disable-next-line react/prop-types
-const UserItem = ({ name, avatar }) => {
-  const avatarUrl = avatar
-    ? { uri: `${avatar}` }
+const UserItem = ({ name, avatarUrl, onClick }) => {
+  const avatarImageUrl = avatarUrl
+    ? { uri: `${avatarUrl}` }
     : require('@assets/icon.png');
 
   return (
-    <View style={styles.container}>
-      <Image source={avatarUrl} style={styles.avatarImage} />
-      <Text style={styles.userName}>{name}</Text>
-    </View>
+    <TouchableOpacity onPress={() => onClick()}>
+      <View style={styles.container}>
+        <Image source={avatarImageUrl} style={styles.avatarImage} />
+        <Text style={styles.userName}>{name}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

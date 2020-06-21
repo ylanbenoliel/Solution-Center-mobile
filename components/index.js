@@ -1,3 +1,4 @@
+import AdminUserModal from './AdminUserModal';
 import GeneralStatusBar from './GeneralStatusBar';
 import Loading from './Loading';
 import Separator from './Separator';
@@ -7,6 +8,7 @@ import UserItem from './UserItem';
 import VacancyModal from './VacancyModal';
 
 export {
+  AdminUserModal,
   Separator,
   StatusButton,
   GeneralStatusBar,
