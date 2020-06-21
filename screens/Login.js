@@ -70,7 +70,7 @@ export default function Login({ navigation }) {
       })
       .then((response) => {
         setLoading(false);
-        if (response.data.active === '0') {
+        if (response.data.active === 0) {
           return setError('Usuário pendente de liberação.');
         }
         signIn(response);
