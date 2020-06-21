@@ -13,6 +13,7 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { isPast, parseISO } from 'date-fns';
 
 import {
   UserItem, ShowInfo, AdminUserModal, Loading,
@@ -91,8 +92,14 @@ const UsersList = () => {
     })
       .then((res) => {
         const { events } = res.data;
+        const pastEvents = events.filter((evt) => {
+          if (isPast(parseISO(evt.date.split('T')[0]))) {
+            return evt;
+          }
+          return false;
+        });
         setLoading(false);
-        setEventList(events);
+        setEventList(pastEvents);
         setIsModalOpen(true);
       })
       .catch(() => {
