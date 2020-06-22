@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import { verticalScale, scale } from 'react-native-size-matters';
 
@@ -16,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { GeneralStatusBar } from '@components';
 
+import Logo from '@assets/logo-solution-azul.svg';
 import background from '@assets/whoweare.png';
 
 import colors from '@constants/colors';
@@ -24,15 +24,15 @@ export default function WhoWeAre({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.whiteColor }}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor="rgba(255,255,0,0.1)"
+        barStyle="dark-content"
       />
       <ImageBackground source={background} style={styles.imageBackground}>
         {/*  */}
         <View style={styles.header}>
           <View style={{ paddingLeft: scale(20) }} />
           <Text style={[styles.text, styles.headerName]}>Sobre nós</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.push('LoginDrawer')}>
             <MaterialIcons
               name="close"
               size={32}
@@ -69,7 +69,7 @@ export default function WhoWeAre({ navigation }) {
           </View>
 
           <View style={styles.logoContainer}>
-            <Image source={require('../../assets/LogoHorizontal.png')} />
+            <Logo width={300} height={70} />
           </View>
         </View>
       </ImageBackground>
