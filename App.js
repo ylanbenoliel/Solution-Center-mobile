@@ -42,6 +42,7 @@ export default function App() {
   }, []);
   const [fontsLoaded] = useFonts({
     'Amaranth-Regular': require('./assets/fonts/Amaranth-Regular.ttf'),
+    Axiforma: require('./assets/fonts/Axiforma.otf'),
   });
   if (!fontsLoaded) {
     return <AppLoading />;

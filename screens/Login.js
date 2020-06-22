@@ -12,7 +12,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
-  ImageBackground,
   Platform,
   ActivityIndicator,
   SafeAreaView,
@@ -28,6 +27,8 @@ import { GeneralStatusBar, ShowInfo } from '@components';
 import AuthContext from '@contexts/auth';
 
 import { api } from '@services/api';
+
+import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
@@ -116,101 +117,115 @@ export default function Login({ navigation }) {
         backgroundColor="rgba(255,255,255,0.1)"
         barStyle="dark-content"
       />
-      <ImageBackground
+      {/* <ImageBackground
         style={{ flex: 1 }}
         imageStyle={styles.imageBackground}
         source={require('../assets/LogoHorizontal.png')}
         resizeMode="center"
-      >
-        <View style={styles.header}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingLeft: scale(20),
-            }}
-          >
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <MaterialIcons
-                name="menu"
-                size={scale(32)}
-                color={colors.navigationColor}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <KeyboardAvoidingView
-          behavior={Platform.select({
-            ios: 'padding',
-            android: null,
-          })}
+      > */}
+      <View style={styles.header}>
+        <View
           style={{
-            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: scale(20),
           }}
         >
-          <View style={styles.loginContainer}>
-            {/*  */}
-            <Text style={[styles.text, styles.headerText]}>Agenda Fácil</Text>
-            <View style={{ margin: verticalScale(20) }} />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <MaterialIcons
+              name="menu"
+              size={scale(32)}
+              color={colors.navigationColor}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.select({
+          ios: 'padding',
+          android: null,
+        })}
+        style={{
+          flex: 1,
+        }}
+      >
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.text}>Email</Text>
-              <View style={styles.textInputContainer}>
-                <TextInput
-                  style={[styles.text, styles.textInput]}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  placeholder="Digite seu email"
-                  placeholderTextColor={colors.placeholderColor}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyType="go"
-                  onSubmitEditing={() => field2.current.focus()}
-                  autoCorrect={false}
-                  blurOnSubmit={false}
-                />
-              </View>
-            </View>
+        <View style={styles.loginContainer}>
+          <Logo width={200} height={70} />
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.text}>Senha</Text>
-              <View style={styles.textInputContainer}>
-                <TextInput
-                  ref={field2}
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
-                  style={[styles.text, styles.textInput]}
-                  placeholder="Digite sua senha"
-                  placeholderTextColor={colors.placeholderColor}
-                  autoCapitalize="none"
-                  onSubmitEditing={() => handleLogin()}
-                  secureTextEntry
-                  autoCorrect={false}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => {
-                handleLogin();
-              }}
-            >
-              {showLoadingLogin()}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => {
-                handleRegister();
-              }}
-            >
-              <Text style={[styles.text, styles.buttonText]}>Registrar</Text>
-            </TouchableOpacity>
-            <ShowInfo error={error} />
+          <View style={{
+            flexDirection: 'row',
+            width: '55%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          >
+            <Text style={[styles.text, styles.headerText]}>
+              Entre com sua
+              conta Solution
+            </Text>
           </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
+
+          <View style={{ margin: verticalScale(20) }} />
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.text}>Email</Text>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={[styles.text, styles.textInput]}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholder="Digite seu email"
+                placeholderTextColor={colors.placeholderColor}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="go"
+                onSubmitEditing={() => field2.current.focus()}
+                autoCorrect={false}
+                blurOnSubmit={false}
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.text}>Senha</Text>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                ref={field2}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                style={[styles.text, styles.textInput]}
+                placeholder="Digite sua senha"
+                placeholderTextColor={colors.placeholderColor}
+                autoCapitalize="none"
+                onSubmitEditing={() => handleLogin()}
+                secureTextEntry
+                autoCorrect={false}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => {
+              handleLogin();
+            }}
+          >
+            {showLoadingLogin()}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => {
+              handleRegister();
+            }}
+          >
+            <Text style={[styles.text, styles.buttonText]}>Registre-se</Text>
+          </TouchableOpacity>
+          <ShowInfo error={error} />
+        </View>
+      </KeyboardAvoidingView>
+      {/* </ImageBackground> */}
     </SafeAreaView>
   );
 }
@@ -220,7 +235,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: verticalScale(30),
   },
   imageBackground: {
     opacity: 0.1,
@@ -231,8 +245,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
   headerText: {
-    fontSize: scale(32),
+    fontSize: scale(28),
     color: colors.mainColor,
+    textAlign: 'center',
   },
   text: {
     fontFamily: 'Amaranth-Regular',
