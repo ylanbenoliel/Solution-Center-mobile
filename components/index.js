@@ -1,6 +1,7 @@
 import AdminUserModal from './AdminUserModal';
 import GeneralStatusBar from './GeneralStatusBar';
 import Loading from './Loading';
+import RoomButton from './RoomButton';
 import Separator from './Separator';
 import ShowInfo from './ShowInfo';
 import StatusButton from './StatusButton';
@@ -16,4 +17,5 @@ export {
   ShowInfo,
   Loading,
   UserItem,
+  RoomButton,
 };

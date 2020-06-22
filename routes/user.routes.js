@@ -1,5 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,7 +19,7 @@ export default function User() {
           let iconName;
 
           if (route.name === 'Salas') {
-            iconName = 'ios-bookmarks';
+            iconName = 'ios-calendar';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;

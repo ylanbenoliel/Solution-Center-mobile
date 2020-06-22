@@ -1,3 +1,4 @@
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 /* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
@@ -8,9 +9,8 @@ import {
   View,
   SafeAreaView,
   StyleSheet,
-  TouchableOpacity,
-  Text,
   FlatList,
+  Text,
   Dimensions,
 } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
@@ -26,7 +26,6 @@ import {
   add,
   isAfter,
 } from 'date-fns';
-import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet from 'reanimated-bottom-sheet';
 
 import {
@@ -35,6 +34,7 @@ import {
   Separator,
   StatusButton,
   Loading,
+  RoomButton,
 } from '@components';
 
 import { removeDuplicates } from '@helpers/functions';
@@ -118,7 +118,7 @@ export default function Schedule() {
         );
       })
       .catch(() => {
-        setError('Erro ao buscar horários disponíveis.');
+        setError('Erro ao buscar dias disponíveis.');
       });
   }, []);
 
@@ -282,17 +282,6 @@ export default function Schedule() {
       });
   }
 
-  const Room = ({ name, onClick }) => (
-    <TouchableOpacity
-      style={styles.roomButton}
-      onPress={() => {
-        onClick();
-      }}
-    >
-      <Text style={[styles.text, styles.roomText]}>{name}</Text>
-    </TouchableOpacity>
-  );
-
   const ScheduleItem = ({
     event, date, room, time, code,
   }) => (
@@ -406,68 +395,61 @@ export default function Schedule() {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
-      <LinearGradient
-        colors={[colors.mainColor, colors.secondaryColor]}
-        style={{
-          flex: 1,
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height,
-        }}
-      >
-        <View style={styles.calendarContainer}>
-          <View style={styles.calendarStrip}>
-            <CalendarStrip
-              ref={calendarRef}
-              selectedDate={INITIALDATE}
-              startingDate={INITIALDATE}
-              locale={LOCALE}
-              calendarAnimation={{ type: 'sequence', duration: 300 }}
-              daySelectionAnimation={{
-                type: 'border',
-                duration: 100,
-                borderWidth: 3,
-                borderHighlightColor: colors.accentColor,
-              }}
-              style={styles.calendarStyle}
-              calendarHeaderStyle={styles.text}
-              dateNumberStyle={styles.dateStyle}
-              dateNameStyle={styles.dateStyle}
-              highlightDateNumberStyle={styles.highlightDateStyle}
-              highlightDateNameStyle={styles.highlightDateStyle}
-              disabledDateNameStyle={styles.disabledDateStyle}
-              disabledDateNumberStyle={styles.disabledDateStyle}
-              datesBlacklist={datesBlacklist}
-              datesWhitelist={datesWhitelist}
-              iconLeft={require('../assets/chevron_left.png')}
-              iconRight={require('../assets/chevron_right.png')}
+
+      <View style={styles.calendarContainer}>
+        <View style={styles.calendarStrip}>
+          <CalendarStrip
+            ref={calendarRef}
+            selectedDate={INITIALDATE}
+            startingDate={INITIALDATE}
+            locale={LOCALE}
+            calendarAnimation={{ type: 'sequence', duration: 300 }}
+            daySelectionAnimation={{
+              type: 'border',
+              duration: 100,
+              borderWidth: 3,
+              borderHighlightColor: colors.accentColor,
+            }}
+            style={styles.calendarStyle}
+            calendarHeaderStyle={styles.text}
+            dateNumberStyle={styles.dateStyle}
+            dateNameStyle={styles.dateStyle}
+            highlightDateNumberStyle={styles.highlightDateStyle}
+            highlightDateNameStyle={styles.highlightDateStyle}
+            disabledDateNameStyle={styles.disabledDateStyle}
+            disabledDateNumberStyle={styles.disabledDateStyle}
+            datesBlacklist={datesBlacklist}
+            datesWhitelist={datesWhitelist}
+          />
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <ShowInfo error={error} success={success} />
+        </View>
+
+        <View style={styles.roomsContainer}>
+          <Text style={[styles.text, styles.selectRoomText]}>
+            Selecione a sala
+          </Text>
+          <View style={styles.flatListContainer}>
+            <FlatList
+              data={ROOM_DATA}
+              keyExtractor={(item) => item.room.toString()}
+              renderItem={({ item }) => (
+                <RoomButton
+                  {...item}
+                  onClick={() => getEventsByDate(item.room)}
+                />
+              )}
             />
           </View>
-
-          <View style={{ alignItems: 'center' }}>
-            <ShowInfo error={error} success={success} />
-          </View>
-
-          <View style={styles.roomsContainer}>
-            <Text style={[styles.text, styles.selectRoomText]}>
-              Selecione a sala
-            </Text>
-            <View style={styles.flatListContainer}>
-              <FlatList
-                data={ROOM_DATA}
-                keyExtractor={(item) => item.room.toString()}
-                renderItem={({ item }) => (
-                  <Room {...item} onClick={() => getEventsByDate(item.room)} />
-                )}
-              />
-            </View>
-            {calendarRef === undefined ? null : <BSheet />}
-          </View>
+          {calendarRef === undefined ? null : <BSheet />}
         </View>
-        {renderLoading()}
-      </LinearGradient>
+      </View>
+      {renderLoading()}
     </SafeAreaView>
   );
 }
@@ -475,8 +457,10 @@ export default function Schedule() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     position: 'absolute',
+    // backgroundColor: colors.whiteColor,
   },
   calendarContainer: {
     flex: 2,
@@ -488,24 +472,11 @@ const styles = StyleSheet.create({
     flex: 4,
     alignItems: 'center',
   },
-  roomButton: {
-    width: '95%',
-    height: verticalScale(120),
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    backgroundColor: colors.whiteColor,
-    borderRadius: scale(16),
-    margin: scale(10),
-  },
-  roomText: {
-    margin: scale(10),
-    fontSize: scale(18),
-    color: colors.mainColor,
-  },
+
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
-    color: colors.whiteColor,
+    color: colors.mainColor,
   },
   panel:
   // bottomsheet
@@ -514,8 +485,7 @@ const styles = StyleSheet.create({
     padding: scale(10),
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
-    paddingBottom: verticalScale(10),
-    marginBottom: 72,
+    marginBottom: verticalScale(20),
   },
   panelSaturday: {
     height: verticalScale(72 * 7.5),
@@ -552,17 +522,17 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   dateStyle: {
-    color: colors.whiteColor,
+    color: colors.mainColor,
     fontFamily: 'Amaranth-Regular',
   },
   highlightDateStyle: {
-    color: colors.whiteColor,
+    color: colors.accentColor,
   },
   disabledDateStyle: {
     color: colors.disableColor,
   },
   selectRoomText: {
-    color: colors.whiteColor,
+    color: colors.mainColor,
     fontSize: 24,
     marginTop: 5,
   },
@@ -580,6 +550,7 @@ const styles = StyleSheet.create({
     width: '95%',
     justifyContent: 'center',
     marginTop: verticalScale(10),
+    paddingBottom: verticalScale(25),
     marginBottom: verticalScale(20),
   },
 });
