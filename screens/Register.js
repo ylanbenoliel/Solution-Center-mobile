@@ -38,7 +38,8 @@ export default function Register({ navigation }) {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState({});
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const field2 = useRef();
   const field3 = useRef();
@@ -49,10 +50,17 @@ export default function Register({ navigation }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setError('');
+      setError(null);
     }, 2200);
     return () => clearTimeout(timer);
   }, [error]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSuccess(null);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [success]);
 
   async function sendAvatarImage(userId) {
     const apiUrl = `${url}/users/${userId}/avatar`;
@@ -107,9 +115,16 @@ export default function Register({ navigation }) {
       phone,
     })
       .then((response) => {
-        sendAvatarImage(response.data.id).then(() => {
-          navigation.push('LoginDrawer');
-        });
+        sendAvatarImage(response.data.id)
+          .then(() => {
+            setSuccess('Usuário salvo, redirecionando ao login');
+            setTimeout(() => {
+              navigation.push('LoginDrawer');
+            }, 2500);
+          })
+          .catch(() => {
+            setError('Erro ao enviar imagem');
+          });
       })
       .catch(() => {
         setError('Erro ao salvar usuário');
@@ -144,8 +159,8 @@ export default function Register({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
       <View style={styles.header}>
         <TouchableOpacity
@@ -158,7 +173,7 @@ export default function Register({ navigation }) {
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={scale(32)}
+            size={scale(40)}
             color={colors.navigationColor}
           />
         </TouchableOpacity>
@@ -180,7 +195,7 @@ export default function Register({ navigation }) {
               >
                 <MaterialCommunityIcons
                   name="camera"
-                  size={scale(16)}
+                  size={scale(24)}
                   color={colors.whiteColor}
                 />
               </TouchableOpacity>
@@ -233,7 +248,7 @@ export default function Register({ navigation }) {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 style={[styles.text, styles.textInput]}
-                placeholder="Mínimo 8 caracteres"
+                placeholder="Mínimo 6 caracteres"
                 placeholderTextColor={colors.placeholderColor}
                 autoCapitalize="none"
                 returnKeyType="next"
@@ -332,7 +347,9 @@ export default function Register({ navigation }) {
               </View>
             </View>
             {/*  */}
-            <ShowInfo error={error} />
+
+            <ShowInfo error={error} success={success} />
+
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => {
@@ -341,6 +358,7 @@ export default function Register({ navigation }) {
             >
               {showLoadingRegister()}
             </TouchableOpacity>
+
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
@@ -362,17 +380,16 @@ const styles = StyleSheet.create({
   header: {
     height: verticalScale(48),
     justifyContent: 'center',
-    marginTop: verticalScale(20),
   },
   avatarContainer: {
-    width: '32%',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   avatarImageContainer: {
     backgroundColor: colors.disableColor,
-    width: scale(100),
-    height: verticalScale(115),
-    borderRadius: scale(60),
+    width: scale(150),
+    height: scale(150),
+    borderRadius: scale(75),
   },
   avatarImage: {
     width: '100%',
@@ -382,13 +399,13 @@ const styles = StyleSheet.create({
   galleryButtonContainer: {
     zIndex: 2,
     justifyContent: 'flex-end',
-    left: scale(-20),
+    marginLeft: scale(-30),
   },
   galleryButton: {
     backgroundColor: colors.mainColor,
-    width: scale(30),
-    height: scale(30),
-    borderRadius: scale(15),
+    width: scale(50),
+    height: scale(50),
+    borderRadius: scale(25),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -402,8 +419,10 @@ const styles = StyleSheet.create({
   textInputContainer: {
     borderRadius: scale(4),
     borderWidth: scale(2),
+    height: verticalScale(40),
     borderColor: colors.mainColor,
     marginBottom: scale(20),
+    justifyContent: 'center',
   },
   textInput: {
     marginLeft: scale(5),

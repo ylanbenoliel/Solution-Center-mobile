@@ -244,8 +244,10 @@ const styles = StyleSheet.create({
   textInputContainer: {
     borderRadius: scale(4),
     borderWidth: scale(2),
+    height: verticalScale(40),
     borderColor: colors.mainColor,
     marginBottom: scale(20),
+    justifyContent: 'center',
   },
   textInput: {
     marginLeft: scale(5),
