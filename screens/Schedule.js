@@ -383,7 +383,7 @@ export default function Schedule() {
     >
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={['90%', '35%', '0%']}
+        snapPoints={['80%', '35%', '0%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
         initialSnap={2}
@@ -450,8 +450,6 @@ export default function Schedule() {
             <ShowInfo error={error} success={success} />
           </View>
 
-          {renderLoading()}
-
           <View style={styles.roomsContainer}>
             <Text style={[styles.text, styles.selectRoomText]}>
               Selecione a sala
@@ -468,6 +466,7 @@ export default function Schedule() {
             {calendarRef === undefined ? null : <BSheet />}
           </View>
         </View>
+        {renderLoading()}
       </LinearGradient>
     </SafeAreaView>
   );
@@ -516,7 +515,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
     paddingBottom: verticalScale(10),
-    marginBottom: verticalScale(10),
+    marginBottom: 72,
   },
   panelSaturday: {
     height: verticalScale(72 * 7.5),

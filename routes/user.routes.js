@@ -1,23 +1,37 @@
 import React from 'react';
-import { scale } from 'react-native-size-matters';
+// eslint-disable-next-line import/no-extraneous-dependencies
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Schedule from '@screens/Schedule';
 
 import colors from '@constants/colors';
 
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function User() {
   return (
-    <Drawer.Navigator
-      drawerStyle={{
-        backgroundColor: colors.whiteColor,
-        width: scale(180),
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+      // eslint-disable-next-line react/prop-types
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === 'Salas') {
+            iconName = 'ios-bookmarks';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: colors.navigationColor,
+        inactiveTintColor: colors.disableColor,
+        keyboardHidesTabBar: true,
       }}
     >
-      <Drawer.Screen name="Agendamento" component={Schedule} />
-    </Drawer.Navigator>
+      <Tab.Screen name="Salas" component={Schedule} />
+    </Tab.Navigator>
   );
 }
