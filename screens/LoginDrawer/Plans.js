@@ -89,8 +89,8 @@ export default function Plans({ navigation }) {
       }}
     >
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
       <ImageBackground
         source={backgroundLogo}

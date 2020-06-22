@@ -69,8 +69,8 @@ export default function Contact({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
       <ImageBackground
         source={backgroundLogo}
