@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Schedule from '@screens/Schedule';
@@ -14,19 +14,20 @@ const Tab = createBottomTabNavigator();
 export default function User() {
   return (
     <Tab.Navigator
+      lazy={false}
       screenOptions={({ route }) => ({
       // eslint-disable-next-line react/prop-types
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
           if (route.name === 'Salas') {
-            iconName = 'ios-calendar';
+            iconName = 'calendar-week';
           }
           if (route.name === 'Perfil') {
-            iconName = 'ios-person';
+            iconName = 'user-alt';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{

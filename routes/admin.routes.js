@@ -1,7 +1,7 @@
 import React from 'react';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Agenda from '@screens/Agenda';
@@ -14,22 +14,23 @@ const Tab = createBottomTabNavigator();
 export default function Admin() {
   return (
     <Tab.Navigator
+      lazy={false}
       screenOptions={({ route }) => ({
         // eslint-disable-next-line react/prop-types
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
           if (route.name === 'Agenda') {
-            iconName = 'ios-calendar';
+            iconName = 'calendar-alt';
           }
           if (route.name === 'Usuários') {
-            iconName = 'ios-contacts';
+            iconName = 'user-friends';
           }
           // else if (route.name === 'Settings') {
           //   iconName = focused ? 'ios-list-box' : 'ios-list';
           // }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
