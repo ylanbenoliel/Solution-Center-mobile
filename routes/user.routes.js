@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Schedule from '@screens/Schedule';
+import UserProfile from '@screens/UserProfile';
 
 import colors from '@constants/colors';
 
@@ -21,6 +22,9 @@ export default function User() {
           if (route.name === 'Salas') {
             iconName = 'ios-calendar';
           }
+          if (route.name === 'Perfil') {
+            iconName = 'ios-person';
+          }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -32,6 +36,7 @@ export default function User() {
       }}
     >
       <Tab.Screen name="Salas" component={Schedule} />
+      <Tab.Screen name="Perfil" component={UserProfile} />
     </Tab.Navigator>
   );
 }

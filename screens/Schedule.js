@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
     padding: scale(10),
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(42),
   },
   panelSaturday: {
     height: verticalScale(72 * 7.5),
@@ -496,14 +496,15 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: verticalScale(50),
-    paddingTop: verticalScale(10),
+    height: verticalScale(20),
+    marginBottom: verticalScale(-5),
     backgroundColor: colors.whiteColor,
     borderTopLeftRadius: scale(16),
     borderTopRightRadius: scale(16),
   },
   panelHeader: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
   panelHandle: {
     width: scale(40),
