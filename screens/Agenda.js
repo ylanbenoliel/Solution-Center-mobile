@@ -18,9 +18,8 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 // import { CommonActions } from '@react-navigation/native';
 import { format } from 'date-fns';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import { GeneralStatusBar, VacancyModal } from '@components';
+import { GeneralStatusBar, VacancyModal, ShowInfo } from '@components';
 
 // import AuthContext from '@contexts/auth';
 
@@ -39,13 +38,16 @@ export default function Agenda() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hours, setHours] = useState([]);
   const [users, setUsers] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const currentDate = format(new Date(), 'yyyy-MM-dd');
     setDaySelected(currentDate);
+    return () => {
+      setHours(null);
+      setUsers(null);
+    };
   }, []);
 
   function handleDayPress(day) {
@@ -119,27 +121,24 @@ export default function Agenda() {
     setIsModalOpen(false);
   }
 
-  function showFetchLoading() {
+  const RenderFetchLoading = () => {
     if (loading) {
       return <ActivityIndicator size="large" color={colors.whiteColor} />;
     }
     return <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>;
-  }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
-      <LinearGradient
-        colors={[colors.mainColor, colors.secondaryColor]}
-        style={{ flex: 1 }}
+
+      <View
+        style={styles.container}
       >
-        <View
-          style={styles.container}
-        >
-          {/* <TouchableOpacity onPress={() => {
+        {/* <TouchableOpacity onPress={() => {
             signOut()
             navigation.dispatch(
               CommonActions.reset({
@@ -150,66 +149,69 @@ export default function Agenda() {
             <Text>Sair</Text>
           </TouchableOpacity> */}
 
-          <Calendar
-            markingType="custom"
-            monthFormat="MMMM yyyy"
-            LocaleConfig
-            current={daySelected}
-            onDayPress={(date) => handleDayPress(date.dateString)}
-            hideExtraDays
-            markedDates={{
-              [daySelected]: {
-                disabled: false,
-                disableTouchEvent: false,
-                customStyles: {
-                  container: {
-                    backgroundColor: colors.accentColor,
-                  },
-                  text: {
-                    color: colors.whiteColor,
-                    fontWeight: 'bold',
-                  },
+        <Calendar
+          markingType="custom"
+          monthFormat="MMMM yyyy"
+          LocaleConfig
+          current={daySelected}
+          onDayPress={(date) => handleDayPress(date.dateString)}
+          hideExtraDays
+          markedDates={{
+            [daySelected]: {
+              disabled: false,
+              disableTouchEvent: false,
+              customStyles: {
+                container: {
+                  backgroundColor: colors.accentColor,
+                },
+                text: {
+                  color: colors.whiteColor,
+                  fontWeight: 'bold',
                 },
               },
-            }}
-            style={{
-              height: 600,
-            }}
-            theme={{
-              calendarBackground: 'rgba(0,0,0,0)',
-              selectedDayTextColor: colors.whiteColor,
-              todayTextColor: colors.accentColor,
-              dayTextColor: colors.whiteColor,
-              textDisabledColor: colors.disableColor,
-              arrowColor: colors.navigationColor,
-              disabledArrowColor: colors.disableColor,
-              monthTextColor: colors.whiteColor,
-              textDayFontFamily: 'Amaranth-Regular',
-              textDayFontSize: 16,
-              textMonthFontFamily: 'Amaranth-Regular',
-              textMonthFontSize: 16,
-              textDayHeaderFontFamily: 'Amaranth-Regular',
-              textDayHeaderFontSize: 16,
-            }}
-          />
-        </View>
-
-        <View style={styles.modalButtonContainer}>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={handleOpenModal}
-          >
-            {showFetchLoading()}
-          </TouchableOpacity>
-        </View>
-        <VacancyModal
-          isVisible={isModalOpen}
-          onClose={() => handleCloseModal()}
-          showDate={daySelected}
-          users={users}
-          hours={hours}
+            },
+          }}
+          style={{
+            borderWidth: 2,
+            borderColor: '#ccc',
+            height: 350,
+          }}
+          theme={{
+            calendarBackground: 'transparent',
+            selectedDayTextColor: colors.mainColor,
+            todayTextColor: colors.accentColor,
+            dayTextColor: colors.mainColor,
+            textDisabledColor: colors.disableColor,
+            arrowColor: colors.navigationColor,
+            disabledArrowColor: colors.disableColor,
+            monthTextColor: colors.mainColor,
+            textDayFontFamily: 'Amaranth-Regular',
+            textDayFontSize: 16,
+            textMonthFontFamily: 'Amaranth-Regular',
+            textMonthFontSize: 16,
+            textDayHeaderFontFamily: 'Amaranth-Regular',
+            textDayHeaderFontSize: 16,
+          }}
         />
-      </LinearGradient>
+      </View>
+
+      <ShowInfo error={error} />
+
+      <View style={styles.modalButtonContainer}>
+        <TouchableOpacity
+          style={styles.modalButton}
+          onPress={() => handleOpenModal()}
+        >
+          <RenderFetchLoading />
+        </TouchableOpacity>
+      </View>
+      <VacancyModal
+        isVisible={isModalOpen}
+        onClose={() => handleCloseModal()}
+        showDate={daySelected}
+        users={users}
+        hours={hours}
+      />
     </SafeAreaView>
   );
 }
@@ -217,7 +219,7 @@ export default function Agenda() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: verticalScale(70),
+    marginTop: verticalScale(70),
   },
   text: {
     fontFamily: 'Amaranth-Regular',
