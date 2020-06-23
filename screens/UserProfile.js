@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Text,
   View,
@@ -10,13 +10,17 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { FontAwesome5 } from '@expo/vector-icons';
+import { CommonActions } from '@react-navigation/native';
 
 import { GeneralStatusBar } from '@components';
+
+import AuthContext from '@contexts/auth';
 
 import { api } from '@services/api';
 
@@ -26,9 +30,12 @@ import Logo from '@assets/logo-solution-azul.svg';
 import colors from '@constants/colors';
 
 // eslint-disable-next-line no-undef
-const UserProfile = () => {
+const UserProfile = ({ navigation }) => {
+  const { signOut } = useContext(AuthContext);
+
   const [userInfo, setUserInfo] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
+
   useEffect(() => {
     api.get('/user/details')
       .then((res) => {
@@ -46,6 +53,27 @@ const UserProfile = () => {
       setUserInfo(null);
     };
   }, []);
+
+  function handleSignOut() {
+    return (
+      Alert.alert('', 'Deseja sair da conta?', [{
+        text:
+        'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: () => {
+          signOut();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'LoginDrawer' }],
+            }),
+          );
+        },
+      }]));
+  }
 
   const RenderInfo = () => {
     if (userInfo) {
@@ -72,7 +100,6 @@ const UserProfile = () => {
   };
 
   const UserOptions = ({ leftIcon, description, last }) => (
-
     <TouchableOpacity
       style={{
         flexDirection: 'row',
@@ -108,9 +135,7 @@ const UserProfile = () => {
   );
 
   return (
-
     <SafeAreaView style={{ flex: 1 }}>
-
       <GeneralStatusBar
         backgroundColor="white"
         barStyle="dark-content"
@@ -150,16 +175,18 @@ const UserProfile = () => {
               <UserOptions leftIcon="book-open" description="Minhas reservas" />
               <UserOptions leftIcon="coins" description="Meus planos" last />
 
-              <TouchableOpacity style={{
-                height: 50,
-                borderWidth: 2,
-                borderRadius: 4,
-                borderColor: '#ccc',
-                marginTop: verticalScale(10),
-                paddingHorizontal: scale(30),
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  borderWidth: 2,
+                  borderRadius: 4,
+                  borderColor: '#ccc',
+                  marginTop: verticalScale(10),
+                  paddingHorizontal: scale(30),
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => { handleSignOut(); }}
               >
                 <Text
                   style={[styles.text, { color: colors.disableColor }]}
