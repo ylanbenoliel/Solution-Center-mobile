@@ -98,13 +98,13 @@ const UsersList = () => {
           }
           return false;
         });
-        setLoading(false);
         setEventList(pastEvents);
-        setIsModalOpen(true);
       })
       .catch(() => {
+      })
+      .finally(() => {
         setLoading(false);
-        setError('Erro ao carregar dados');
+        setIsModalOpen(true);
       });
   }
 
