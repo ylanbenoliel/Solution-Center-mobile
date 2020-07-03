@@ -108,12 +108,12 @@ export default function Agenda() {
         const chunkUsers = chunkArray(totalUsers, 10);
         setUsers(chunkUsers);
       }
+      setLoading(false);
       setHours(hoursInterval);
       setIsModalOpen(true);
     }).catch(() => {
-      setError('Erro ao buscar registros');
-    }).finally(() => {
       setLoading(false);
+      setError('Erro ao buscar registros');
     });
   }
 
@@ -136,7 +136,7 @@ export default function Agenda() {
       />
 
       <View
-        style={styles.container}
+        style={styles.calendarContainer}
       >
         {/* <TouchableOpacity onPress={() => {
             signOut()
@@ -195,16 +195,21 @@ export default function Agenda() {
         />
       </View>
 
-      <ShowInfo error={error} />
+      <View style={{ flex: 1 }}>
 
-      <View style={styles.modalButtonContainer}>
-        <TouchableOpacity
-          style={styles.modalButton}
-          onPress={() => handleOpenModal()}
-        >
-          <RenderFetchLoading />
-        </TouchableOpacity>
+        <ShowInfo error={error} />
+
+        <View style={styles.modalButtonContainer}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => handleOpenModal()}
+          >
+            <RenderFetchLoading />
+          </TouchableOpacity>
+        </View>
+
       </View>
+
       <VacancyModal
         isVisible={isModalOpen}
         onClose={() => handleCloseModal()}
@@ -217,9 +222,10 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: verticalScale(70),
+  calendarContainer: {
+    flex: 2,
+    justifyContent: 'center',
+    marginTop: verticalScale(40),
   },
   text: {
     fontFamily: 'Amaranth-Regular',
