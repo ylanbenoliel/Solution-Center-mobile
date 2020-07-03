@@ -192,7 +192,6 @@ const AdminUserModal = ({
 
         <Image
           source={avatarUrl}
-          resizeMode="center"
           style={styles.avatarImage}
         />
 

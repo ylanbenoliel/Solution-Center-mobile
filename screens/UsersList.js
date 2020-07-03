@@ -7,7 +7,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Button,
+  Text,
   Keyboard,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -113,10 +113,12 @@ const UsersList = () => {
     fetchUsers();
   }
 
-  function renderSearchedUsers() {
+  const RenderSearchedUsers = () => {
     const hasFilteredUsers = filteredUsers !== null ? filteredUsers : totalUsers;
     return (
       <FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: verticalScale(110) }}
         data={hasFilteredUsers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -127,9 +129,9 @@ const UsersList = () => {
         )}
       />
     );
-  }
+  };
 
-  const renderLoading = () => {
+  const RenderLoading = () => {
     if (loading) {
       return (
         <View style={styles.conditionalLoading}>
@@ -139,6 +141,7 @@ const UsersList = () => {
     }
     return null;
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -166,17 +169,18 @@ const UsersList = () => {
           </TouchableOpacity>
         </View>
 
-        <Button
-          title="Buscar"
-          color={colors.mainColor}
+        <TouchableOpacity
+          style={styles.searchButton}
           onPress={() => handleSearch()}
-        />
+        >
+          <Text style={[styles.text, { color: colors.whiteColor }]}>Buscar</Text>
+        </TouchableOpacity>
 
         <View style={{ alignItems: 'center' }}>
           <ShowInfo error={error} />
         </View>
 
-        {renderSearchedUsers()}
+        <RenderSearchedUsers />
 
         {!!userInfo && (
         <AdminUserModal
@@ -188,7 +192,7 @@ const UsersList = () => {
         )}
 
       </View>
-      {renderLoading()}
+      <RenderLoading />
     </SafeAreaView>
 
   );
@@ -218,6 +222,13 @@ const styles = StyleSheet.create({
     marginLeft: scale(15),
     fontSize: scale(18),
     height: verticalScale(42),
+  },
+  searchButton: {
+    backgroundColor: colors.mainColor,
+    paddingVertical: verticalScale(10),
+    borderRadius: scale(4),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   conditionalLoading: {
     zIndex: 10,
