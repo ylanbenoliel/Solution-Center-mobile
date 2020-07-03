@@ -5,6 +5,7 @@ import RoomButton from './RoomButton';
 import Separator from './Separator';
 import ShowInfo from './ShowInfo';
 import StatusButton from './StatusButton';
+import UserEventsModal from './UserEventsModal';
 import UserItem from './UserItem';
 import VacancyModal from './VacancyModal';
 
@@ -18,4 +19,5 @@ export {
   Loading,
   UserItem,
   RoomButton,
+  UserEventsModal,
 };

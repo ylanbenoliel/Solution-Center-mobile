@@ -29,12 +29,16 @@ import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
+import UserEventsModal from '../components/UserEventsModal';
+
 // eslint-disable-next-line no-undef
 const UserProfile = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
 
   const [userInfo, setUserInfo] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [eventList, setEventList] = useState(null);
+  const [isModalEventOpen, setIsModalEventOpen] = useState(false);
 
   useEffect(() => {
     api.get('/user/details')
@@ -75,13 +79,26 @@ const UserProfile = ({ navigation }) => {
       }]));
   }
 
+  function fetchEvents() {
+    api.get('/events/list/user').then((res) => {
+
+    })
+      .catch((err) => { })
+      .finally(() => {
+        setIsModalEventOpen(true);
+      });
+  }
+
+  function handleCloseModal(func) {
+    return func(false);
+  }
+
   const RenderInfo = () => {
     if (userInfo) {
       return (
         <>
           <Image
             source={avatarUrl}
-            resizeMode="cover"
             style={{
               width: scale(130),
               height: scale(130),
@@ -99,7 +116,9 @@ const UserProfile = ({ navigation }) => {
     return null;
   };
 
-  const UserOptions = ({ leftIcon, description, last }) => (
+  const UserOptions = ({
+    leftIcon, description, last, onClick,
+  }) => (
     <TouchableOpacity
       style={{
         flexDirection: 'row',
@@ -110,6 +129,7 @@ const UserProfile = ({ navigation }) => {
         borderColor: '#ccc',
         paddingVertical: verticalScale(10),
       }}
+      onPress={() => onClick()}
     >
       <FontAwesome5
         name={leftIcon}
@@ -154,14 +174,7 @@ const UserProfile = ({ navigation }) => {
           alignItems: 'center',
         }}
         >
-          <View style={{
-            alignItems: 'center',
-            width: '80%',
-            paddingVertical: verticalScale(20),
-            backgroundColor: 'white',
-            borderRadius: 20,
-          }}
-          >
+          <View style={styles.userView}>
 
             <RenderInfo />
 
@@ -171,21 +184,25 @@ const UserProfile = ({ navigation }) => {
             }}
             >
 
-              <UserOptions leftIcon="user-alt" description="Editar meu perfil" />
-              <UserOptions leftIcon="book-open" description="Minhas reservas" />
-              <UserOptions leftIcon="coins" description="Meus planos" last />
+              <UserOptions
+                leftIcon="user-alt"
+                description="Editar meu perfil"
+                onClick={() => {}}
+              />
+              <UserOptions
+                leftIcon="book-open"
+                description="Minhas reservas"
+                onClick={() => fetchEvents()}
+              />
+              <UserOptions
+                last
+                leftIcon="coins"
+                description="Meus planos"
+                onClick={() => {}}
+              />
 
               <TouchableOpacity
-                style={{
-                  height: 50,
-                  borderWidth: 2,
-                  borderRadius: 4,
-                  borderColor: '#ccc',
-                  marginTop: verticalScale(10),
-                  paddingHorizontal: scale(30),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                style={styles.signOutButton}
                 onPress={() => { handleSignOut(); }}
               >
                 <Text
@@ -200,6 +217,12 @@ const UserProfile = ({ navigation }) => {
       </ImageBackground>
 
       {/*  */}
+      <UserEventsModal
+        isVisible={isModalEventOpen}
+        events={eventList}
+        onClose={() => handleCloseModal(setIsModalEventOpen)}
+
+      />
 
     </SafeAreaView>
   );
@@ -214,6 +237,23 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginVertical: verticalScale(20),
+  },
+  userView: {
+    alignItems: 'center',
+    width: '80%',
+    paddingVertical: verticalScale(20),
+    backgroundColor: 'white',
+    borderRadius: 20,
+  },
+  signOutButton: {
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: '#ccc',
+    marginTop: verticalScale(10),
+    paddingHorizontal: scale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
