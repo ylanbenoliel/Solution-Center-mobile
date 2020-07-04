@@ -138,17 +138,25 @@ export default function Schedule() {
       time,
     })
       .then((res) => {
-        const vacEvt = scheduleList.find((evt) => evt.time);
-        const userEvt = {
+        const emptyEvent = scheduleList.find((evt) => evt.time.includes(time));
+
+        const userEvent = {
           event: res.data.event.id,
           code: '2',
           ...res.data.event,
         };
-        const newEvtList = scheduleList
-          .filter((evt) => evt.time !== vacEvt.time)
-          .concat(userEvt)
+
+        const totalList = scheduleList
+          .map((event) => {
+            if (event.time === emptyEvent.time) {
+              return userEvent;
+            }
+
+            return event;
+          })
           .sort((prev, next) => prev.time.localeCompare(next.time));
-        setScheduleList(newEvtList);
+
+        setScheduleList(totalList);
         setSuccess('Horário salvo.');
       })
       .catch(() => {
@@ -156,25 +164,26 @@ export default function Schedule() {
       });
   }
 
-  function dismissRoom(eventID) {
-    api.delete(`/events/${eventID}`)
+  function dismissRoom(eventId) {
+    api.delete(`/events/${eventId}`)
       .then(() => {
         // eslint-disable-next-line eqeqeq
-        const deletedEvt = scheduleList.find((evt) => evt.event == eventID);
-        const noEvt = {
+        const deletedEvent = scheduleList.find((evt) => evt.event == eventId);
+
+        const emptyEvent = {
           event: `${Math.random()}`,
           user: '',
-          room: `${deletedEvt.room}`,
-          date: `${deletedEvt.date.split('T')[0]}`,
-          time: `${deletedEvt.time}`,
+          room: `${deletedEvent.room}`,
+          date: `${deletedEvent.date.split('T')[0]}`,
+          time: `${deletedEvent.time}`,
           code: '1',
         };
-        const newEvtList = scheduleList
+        const totalList = scheduleList
           // eslint-disable-next-line eqeqeq
-          .filter((evt) => evt.event != eventID)
-          .concat(noEvt)
+          .filter((evt) => evt.event != eventId)
+          .concat(emptyEvent)
           .sort((prev, next) => prev.time.localeCompare(next.time));
-        setScheduleList(newEvtList);
+        setScheduleList(totalList);
         setSuccess('Horário excluído.');
       })
       .catch(() => {
@@ -372,7 +381,7 @@ export default function Schedule() {
     >
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={['80%', '35%', '0%']}
+        snapPoints={['85%', '35%', '0%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
         initialSnap={2}
