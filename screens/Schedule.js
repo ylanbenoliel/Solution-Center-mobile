@@ -362,6 +362,7 @@ export default function Schedule() {
     return (
       <View style={setPanelHeight()}>
         <FlatList
+          contentContainerStyle={{ paddingBottom: verticalScale(10) }}
           data={scheduleList}
           extraData={scheduleList}
           keyExtractor={(item) => `${item.event}`}
@@ -381,7 +382,7 @@ export default function Schedule() {
     >
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={['85%', '35%', '0%']}
+        snapPoints={['90%', '35%', '0%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
         initialSnap={2}
@@ -447,10 +448,10 @@ export default function Schedule() {
             <FlatList
               data={ROOM_DATA}
               keyExtractor={(item) => item.room.toString()}
-              renderItem={({ item }) => (
+              renderItem={({ item: button }) => (
                 <RoomButton
-                  {...item}
-                  onClick={() => getEventsByDate(item.room)}
+                  {...button}
+                  onClick={() => getEventsByDate(button.room)}
                 />
               )}
             />
@@ -469,19 +470,19 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
     position: 'absolute',
-    // backgroundColor: colors.whiteColor,
   },
   calendarContainer: {
-    flex: 2,
-  },
-  calendarStrip: {
     flex: 1,
   },
+  calendarStrip: {
+    flex: 2,
+    justifyContent: 'center',
+
+  },
   roomsContainer: {
-    flex: 4,
+    flex: 7,
     alignItems: 'center',
   },
-
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
@@ -497,11 +498,10 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(42),
   },
   panelSaturday: {
-    height: verticalScale(72 * 7.5),
+    height: verticalScale(72 * 8),
     padding: scale(10),
     backgroundColor: colors.whiteColor,
     paddingTop: verticalScale(20),
-    marginBottom: verticalScale(-15),
   },
   header: {
     width: '100%',
