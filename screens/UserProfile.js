@@ -81,7 +81,15 @@ const UserProfile = ({ navigation }) => {
 
   function fetchEvents() {
     api.get('/events/list/user').then((res) => {
-      setEventList(res.data);
+      const sortEvents = res.data
+        .map((event) => {
+          const onlyDate = event.date.split('T')[0];
+          const datetime = `${onlyDate}T${event.time}.000Z`;
+          const eventWithDatetime = { ...event, datetime };
+          return eventWithDatetime;
+        })
+        .sort((prev, next) => next.datetime.localeCompare(prev.datetime));
+      setEventList(sortEvents);
     })
       .catch((err) => { })
       .finally(() => {
