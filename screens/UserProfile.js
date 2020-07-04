@@ -81,7 +81,7 @@ const UserProfile = ({ navigation }) => {
 
   function fetchEvents() {
     api.get('/events/list/user').then((res) => {
-
+      setEventList(res.data);
     })
       .catch((err) => { })
       .finally(() => {
