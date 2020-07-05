@@ -7,6 +7,7 @@ import ShowInfo from './ShowInfo';
 import StatusButton from './StatusButton';
 import UserEventsModal from './UserEventsModal';
 import UserItem from './UserItem';
+import UserMessagesModal from './UserMessagesModal';
 import VacancyModal from './VacancyModal';
 
 export {
@@ -20,4 +21,5 @@ export {
   UserItem,
   RoomButton,
   UserEventsModal,
+  UserMessagesModal,
 };

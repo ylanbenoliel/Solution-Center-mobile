@@ -18,7 +18,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { CommonActions } from '@react-navigation/native';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, UserEventsModal, UserMessagesModal } from '@components';
 
 import AuthContext from '@contexts/auth';
 
@@ -29,8 +29,6 @@ import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
-import UserEventsModal from '../components/UserEventsModal';
-
 // eslint-disable-next-line no-undef
 const UserProfile = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
@@ -38,7 +36,9 @@ const UserProfile = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [eventList, setEventList] = useState(null);
+  const [messageList, setMessageList] = useState(null);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
+  const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
 
   useEffect(() => {
     api.get('/user/details')
@@ -94,6 +94,19 @@ const UserProfile = ({ navigation }) => {
       .catch((err) => { })
       .finally(() => {
         setIsModalEventOpen(true);
+      });
+  }
+
+  function fetchMessages() {
+    api.get('/messages')
+      .then((res) => {
+        const messages = res.data.sort((prev, next) => next.id - prev.id);
+
+        setMessageList(messages);
+      })
+      .catch((err) => { setMessageList(null); })
+      .finally(() => {
+        setIsModalMessageOpen(true);
       });
   }
 
@@ -163,7 +176,7 @@ const UserProfile = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#eee' }}>
       <GeneralStatusBar
         backgroundColor="white"
         barStyle="dark-content"
@@ -203,10 +216,15 @@ const UserProfile = ({ navigation }) => {
                 onClick={() => fetchEvents()}
               />
               <UserOptions
-                last
                 leftIcon="coins"
                 description="Meus planos"
                 onClick={() => {}}
+              />
+              <UserOptions
+                last
+                leftIcon="concierge-bell"
+                description="Minhas notificações"
+                onClick={() => fetchMessages()}
               />
 
               <TouchableOpacity
@@ -229,7 +247,12 @@ const UserProfile = ({ navigation }) => {
         isVisible={isModalEventOpen}
         events={eventList}
         onClose={() => handleCloseModal(setIsModalEventOpen)}
+      />
 
+      <UserMessagesModal
+        isVisible={isModalMessageOpen}
+        messages={messageList}
+        onClose={() => handleCloseModal(setIsModalMessageOpen)}
       />
 
     </SafeAreaView>
@@ -258,7 +281,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 4,
     borderColor: '#ccc',
-    marginTop: verticalScale(10),
+    marginTop: verticalScale(14),
     paddingHorizontal: scale(30),
     alignItems: 'center',
     justifyContent: 'center',
