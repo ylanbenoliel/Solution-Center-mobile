@@ -4,8 +4,8 @@ import React from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
-import UsersList from '@screens/UsersList';
 
 import colors from '@constants/colors';
 
@@ -40,7 +40,7 @@ export default function Admin() {
       }}
     >
       <Tab.Screen name="Agenda" component={Agenda} />
-      <Tab.Screen name="Usuários" component={UsersList} />
+      <Tab.Screen name="Usuários" component={AdminUserList} />
     </Tab.Navigator>
   );
 }

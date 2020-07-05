@@ -13,6 +13,7 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from 'axios';
 import { isPast, parseISO } from 'date-fns';
 
 import {
@@ -25,7 +26,7 @@ import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
-const UsersList = () => {
+const AdminUserList = () => {
   const [totalUsers, setTotalUsers] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(null);
   const [error, setError] = useState('');
@@ -33,6 +34,7 @@ const UsersList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [eventList, setEventList] = useState(null);
+  const [planList, setPlanList] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -87,19 +89,42 @@ const UsersList = () => {
   function handleOpenModal(user) {
     setUserInfo(user);
     setLoading(true);
-    api.post('/admin/events/list/user', {
+    const requestEvents = api.post('/admin/events/list/user', {
       user: user.id,
-    })
-      .then((res) => {
-        const { events } = res.data;
-        const pastEvents = events.filter((evt) => {
-          if (isPast(parseISO(evt.date.split('T')[0]))) {
-            return evt;
+    });
+
+    const requestPlans = api.get(`/plans/${user.id}`);
+
+    axios.all([requestEvents, requestPlans])
+      .then(axios.spread((...responses) => {
+        const responseEvents = responses[0];
+        const responsePlans = responses[1];
+        const { events } = responseEvents.data;
+        const pastEvents = events.filter((event) => {
+          const onlyDate = event.date.split('T')[0];
+          const datetime = `${onlyDate}T${event.time}.000Z`;
+          if (isPast(parseISO(datetime))) {
+            return event;
           }
           return false;
         });
+
+        // console.log(responsePlans.data);
+        const plans = responsePlans.data.map((p) => {
+          const { plan, id } = p;
+          return { plan, id };
+        });
+
+        // const totalPlans = plans.map((data) => ({
+        //   id: data.id,
+        //   plan: data.plan,
+        // }));
+
+        // console.log(totalPlans);
+
+        setPlanList(plans);
         setEventList(pastEvents);
-      })
+      }))
       .catch(() => {
       })
       .finally(() => {
@@ -121,10 +146,10 @@ const UsersList = () => {
         contentContainerStyle={{ paddingBottom: verticalScale(110) }}
         data={hasFilteredUsers}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+        renderItem={({ item: user }) => (
           <UserItem
-            {...item}
-            onClick={() => handleOpenModal(item)}
+            {...user}
+            onClick={() => handleOpenModal(user)}
           />
         )}
       />
@@ -186,6 +211,7 @@ const UsersList = () => {
         <AdminUserModal
           userInfo={userInfo}
           userEvents={eventList}
+          userPlans={planList}
           isVisible={isModalOpen}
           onClose={() => handleCloseModal()}
         />
@@ -219,6 +245,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   textInput: {
+    flex: 1,
     marginLeft: scale(15),
     fontSize: scale(18),
     height: verticalScale(42),
@@ -241,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UsersList;
+export default AdminUserList;
