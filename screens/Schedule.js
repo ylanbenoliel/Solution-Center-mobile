@@ -467,6 +467,7 @@ export default function Schedule() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#eee',
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
     position: 'absolute',
