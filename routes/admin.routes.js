@@ -3,6 +3,9 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Info from '@components/Info';
 
 import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
@@ -12,6 +15,16 @@ import Notifications from '@screens/Notifications';
 import colors from '@constants/colors';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function AdminInfo() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="UserProfile" component={AdminProfile} />
+      <Stack.Screen name="Info" component={Info} />
+    </Stack.Navigator>
+  );
+}
 
 export default function Admin() {
   return (
@@ -47,7 +60,7 @@ export default function Admin() {
       <Tab.Screen name="Agenda" component={Agenda} />
       <Tab.Screen name="Usuários" component={AdminUserList} />
       <Tab.Screen name="Notificações" component={Notifications} />
-      <Tab.Screen name="Perfil" component={AdminProfile} />
+      <Tab.Screen name="Perfil" component={AdminInfo} />
     </Tab.Navigator>
   );
 }

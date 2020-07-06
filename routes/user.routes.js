@@ -3,6 +3,9 @@ import React from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Info from '@components/Info';
 
 import Schedule from '@screens/Schedule';
 import UserProfile from '@screens/UserProfile';
@@ -10,6 +13,16 @@ import UserProfile from '@screens/UserProfile';
 import colors from '@constants/colors';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function UserInfo() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="UserProfile" component={UserProfile} />
+      <Stack.Screen name="Info" component={Info} />
+    </Stack.Navigator>
+  );
+}
 
 export default function User() {
   return (
@@ -37,7 +50,7 @@ export default function User() {
       }}
     >
       <Tab.Screen name="Salas" component={Schedule} />
-      <Tab.Screen name="Perfil" component={UserProfile} />
+      <Tab.Screen name="Perfil" component={UserInfo} />
     </Tab.Navigator>
   );
 }

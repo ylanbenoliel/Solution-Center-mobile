@@ -19,7 +19,11 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { Feather } from '@expo/vector-icons';
 import { CommonActions } from '@react-navigation/native';
 
-import { GeneralStatusBar, UserEventsModal, UserMessagesModal } from '@components';
+import {
+  GeneralStatusBar,
+  UserEventsModal,
+  UserMessagesModal,
+} from '@components';
 
 import AuthContext from '@contexts/auth';
 
@@ -39,9 +43,14 @@ const Profile = ({ navigation }) => {
   const [eventList, setEventList] = useState(null);
   const [messageList, setMessageList] = useState(null);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
+  const [isModalPlanOpen, setIsModalPlanOpen] = useState(false);
   const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
 
   useEffect(() => {
+    fetchInfo();
+  }, []);
+
+  function fetchInfo() {
     api.get('/user/details')
       .then((res) => {
         const user = { ...res.data[0] };
@@ -57,7 +66,7 @@ const Profile = ({ navigation }) => {
       setAvatarUrl(null);
       setUserInfo(null);
     };
-  }, []);
+  }
 
   function handleSignOut() {
     return (
@@ -109,6 +118,10 @@ const Profile = ({ navigation }) => {
       .finally(() => {
         setIsModalMessageOpen(true);
       });
+  }
+
+  function handleOpenInfoModal() {
+    navigation.navigate('Info', { details: userInfo });
   }
 
   function handleCloseModal(func) {
@@ -209,18 +222,18 @@ const Profile = ({ navigation }) => {
               <UserOptions
                 leftIcon="user"
                 description="Editar meu perfil"
-                onClick={() => {}}
+                onClick={() => handleOpenInfoModal()}
               />
               <UserOptions
                 leftIcon="book-open"
                 description="Minhas reservas"
                 onClick={() => fetchEvents()}
               />
-              <UserOptions
+              {/* <UserOptions
                 leftIcon="percent"
                 description="Meus planos"
                 onClick={() => {}}
-              />
+              /> */}
               <UserOptions
                 last
                 leftIcon="bell"
