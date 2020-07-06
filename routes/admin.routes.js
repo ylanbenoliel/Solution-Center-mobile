@@ -4,6 +4,7 @@ import React from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
 import Notifications from '@screens/Notifications';
@@ -30,6 +31,9 @@ export default function Admin() {
           if (route.name === 'Notificações') {
             iconName = 'bell';
           }
+          if (route.name === 'Perfil') {
+            iconName = 'user';
+          }
 
           return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
@@ -43,6 +47,7 @@ export default function Admin() {
       <Tab.Screen name="Agenda" component={Agenda} />
       <Tab.Screen name="Usuários" component={AdminUserList} />
       <Tab.Screen name="Notificações" component={Notifications} />
+      <Tab.Screen name="Perfil" component={AdminProfile} />
     </Tab.Navigator>
   );
 }

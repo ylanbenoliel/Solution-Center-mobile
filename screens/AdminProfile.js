@@ -3,6 +3,6 @@ import React from 'react';
 
 import { Profile } from '@components';
 
-const UserProfile = ({ navigation }) => <Profile navigation={navigation} />;
+const AdminProfile = ({ navigation }) => <Profile navigation={navigation} />;
 
-export default UserProfile;
+export default AdminProfile;

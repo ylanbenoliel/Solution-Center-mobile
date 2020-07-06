@@ -1,6 +1,8 @@
+/* eslint-disable import/no-cycle */
 import AdminUserModal from './AdminUserModal';
 import GeneralStatusBar from './GeneralStatusBar';
 import Loading from './Loading';
+import Profile from './Profile';
 import RoomButton from './RoomButton';
 import Separator from './Separator';
 import ShowInfo from './ShowInfo';
@@ -22,4 +24,5 @@ export {
   RoomButton,
   UserEventsModal,
   UserMessagesModal,
+  Profile,
 };
