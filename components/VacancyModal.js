@@ -20,19 +20,28 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 
 import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
+
+const roomsName = ROOM_DATA.map((room) => {
+  if (room.name.includes('Sala')) {
+    return room.name;
+  }
+  return room.name.split(' ')[0];
+});
 
 const tableHead = [
   '',
-  'Sala 1',
-  'Sala 2',
-  'Sala 3',
-  'Sala 4',
-  'Sala 5',
-  'Sala 6',
-  'Sala 7',
-  'Sala 8',
-  'Sala 9',
-  'Sala de reunião',
+  roomsName[0],
+  roomsName[1],
+  roomsName[2],
+  roomsName[3],
+  roomsName[4],
+  roomsName[5],
+  roomsName[6],
+  roomsName[7],
+  roomsName[8],
+  roomsName[9],
+
 ];
 
 const VacancyModal = ({
@@ -98,7 +107,7 @@ const VacancyModal = ({
           <Table>
             <Row
               data={tableHead}
-              widthArr={[35, 50, 50, 50, 50, 50, 50, 50, 50, 50, 52]}
+              widthArr={[35, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52]}
               style={styles.head}
               textStyle={styles.text}
             />
@@ -119,7 +128,7 @@ const VacancyModal = ({
                   />
                   <Rows
                     data={tableData}
-                    widthArr={[50, 50, 50, 50, 50, 50, 50, 50, 50, 52]}
+                    widthArr={[52, 52, 52, 52, 52, 52, 52, 52, 52, 52]}
                     style={styles.row}
                     textStyle={[styles.text, { color: colors.mainColor }]}
                   />

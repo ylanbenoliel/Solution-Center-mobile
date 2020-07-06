@@ -1,14 +1,22 @@
 export const ROOM_DATA = [
-  { room: 1, image: '@assets/room-exemple.jpg', name: 'Sala 1' },
-  { room: 2, image: '@assets/room-exemple.jpg', name: 'Sala 2' },
-  { room: 3, image: '@assets/room-exemple.jpg', name: 'Sala 3' },
-  { room: 4, image: '@assets/room-exemple.jpg', name: 'Sala 4' },
-  { room: 5, image: '@assets/room-exemple.jpg', name: 'Sala 5' },
-  { room: 6, image: '@assets/room-exemple.jpg', name: 'Sala 6' },
-  { room: 7, image: '@assets/room-exemple.jpg', name: 'Sala 7' },
-  { room: 8, image: '@assets/room-exemple.jpg', name: 'Sala 8' },
-  { room: 9, image: '@assets/room-exemple.jpg', name: 'Sala 9' },
+  { room: 1, image: '@assets/room-exemple.jpg', name: 'Clarice Lispector' },
+  { room: 2, image: '@assets/room-exemple.jpg', name: 'Carlos Drummond de Andrade' },
+  { room: 3, image: '@assets/room-exemple.jpg', name: 'Cecília Meireles' },
+  { room: 4, image: '@assets/room-exemple.jpg', name: 'Rui Barbosa' },
+  { room: 5, image: '@assets/room-exemple.jpg', name: 'Machado de Assis' },
+  { room: 6, image: '@assets/room-exemple.jpg', name: 'Monteiro Lobato' },
+  { room: 7, image: '@assets/room-exemple.jpg', name: 'Luís Fernando Veríssimo' },
+  { room: 8, image: '@assets/room-exemple.jpg', name: 'Cora Coralina' },
+  { room: 9, image: '@assets/room-exemple.jpg', name: 'Carolina de Jesus' },
   { room: 10, image: '@assets/room-exemple.jpg', name: 'Sala de reunião' },
 ];
 
 export const ROOM_IDS = ROOM_DATA.map((data) => data.room);
+
+export const PLAN_DATA = [
+  { plan: 1, text: 'Hora Avulsa' },
+  { plan: 2, text: 'Turno' },
+  { plan: 3, text: 'Diária' },
+  { plan: 4, text: 'Fidelidade' },
+  { plan: 5, text: 'Mensal' },
+];
