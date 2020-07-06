@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import { isPast, parseISO } from 'date-fns';
 
@@ -110,10 +110,10 @@ const AdminUserList = () => {
         });
 
         // console.log(responsePlans.data);
-        const plans = responsePlans.data.map((p) => {
-          const { plan, id } = p;
-          return { plan, id };
-        });
+        // const plans = responsePlans.data.map((p) => {
+        //   const { plan, id } = p;
+        //   return { plan, id };
+        // });
 
         // const totalPlans = plans.map((data) => ({
         //   id: data.id,
@@ -122,7 +122,7 @@ const AdminUserList = () => {
 
         // console.log(totalPlans);
 
-        setPlanList(plans);
+        // setPlanList(plans);
         setEventList(pastEvents);
       }))
       .catch(() => {
@@ -186,8 +186,8 @@ const AdminUserList = () => {
           />
 
           <TouchableOpacity onPress={() => setNameInput('')}>
-            <MaterialCommunityIcons
-              name="close"
+            <Feather
+              name="x"
               size={scale(32)}
               color={colors.placeholderColor}
             />

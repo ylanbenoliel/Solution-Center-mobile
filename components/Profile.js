@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
 /* eslint-disable global-require */
@@ -15,7 +16,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { CommonActions } from '@react-navigation/native';
 
 import { GeneralStatusBar, UserEventsModal, UserMessagesModal } from '@components';
@@ -152,7 +153,7 @@ const Profile = ({ navigation }) => {
       }}
       onPress={() => onClick()}
     >
-      <FontAwesome5
+      <Feather
         name={leftIcon}
         size={28}
         color={colors.navigationColor}
@@ -167,7 +168,7 @@ const Profile = ({ navigation }) => {
       >
         {description}
       </Text>
-      <FontAwesome5
+      <Feather
         name="chevron-right"
         size={28}
         color={colors.navigationColor}
@@ -206,7 +207,7 @@ const Profile = ({ navigation }) => {
             >
 
               <UserOptions
-                leftIcon="user-alt"
+                leftIcon="user"
                 description="Editar meu perfil"
                 onClick={() => {}}
               />
@@ -216,13 +217,13 @@ const Profile = ({ navigation }) => {
                 onClick={() => fetchEvents()}
               />
               <UserOptions
-                leftIcon="coins"
+                leftIcon="percent"
                 description="Meus planos"
                 onClick={() => {}}
               />
               <UserOptions
                 last
-                leftIcon="concierge-bell"
+                leftIcon="bell"
                 description="Minhas notificações"
                 onClick={() => fetchMessages()}
               />

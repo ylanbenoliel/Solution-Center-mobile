@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Schedule from '@screens/Schedule';
@@ -21,13 +21,13 @@ export default function User() {
           let iconName;
 
           if (route.name === 'Salas') {
-            iconName = 'calendar-week';
+            iconName = 'calendar';
           }
           if (route.name === 'Perfil') {
-            iconName = 'user-alt';
+            iconName = 'user';
           }
 
-          return <FontAwesome5 name={iconName} size={size} color={color} />;
+          return <Feather name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{

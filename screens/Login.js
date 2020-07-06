@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { CommonActions } from '@react-navigation/native';
 
 import { GeneralStatusBar, ShowInfo } from '@components';
@@ -132,7 +132,7 @@ export default function Login({ navigation }) {
           }}
         >
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <MaterialIcons
+            <Feather
               name="menu"
               size={scale(32)}
               color={colors.navigationColor}

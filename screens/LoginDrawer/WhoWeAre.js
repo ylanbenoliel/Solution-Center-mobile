@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { verticalScale, scale } from 'react-native-size-matters';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 import Logo from '@assets/logo-solution-azul.svg';
 import background from '@assets/whoweare.png';
@@ -28,8 +28,8 @@ export default function WhoWeAre({ navigation }) {
           <View style={{ paddingLeft: scale(20) }} />
           <Text style={[styles.text, styles.headerName]}>Sobre nós</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <MaterialIcons
-              name="close"
+            <Feather
+              name="x"
               size={32}
               color={colors.navigationColor}
             />

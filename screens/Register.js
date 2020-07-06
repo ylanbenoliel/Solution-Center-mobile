@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
 import { GeneralStatusBar, ShowInfo } from '@components';
@@ -171,7 +171,7 @@ export default function Register({ navigation }) {
           }}
           onPress={() => navigation.push('LoginDrawer')}
         >
-          <MaterialCommunityIcons
+          <Feather
             name="chevron-left"
             size={scale(40)}
             color={colors.navigationColor}
@@ -193,7 +193,7 @@ export default function Register({ navigation }) {
                 style={styles.galleryButton}
                 onPress={() => handlePickImage()}
               >
-                <MaterialCommunityIcons
+                <Feather
                   name="camera"
                   size={scale(24)}
                   color={colors.whiteColor}

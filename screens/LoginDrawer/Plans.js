@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 import { GeneralStatusBar } from '@components';
 
@@ -38,8 +38,8 @@ export default function Plans({ navigation }) {
               {touchText}
             </Text>
             <View>
-              <MaterialIcons
-                name="arrow-drop-down"
+              <Feather
+                name="arrow-down"
                 size={32}
                 color={colors.accentColor}
               />
@@ -61,8 +61,8 @@ export default function Plans({ navigation }) {
                 {touchText}
               </Text>
               <View>
-                <MaterialIcons
-                  name="arrow-drop-up"
+                <Feather
+                  name="arrow-up"
                   size={32}
                   color={colors.accentColor}
                 />
@@ -112,8 +112,8 @@ export default function Plans({ navigation }) {
             <View style={{ paddingLeft: verticalScale(20) }} />
             <Text style={[styles.text, styles.headerName]}>Planos</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <MaterialIcons
-                name="close"
+              <Feather
+                name="x"
                 size={32}
                 color={colors.navigationColor}
               />

@@ -17,7 +17,7 @@ import {
   Col,
 } from 'react-native-table-component';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
@@ -91,8 +91,8 @@ const VacancyModal = ({
               onClose();
             }}
           >
-            <MaterialIcons
-              name="close"
+            <Feather
+              name="x"
               color={colors.navigationColor}
               size={32}
             />

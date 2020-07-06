@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable eqeqeq */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
@@ -12,27 +13,57 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
+const UserDetails = ({ data, dataField }) => (
+  <View style={{ marginVertical: verticalScale(2) }}>
+    <Text style={styles.text}>
+      {dataField}
+      {': '}
+      {data}
+    </Text>
+  </View>
+);
+
+const Plan = ({ plan }) => {
+  const [text, setText] = useState('');
+  if (plan == 1) {
+    return setText('Hora avulsa');
+  }
+
+  return (
+    <View style={{ backgroundColor: 'green' }}>
+      <Text style={styles.text}>
+        plano:
+        {text}
+      </Text>
+    </View>
+  );
+};
+
 const AdminUserModal = ({
-  isVisible, onClose, userInfo, userEvents,
+  isVisible, onClose, userInfo, userEvents, userPlans,
 }) => {
-  const [eventList, setEventList] = useState(userEvents);
   const [userDetails, setUserDetails] = useState(userInfo);
+  const [eventList, setEventList] = useState(userEvents);
+  const [planList, setPlanList] = useState(userPlans);
 
   useEffect(() => {
     setUserDetails(userInfo);
     setEventList(userEvents);
+    setPlanList(userPlans);
     return () => {
       setUserDetails(null);
       setEventList(null);
+      setPlanList(null);
     };
   }, [!!isVisible]);
 
@@ -79,16 +110,6 @@ const AdminUserModal = ({
       });
   }
 
-  const UserDetails = ({ data, dataField }) => (
-    <View style={{ marginVertical: verticalScale(2) }}>
-      <Text style={styles.text}>
-        {dataField}
-        {': '}
-        {data}
-      </Text>
-    </View>
-  );
-
   const ShowNotPaidEvent = ({ singleEvent }) => {
     if (singleEvent.status_payment === 0) {
       const onlyDate = singleEvent.date.split('T')[0];
@@ -125,7 +146,8 @@ const AdminUserModal = ({
                 borderRadius: scale(8),
               }}
               onLongPress={() => {
-                Alert.alert('Aviso', `O usuário pagou a reserva Hora:${singleEvent.time.split(':')[0]}h Sala: ${singleEvent.room}?`,
+                Alert.alert('Aviso',
+                  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Sala: ${singleEvent.room}?`,
                   [{
                     text:
                     'Cancelar',
@@ -146,6 +168,31 @@ const AdminUserModal = ({
     return null;
   };
 
+  const ToogleUserPermission = ({ status }) => (
+
+    <View style={{ flexDirection: 'row' }}>
+      <Text style={styles.text}>
+        Admin:
+        {' '}
+      </Text>
+      <TouchableOpacity onPress={() => {
+        Alert.alert('Aviso', 'Deseja alterar o acesso desse usuário?',
+          [{
+            text:
+            'Cancelar',
+            style: 'cancel',
+          }, {
+            text: 'Ok',
+            onPress: () => { },
+          }]);
+      }}
+      >
+        <Text style={[styles.text, { color: 'orange' }]}>
+          {status == 1 ? 'Sim' : 'Não'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
   const ToogleUserLoginSituation = ({ status }) => (
 
     <View style={{ flexDirection: 'row' }}>
@@ -183,39 +230,60 @@ const AdminUserModal = ({
             onClose();
           }}
         >
-          <MaterialCommunityIcons
-            name="close"
+          <Feather
+            name="x"
             size={scale(32)}
             color={colors.navigationColor}
           />
         </TouchableOpacity>
 
-        <Image
-          source={avatarUrl}
-          style={styles.avatarImage}
-        />
+        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+          <Image
+            source={avatarUrl}
+            style={styles.avatarImage}
+          />
 
-        <View style={styles.userContainer}>
-          <UserDetails data={userDetails.name} dataField="Nome" />
-          <UserDetails data={userDetails.phone} dataField="Telefone" />
-          <UserDetails data={userDetails.address} dataField="Endereço" />
-          <UserDetails data={userDetails.cpf} dataField="CPF" />
-          <UserDetails data={userDetails.rg} dataField="RG" />
+          <View style={styles.userContainer}>
+            <UserDetails data={userDetails.name} dataField="Nome" />
+            <UserDetails data={userDetails.phone} dataField="Telefone" />
+            <UserDetails data={userDetails.address} dataField="Endereço" />
+            <UserDetails data={userDetails.cpf} dataField="CPF" />
+            <UserDetails data={userDetails.rg} dataField="RG" />
+            <ToogleUserPermission status={userDetails.is_admin} />
+            <ToogleUserLoginSituation status={userDetails.active} />
+          </View>
 
-          <ToogleUserLoginSituation status={userDetails.active} />
-        </View>
+          {/* <Text style={styles.text}>Planos</Text> */}
 
-        <Text style={styles.text}>Horários não pagos</Text>
-        <FlatList
-          horizontal
-          data={eventList}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <ShowNotPaidEvent
-              singleEvent={item}
-            />
-          )}
-        />
+          {/* {!!planList && planList.map((p) => {
+            const { plan, id } = p;
+            return (
+              <Plan key={id} plan={plan} />
+            );
+          })} */}
+
+          {/* <FlatList
+            data={planList}
+            contentContainerStyle={{ flex: 1 }}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <Plan key={item.id} plan={item.plan} />
+            )}
+          /> */}
+
+          <Text style={styles.text}>Horários não pagos</Text>
+          <FlatList
+            horizontal
+            data={eventList}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <ShowNotPaidEvent
+                singleEvent={item}
+              />
+            )}
+          />
+        </ScrollView>
+
       </View>
     </Modal>
   );

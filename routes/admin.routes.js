@@ -1,7 +1,7 @@
 import React from 'react';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AdminProfile from '@screens/AdminProfile';
@@ -23,10 +23,10 @@ export default function Admin() {
           let iconName;
 
           if (route.name === 'Agenda') {
-            iconName = 'calendar-alt';
+            iconName = 'calendar';
           }
           if (route.name === 'Usuários') {
-            iconName = 'user-friends';
+            iconName = 'users';
           }
           if (route.name === 'Notificações') {
             iconName = 'bell';
@@ -35,7 +35,7 @@ export default function Admin() {
             iconName = 'user';
           }
 
-          return <FontAwesome5 name={iconName} size={size} color={color} />;
+          return <Feather name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
