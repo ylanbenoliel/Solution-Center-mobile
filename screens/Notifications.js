@@ -184,7 +184,7 @@ const Notifications = () => {
             marginTop: verticalScale(10),
             borderTopWidth: 2,
             borderColor: '#ccc',
-            paddingBottom: verticalScale(180),
+            paddingBottom: verticalScale(230),
           }}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
