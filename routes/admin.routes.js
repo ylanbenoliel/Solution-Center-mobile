@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
+import Notifications from '@screens/Notifications';
 
 import colors from '@constants/colors';
 
@@ -26,9 +27,9 @@ export default function Admin() {
           if (route.name === 'Usuários') {
             iconName = 'user-friends';
           }
-          // else if (route.name === 'Settings') {
-          //   iconName = focused ? 'ios-list-box' : 'ios-list';
-          // }
+          if (route.name === 'Notificações') {
+            iconName = 'bell';
+          }
 
           return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
@@ -41,6 +42,7 @@ export default function Admin() {
     >
       <Tab.Screen name="Agenda" component={Agenda} />
       <Tab.Screen name="Usuários" component={AdminUserList} />
+      <Tab.Screen name="Notificações" component={Notifications} />
     </Tab.Navigator>
   );
 }
