@@ -89,6 +89,24 @@ const AdminUserModal = ({
           ]);
       });
   }
+  function toggleAdminAccess() {
+    api.patch(`/users/${userDetails.id}`, {
+      is_admin: !userDetails.is_admin,
+    }).then(() => {
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        is_admin: !userDetails.is_admin,
+      }));
+    })
+      .catch(() => {
+        Alert.alert('Aviso', 'Erro ao atualizar permissões do cliente.',
+          [
+            {
+              text: 'Ok',
+            },
+          ]);
+      });
+  }
 
   function confirmEventPayment(eventId) {
     api.patch('/admin/events/update', {
@@ -147,7 +165,7 @@ const AdminUserModal = ({
               }}
               onLongPress={() => {
                 Alert.alert('Aviso',
-                  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Sala: ${singleEvent.room}?`,
+                  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Dia: ${dateWithBars}?`,
                   [{
                     text:
                     'Cancelar',
@@ -176,14 +194,14 @@ const AdminUserModal = ({
         {' '}
       </Text>
       <TouchableOpacity onPress={() => {
-        Alert.alert('Aviso', 'Deseja alterar o acesso desse usuário?',
+        Alert.alert('Aviso', 'Deseja alterar as permissões do usuário?',
           [{
             text:
             'Cancelar',
             style: 'cancel',
           }, {
             text: 'Ok',
-            onPress: () => { },
+            onPress: () => { toggleAdminAccess(); },
           }]);
       }}
       >
