@@ -11,42 +11,45 @@ import Route from './routes/Route';
 import { api } from './services/api';
 
 export default function App() {
-  const [user, setUser] = useState('');
   const [admin, setAdmin] = useState('');
 
   useEffect(() => {
-    async function getToken() {
-      api.interceptors.request.use(async (config) => {
-        try {
-          const token = await AsyncStorage.getItem('@SC:token');
-          if (token) {
-            // eslint-disable-next-line no-param-reassign
-            config.headers.Authorization = `Bearer ${token}`;
-          }
-          return config;
-        } catch (error) {
-          return error;
-        }
-      });
-    }
-    async function getPrivilegies() {
-      try {
-        const isAdmin = await AsyncStorage.getItem('@SC:admin');
-        setAdmin(isAdmin);
-      } catch (error) {
-        setAdmin(null);
-      }
-    }
     getToken();
-    // getPrivilegies();
+    getPrivilegies();
   }, []);
+
+  async function getToken() {
+    api.interceptors.request.use(async (config) => {
+      try {
+        const token = await AsyncStorage.getItem('@SC:token');
+        if (token) {
+          // eslint-disable-next-line no-param-reassign
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      } catch (error) {
+        return error;
+      }
+    });
+  }
+
+  async function getPrivilegies() {
+    try {
+      const isAdmin = await AsyncStorage.getItem('@SC:admin');
+      setAdmin(isAdmin);
+    } catch (error) {
+      setAdmin(null);
+    }
+  }
+
   const [fontsLoaded] = useFonts({
     'Amaranth-Regular': require('./assets/fonts/Amaranth-Regular.ttf'),
-    Axiforma: require('./assets/fonts/Axiforma.otf'),
   });
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
+
   return (
     <NavigationContainer>
       <AuthProvider>
