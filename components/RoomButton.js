@@ -8,7 +8,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import colors from '@constants/colors.js';
 
-const RoomButton = ({ name, onClick }) => (
+const RoomButton = ({ name, photo, onClick }) => (
   <TouchableOpacity
     style={styles.roomButton}
     onPress={() => {
@@ -16,7 +16,7 @@ const RoomButton = ({ name, onClick }) => (
     }}
   >
     <ImageBackground
-      source={require('@assets/room-1.png')}
+      source={photo}
       imageStyle={{ borderRadius: scale(16) }}
       style={styles.background}
     >

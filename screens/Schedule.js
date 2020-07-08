@@ -12,6 +12,7 @@ import {
   FlatList,
   Text,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -444,18 +445,76 @@ export default function Schedule() {
           <Text style={[styles.text, styles.selectRoomText]}>
             Selecione a sala
           </Text>
-          <View style={styles.flatListContainer}>
-            <FlatList
+
+          <View style={styles.scrollViewContainer}>
+
+            <ScrollView>
+
+              <RoomButton
+                photo={require('@assets/rooms/clarice-min.jpeg')}
+                name={ROOM_DATA[0].name}
+                onClick={() => getEventsByDate(ROOM_DATA[0].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/carlos-min.jpeg')}
+                name={ROOM_DATA[1].name}
+                onClick={() => getEventsByDate(ROOM_DATA[1].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/cecilia-min.jpeg')}
+                name={ROOM_DATA[2].name}
+                onClick={() => getEventsByDate(ROOM_DATA[2].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/rui-min.jpeg')}
+                name={ROOM_DATA[3].name}
+                onClick={() => getEventsByDate(ROOM_DATA[3].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/machado-min.jpeg')}
+                name={ROOM_DATA[4].name}
+                onClick={() => getEventsByDate(ROOM_DATA[4].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/monteiro-min.jpeg')}
+                name={ROOM_DATA[5].name}
+                onClick={() => getEventsByDate(ROOM_DATA[5].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/luis-min.jpeg')}
+                name={ROOM_DATA[6].name}
+                onClick={() => getEventsByDate(ROOM_DATA[6].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/cora-min.jpeg')}
+                name={ROOM_DATA[7].name}
+                onClick={() => getEventsByDate(ROOM_DATA[7].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/carolina-min.jpeg')}
+                name={ROOM_DATA[8].name}
+                onClick={() => getEventsByDate(ROOM_DATA[8].room)}
+              />
+              <RoomButton
+                photo={require('@assets/rooms/reuniao-min.jpeg')}
+                name={ROOM_DATA[9].name}
+                onClick={() => getEventsByDate(ROOM_DATA[9].room)}
+              />
+
+              {/* <FlatList
               data={ROOM_DATA}
               keyExtractor={(item) => item.room.toString()}
               renderItem={({ item: button }) => (
                 <RoomButton
+                  image={button.image}
                   {...button}
                   onClick={() => getEventsByDate(button.room)}
                 />
               )}
-            />
+            /> */}
+            </ScrollView>
           </View>
+
           {calendarRef === undefined ? null : <BSheet />}
         </View>
       </View>
@@ -556,12 +615,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.6)',
   },
-  flatListContainer: {
+  scrollViewContainer: {
     flex: 1,
     width: '95%',
     justifyContent: 'center',
     marginTop: verticalScale(10),
-    paddingBottom: verticalScale(25),
-    marginBottom: verticalScale(20),
+    paddingBottom: verticalScale(45),
   },
 });
