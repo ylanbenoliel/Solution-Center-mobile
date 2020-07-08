@@ -71,6 +71,7 @@ export default function Schedule() {
   const [success, setSuccess] = useState('');
   const [calendarDate, setCalendarDate] = useState('');
   const [loading, setLoading] = useState(false);
+  const [roomName, setRoomName] = useState('');
 
   useEffect(() => {
     if (isFirstRun) {
@@ -270,6 +271,12 @@ export default function Schedule() {
     setScheduleList([]);
     setCalendarDate('');
 
+    const selectedRoom = ROOM_DATA
+      .filter((item) => item.room === room)
+      .map((item) => item.name);
+
+    setRoomName(selectedRoom);
+
     const calendarRaw = calendarRef.current.getSelectedDate();
     const calendarDateFormatted = format(new Date(calendarRaw), 'yyyy-MM-dd');
 
@@ -280,7 +287,12 @@ export default function Schedule() {
       })
       .then((response) => {
         const { hoursInterval, validEvents } = response.data;
-        transformEventToSchedule(hoursInterval, validEvents, room, calendarDateFormatted);
+        transformEventToSchedule(
+          hoursInterval,
+          validEvents,
+          room,
+          calendarDateFormatted,
+        );
         setCalendarDate(calendarDateFormatted);
         setLoading(false);
         bottomSheetRef.current.snapTo(0);
@@ -347,9 +359,16 @@ export default function Schedule() {
   // Start of BottomSheet
 
   const renderHeader = () => (
+
     <View style={styles.header}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
+        <Text
+          style={styles.text}
+        >
+          {roomName}
+        </Text>
+        <Text />
       </View>
     </View>
   );
@@ -370,6 +389,7 @@ export default function Schedule() {
           renderItem={({ item }) => <ScheduleItemMemoized {...item} />}
         />
       </View>
+
     );
   };
 
@@ -500,18 +520,6 @@ export default function Schedule() {
                 name={ROOM_DATA[9].name}
                 onClick={() => getEventsByDate(ROOM_DATA[9].room)}
               />
-
-              {/* <FlatList
-              data={ROOM_DATA}
-              keyExtractor={(item) => item.room.toString()}
-              renderItem={({ item: button }) => (
-                <RoomButton
-                  image={button.image}
-                  {...button}
-                  onClick={() => getEventsByDate(button.room)}
-                />
-              )}
-            /> */}
             </ScrollView>
           </View>
 
@@ -565,22 +573,22 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: verticalScale(20),
+    height: verticalScale(40),
     marginBottom: verticalScale(-5),
     backgroundColor: colors.whiteColor,
     borderTopLeftRadius: scale(16),
     borderTopRightRadius: scale(16),
   },
   panelHeader: {
+    height: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   panelHandle: {
     width: scale(40),
     height: verticalScale(8),
     borderRadius: scale(4),
+    marginBottom: verticalScale(5),
     backgroundColor: colors.disableColor,
-    marginBottom: verticalScale(10),
   },
   panelTitle: {
     fontSize: scale(24),
