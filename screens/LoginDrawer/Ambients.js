@@ -10,6 +10,7 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import { verticalScale, scale } from 'react-native-size-matters';
 
@@ -22,12 +23,15 @@ import backgroundLogo from '@assets/LogoHorizontal.png';
 
 import colors from '@constants/colors';
 
+const width = Dimensions.get('window').width * 0.9;
+const height = width * 0.6;
+
 const Place = ({
   name, photo, support, com, indication, extra,
 }) => (
   <View style={{
-    width: '80%',
-    marginVertical: verticalScale(20),
+    width,
+    marginHorizontal: verticalScale(20),
   }}
   >
 
@@ -39,9 +43,9 @@ const Place = ({
       <Image
         source={photo}
         style={{
-          width: scale(200),
-          height: verticalScale(120),
-          borderRadius: 4,
+          width,
+          height,
+          borderRadius: scale(6),
           marginVertical: verticalScale(4),
         }}
       />
@@ -89,121 +93,125 @@ export default function Ambients({ navigation }) {
           </TouchableOpacity>
         </View>
         {/*  */}
-        <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: verticalScale(50) }}>
 
-          <Place
-            name="Sala Clarice Lispector"
-            photo={require('@assets/rooms/clarice-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e maca."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Médicos, Enfermeiros, Biomédicos,
+        <View style={{ flex: 8 }}>
+
+          <ScrollView horizontal>
+
+            <Place
+              name="Sala Clarice Lispector"
+              photo={require('@assets/rooms/clarice-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e maca."
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Médicos, Enfermeiros, Biomédicos,
               Farmacêuticos, Fisioterapeutas, Nutricionistas, Terapeutas Manuais, Profissionais da área
               de estética, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Carlos Drummond de Andrade"
-            photo={require('@assets/rooms/carlos-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e divã."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Psicólogos,
+            <Place
+              name="Sala Carlos Drummond de Andrade"
+              photo={require('@assets/rooms/carlos-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e divã."
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Psicólogos,
              Terapeutas Ocupacionais, Advogados, Contadores, Coach, entre outros profissionais"
-          />
+            />
 
-          <Place
-            name="Sala Cecília Meireles"
-            photo={require('@assets/rooms/cecilia-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa de apoio, poltrona e divã."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Psicólogos,
+            <Place
+              name="Sala Cecília Meireles"
+              photo={require('@assets/rooms/cecilia-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa de apoio, poltrona e divã."
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Psicólogos,
              Terapeutas, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Rui Barbosa"
-            photo={require('@assets/rooms/rui-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e divã."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Médicos,
+            <Place
+              name="Sala Rui Barbosa"
+              photo={require('@assets/rooms/rui-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e divã."
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Médicos,
              Psicólogos, Nutricionistas, Advogados, Contadores, Terapeutas Ocupacionais,
               Coach, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Machado de Assis"
-            photo={require('@assets/rooms/machado-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona,
+            <Place
+              name="Sala Machado de Assis"
+              photo={require('@assets/rooms/machado-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona,
              cadeiras, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Médicos,
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Médicos,
              Psicólogos, Nutricionistas, Advogados, Contadores, Engenheiros, Arquitetos,
               Terapeutas Ocupacionais, Cerimonialistas de Eventos, Fotógrafos, Decoradores,
                Coach, Terapeutas Manuais, Profissionais da área de estética, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Monteiro Lobato"
-            photo={require('@assets/rooms/monteiro-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa de apoio,
+            <Place
+              name="Sala Monteiro Lobato"
+              photo={require('@assets/rooms/monteiro-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa de apoio,
              poltrona e sofá."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Psicólogos,
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Psicólogos,
              Terapeutas, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Luís Fernando Veríssimo"
-            photo={require('@assets/rooms/luis-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e sofá."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Médicos,
+            <Place
+              name="Sala Luís Fernando Veríssimo"
+              photo={require('@assets/rooms/luis-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e sofá."
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Médicos,
              Psicólogos, Nutricionistas, Advogados, Contadores, Terapeutas Ocupacionais,
               Coach, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala Cora Coralina"
-            photo={require('@assets/rooms/cora-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa de apoio e poltronas"
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Psicólogos, Terapeutas, entre outros profissionais."
-          />
+            <Place
+              name="Sala Cora Coralina"
+              photo={require('@assets/rooms/cora-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa de apoio e poltronas"
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Psicólogos, Terapeutas, entre outros profissionais."
+            />
 
-          <Place
-            name="Sala Carolina de Jesus"
-            photo={require('@assets/rooms/carolina-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, poltrona,
+            <Place
+              name="Sala Carolina de Jesus"
+              photo={require('@assets/rooms/carolina-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, poltrona,
              cadeiras, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para atendimentos realizados por Médicos,
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para atendimentos realizados por Médicos,
              Psicólogos, Nutricionistas, Advogados, Contadores, Engenheiros, Arquitetos,
               Terapeutas Ocupacionais, Cerimonialistas de Eventos, Fotógrafos, Decoradores,
                Coach, entre outros profissionais."
-          />
+            />
 
-          <Place
-            name="Sala de Reunião"
-            photo={require('@assets/rooms/reuniao-min.jpeg')}
-            support="- Sala equipada com central de ar, telefone, mesa, cadeiras,
+            <Place
+              name="Sala de Reunião"
+              photo={require('@assets/rooms/reuniao-min.jpeg')}
+              support="- Sala equipada com central de ar, telefone, mesa, cadeiras,
              poltrona, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-            com="- Acesso à internet e ligações ilimitadas."
-            indication="- Sala excelente para a realização de reuniões,
+              com="- Acesso à internet e ligações ilimitadas."
+              indication="- Sala excelente para a realização de reuniões,
              cursos, workshops, palestras exclusivas, grupos terapêuticos,
               entre outras atividades."
-            extra="- Capacidade: 10 (dez) pessoas."
-          />
-          <Place
-            name="Recepção"
-            photo={require('@assets/rooms/recepcao-min.jpeg')}
-            support="- Equipada com central de ar, telefone, cadeiras, recamier,
+              extra="- Capacidade: 10 (dez) pessoas."
+            />
+            <Place
+              name="Recepção"
+              photo={require('@assets/rooms/recepcao-min.jpeg')}
+              support="- Equipada com central de ar, telefone, cadeiras, recamier,
             Smart TV, som ambiente, dispensador de álcool líquido e um lindo lavabo."
-            com="- Acesso à internet ilimitado."
-            indication="- Solicite auxílio aos nossos recepcionistas para cópias e impressões,
+              com="- Acesso à internet ilimitado."
+              indication="- Solicite auxílio aos nossos recepcionistas para cópias e impressões,
              água, café, chocolate quente ou cappuccino, além de bombons e biscoitos."
+            />
 
-          />
+          </ScrollView>
+        </View>
 
-        </ScrollView>
       </ImageBackground>
     </View>
   );
@@ -215,12 +223,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
-    width: '100%',
-    height: verticalScale(56),
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: verticalScale(40),
+    marginTop: verticalScale(10),
   },
   headerName: {
     fontWeight: 'bold',
@@ -230,7 +237,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
-    textAlign: 'justify',
   },
 
 });
