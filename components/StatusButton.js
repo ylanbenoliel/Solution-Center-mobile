@@ -12,7 +12,7 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
     return (
       <>
         <TouchableOpacity
-          onLongPress={() => onCheckIn()}
+          onPress={() => onCheckIn()}
           style={styles.availableButton}
         >
           <Text style={styles.text}>Pressione para reservar</Text>
@@ -23,7 +23,7 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
   if (code === '2') {
     return (
       <TouchableOpacity
-        onLongPress={() => onDismiss()}
+        onPress={() => onDismiss()}
         style={[styles.defaultButton, styles.reservedButton]}
       >
         <Text style={styles.text}>Sua reserva</Text>
@@ -33,7 +33,7 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
   if (code === '3') {
     return (
       <TouchableOpacity
-        onLongPress={() => Alert.alert('Erro', 'Não é possível cancelar esse horário', [
+        onPress={() => Alert.alert('Erro', 'Não é possível cancelar esse horário', [
           { text: 'Ok' },
         ])}
         style={[styles.defaultButton, styles.disabledButton]}

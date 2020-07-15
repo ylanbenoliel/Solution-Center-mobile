@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 import AdminUserModal from './AdminUserModal';
+import EventModal from './EventModal';
 import GeneralStatusBar from './GeneralStatusBar';
 import Loading from './Loading';
 import RoomButton from './RoomButton';
@@ -23,4 +24,5 @@ export {
   RoomButton,
   UserEventsModal,
   UserMessagesModal,
+  EventModal,
 };
