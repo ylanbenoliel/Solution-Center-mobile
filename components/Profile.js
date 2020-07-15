@@ -120,8 +120,8 @@ const Profile = ({ navigation }) => {
       });
   }
 
-  function handleOpenInfoModal() {
-    navigation.navigate('Info', { details: userInfo });
+  function handleOpenInfoStack() {
+    navigation.push('Info', { details: userInfo });
   }
 
   function handleCloseModal(func) {
@@ -222,7 +222,7 @@ const Profile = ({ navigation }) => {
               <UserOptions
                 leftIcon="user"
                 description="Editar meu perfil"
-                onClick={() => handleOpenInfoModal()}
+                onClick={() => handleOpenInfoStack()}
               />
               <UserOptions
                 leftIcon="book-open"

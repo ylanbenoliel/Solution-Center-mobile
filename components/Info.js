@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, TextInput, SafeAreaView,
+  View, Text, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Keyboard,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -18,7 +18,7 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 
 const Info = ({ route, navigation }) => {
-  const { details, previousRoute } = route.params;
+  const { details } = route.params;
 
   const [name, setName] = useState(details.name);
   const [email, setEmail] = useState(details.email);
@@ -29,25 +29,6 @@ const Info = ({ route, navigation }) => {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState(null);
-
-  const UserData = (props) => (
-    <View
-      style={styles.infoContainer}
-    >
-      <Text style={styles.text}>
-        {props.dataField}
-        :
-      </Text>
-      <TextInput
-        style={[styles.text, styles.textInput]}
-        value={props.data}
-        placeholder={props.placeholder || props.dataField}
-        onChangeText={(text) => {
-          props.changeData(text);
-        }}
-      />
-    </View>
-  );
 
   function handleUpdate() {
     if (
@@ -60,7 +41,7 @@ const Info = ({ route, navigation }) => {
     ) {
       return setError('Campo vazio');
     }
-    if (password === '') {
+    if (!password) {
       api.patch(`/users/${details.id}`, {
         name,
         email,
@@ -68,7 +49,10 @@ const Info = ({ route, navigation }) => {
         cpf,
         phone,
         rg,
-      }).then(() => { navigation.push('UserProfile'); })
+      }).then(() => {
+        Keyboard.dismiss();
+        navigation.push('UserProfile');
+      })
         .catch(() => {});
     } else {
       api.patch(`/users/${details.id}`, {
@@ -79,7 +63,10 @@ const Info = ({ route, navigation }) => {
         phone,
         rg,
         password,
-      }).then(() => { navigation.push('UserProfile'); })
+      }).then(() => {
+        Keyboard.dismiss();
+        navigation.push('UserProfile');
+      })
         .catch(() => {});
     }
     return null;
@@ -92,12 +79,14 @@ const Info = ({ route, navigation }) => {
         backgroundColor="white"
         barStyle="dark-content"
       />
+
       <View style={styles.header}>
         <View style={{ height: scale(32), width: scale(32) }} />
         <Text style={[styles.text, { fontSize: scale(24) }]}>Perfil</Text>
         <TouchableOpacity
           style={styles.closeModal}
           onPress={() => {
+            Keyboard.dismiss();
             navigation.pop();
           }}
         >
@@ -111,48 +100,120 @@ const Info = ({ route, navigation }) => {
 
       <View style={{ flex: 9, width: '90%' }}>
 
-        <UserData
-          data={name}
-          changeData={setName}
-          dataField="Nome"
-        />
-        <UserData
-          data={email}
-          changeData={setEmail}
-          dataField="Email"
-        />
-        <UserData
-          data={address}
-          changeData={setAddress}
-          dataField="Endereço"
-        />
-        <UserData
-          data={phone}
-          changeData={setPhone}
-          dataField="Telefone"
-        />
-        <UserData
-          data={cpf}
-          changeData={setCpf}
-          dataField="Cpf"
-        />
-        <UserData
-          data={rg}
-          changeData={setRg}
-          dataField="Rg"
-        />
-        <UserData
-          data={password}
-          placeholder="Vazia para permanecer"
-          changeData={setPassword}
-          dataField="Senha"
-        />
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Nome:
+          </Text>
+          <TextInput
+            style={[styles.text, styles.textInput]}
+            value={name}
+            placeholder="Nome"
+            onChangeText={(text) => {
+              setName(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Email:
+          </Text>
+          <TextInput
+            keyboardType="email-address"
+            style={[styles.text, styles.textInput]}
+            value={email}
+            placeholder="Email"
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Endereço:
+          </Text>
+          <TextInput
+            style={[styles.text, styles.textInput]}
+            value={address}
+            placeholder="Endereço"
+            onChangeText={(text) => {
+              setAddress(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Telefone:
+          </Text>
+          <TextInput
+            keyboardType="number-pad"
+            style={[styles.text, styles.textInput]}
+            value={phone}
+            placeholder="Telefone"
+            onChangeText={(text) => {
+              setPhone(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Cpf:
+          </Text>
+          <TextInput
+            keyboardType="number-pad"
+            style={[styles.text, styles.textInput]}
+            value={cpf}
+            placeholder="Cpf"
+            onChangeText={(text) => {
+              setCpf(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Rg:
+          </Text>
+          <TextInput
+            keyboardType="number-pad"
+            style={[styles.text, styles.textInput]}
+            value={rg}
+            placeholder="Rg"
+            onChangeText={(text) => {
+              setRg(text);
+            }}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>
+            Senha:
+          </Text>
+          <TextInput
+            style={[styles.text, styles.textInput]}
+            value={password}
+            placeholderTextColor={colors.disableColor}
+            placeholder="Vazia para permanecer"
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+          />
+        </View>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => handleUpdate()}
         >
-          <Text style={[styles.text, { color: colors.whiteColor }]}>Atualizar</Text>
+          <Text
+            style={
+            [styles.text, { color: colors.whiteColor }]
+            }
+          >
+            Atualizar
+          </Text>
         </TouchableOpacity>
       </View>
 
