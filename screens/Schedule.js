@@ -31,8 +31,8 @@ import {
   ShowInfo,
   Loading,
   RoomButton,
-  EventModal,
 } from '@components';
+import EventModal from '@components/EventModal';
 
 import { removeDuplicates } from '@helpers/functions';
 
