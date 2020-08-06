@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Alert,
   SafeAreaView,
-  ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -26,11 +25,6 @@ const UserEventsDetails = ({ route, navigation }) => {
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
   const [totalEvents, setTotalEvents] = useState(events);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setTotalEvents(totalEvents
-      .sort((prev, next) => next.id - prev.id));
-  }, []);
 
   function confirmEventPayment(eventId) {
     api.patch('/admin/events/update', {

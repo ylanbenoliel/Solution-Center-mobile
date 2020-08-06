@@ -238,7 +238,7 @@ const AdminUserModal = ({
                 borderRadius: scale(16),
               }}
               onPress={() => {
-                navigation.navigate('Eventos', { events: eventList, user: userDetails });
+                navigation.push('Eventos', { events: eventList, user: userDetails });
                 onClose();
               }}
             >

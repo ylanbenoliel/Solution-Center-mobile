@@ -15,7 +15,6 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
-import { isPast, parseISO } from 'date-fns';
 
 import {
   UserItem, ShowInfo, AdminUserModal, Loading,
@@ -88,8 +87,10 @@ const AdminUserList = ({ navigation }) => {
   }
 
   function handleOpenModal(user) {
-    setUserInfo(user);
     setLoading(true);
+    setUserInfo(user);
+    setEventList(null);
+
     const requestEvents = api.post('/admin/events/list/user', {
       user: user.id,
     });
@@ -101,17 +102,10 @@ const AdminUserList = ({ navigation }) => {
         const responseEvents = responses[0];
         const responsePlans = responses[1];
         const { events } = responseEvents.data;
-        const pastEvents = events.filter((event) => {
-          const onlyDate = event.date.split('T')[0];
-          const datetime = `${onlyDate}T${event.time}.000Z`;
-          if (isPast(parseISO(datetime))) {
-            return event;
-          }
-          return false;
-        });
 
         setPlanList(responsePlans.data);
-        setEventList(pastEvents);
+        setEventList(events);
+        // setEventList(pastEvents);
       }))
       .catch(() => {
       })
