@@ -219,6 +219,10 @@ const AdminUserModal = ({
                 borderRadius: scale(16),
                 marginRight: scale(10),
               }}
+              onPress={() => {
+                navigation.push('Adicionar', { user: userDetails });
+                onClose();
+              }}
             >
               <Feather
                 name="plus"

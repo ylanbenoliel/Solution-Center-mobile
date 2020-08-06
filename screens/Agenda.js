@@ -3,7 +3,6 @@
 import React, {
   useState,
   useEffect,
-  // useContext,
 } from 'react';
 import {
   View,
@@ -16,12 +15,9 @@ import {
 import { Calendar } from 'react-native-calendars';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-// import { CommonActions } from '@react-navigation/native';
 import { format } from 'date-fns';
 
 import { GeneralStatusBar, VacancyModal, ShowInfo } from '@components';
-
-// import AuthContext from '@contexts/auth';
 
 import { removeDuplicates, chunkArray } from '@helpers/functions';
 
@@ -29,11 +25,8 @@ import { api } from '@services/api';
 
 import colors from '@constants/colors';
 import { ROOM_IDS } from '@constants/fixedValues';
-// eslint-disable-next-line no-unused-vars
-import LocaleConfig from '@constants/localeWixCalendar';
 
 export default function Agenda() {
-  // const { signOut } = useContext(AuthContext);
   const [daySelected, setDaySelected] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hours, setHours] = useState([]);
@@ -135,20 +128,7 @@ export default function Agenda() {
         barStyle="dark-content"
       />
 
-      <View
-        style={styles.calendarContainer}
-      >
-        {/* <TouchableOpacity onPress={() => {
-            signOut()
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: "LoginDrawer" }]
-              }))
-          }}>
-            <Text>Sair</Text>
-          </TouchableOpacity> */}
-
+      <View style={styles.calendarContainer}>
         <Calendar
           markingType="custom"
           monthFormat="MMMM yyyy"

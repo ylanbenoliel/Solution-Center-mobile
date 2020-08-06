@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Info from '@components/Info';
 
+import AdminAddEvent from '@screens/AdminAddEvent';
 import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
@@ -27,11 +28,12 @@ function AdminInfo() {
   );
 }
 
-function UsersList() {
+function UserStack() {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Usuários" component={AdminUserList} />
       <Stack.Screen name="Eventos" component={UserEventsDetails} />
+      <Stack.Screen name="Adicionar" component={AdminAddEvent} />
     </Stack.Navigator>
   );
 }
@@ -39,7 +41,6 @@ function UsersList() {
 export default function Admin() {
   return (
     <Tab.Navigator
-      lazy={false}
       screenOptions={({ route }) => ({
         // eslint-disable-next-line react/prop-types
         tabBarIcon: ({ color, size }) => {
@@ -68,7 +69,7 @@ export default function Admin() {
       }}
     >
       <Tab.Screen name="Agenda" component={Agenda} />
-      <Tab.Screen name="Usuários" component={UsersList} />
+      <Tab.Screen name="Usuários" component={UserStack} />
       <Tab.Screen name="Notificações" component={Notifications} />
       <Tab.Screen name="Perfil" component={AdminInfo} />
     </Tab.Navigator>
