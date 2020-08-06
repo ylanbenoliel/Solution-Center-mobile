@@ -11,6 +11,7 @@ import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
 import Notifications from '@screens/Notifications';
+import UserEventsDetails from '@screens/UserEventsDetails';
 
 import colors from '@constants/colors';
 
@@ -22,6 +23,15 @@ function AdminInfo() {
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="UserProfile" component={AdminProfile} />
       <Stack.Screen name="Info" component={Info} />
+    </Stack.Navigator>
+  );
+}
+
+function UsersList() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="Usuários" component={AdminUserList} />
+      <Stack.Screen name="Eventos" component={UserEventsDetails} />
     </Stack.Navigator>
   );
 }
@@ -58,7 +68,7 @@ export default function Admin() {
       }}
     >
       <Tab.Screen name="Agenda" component={Agenda} />
-      <Tab.Screen name="Usuários" component={AdminUserList} />
+      <Tab.Screen name="Usuários" component={UsersList} />
       <Tab.Screen name="Notificações" component={Notifications} />
       <Tab.Screen name="Perfil" component={AdminInfo} />
     </Tab.Navigator>

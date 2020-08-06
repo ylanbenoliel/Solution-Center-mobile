@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect } from 'react';
 import {
@@ -26,7 +27,7 @@ import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
-const AdminUserList = () => {
+const AdminUserList = ({ navigation }) => {
   const [totalUsers, setTotalUsers] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(null);
   const [error, setError] = useState('');
@@ -109,20 +110,7 @@ const AdminUserList = () => {
           return false;
         });
 
-        // console.log(responsePlans.data);
-        // const plans = responsePlans.data.map((p) => {
-        //   const { plan, id } = p;
-        //   return { plan, id };
-        // });
-
-        // const totalPlans = plans.map((data) => ({
-        //   id: data.id,
-        //   plan: data.plan,
-        // }));
-
-        // console.log(totalPlans);
-
-        // setPlanList(plans);
+        setPlanList(responsePlans.data);
         setEventList(pastEvents);
       }))
       .catch(() => {
@@ -135,7 +123,7 @@ const AdminUserList = () => {
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    fetchUsers();
+    // fetchUsers();
   }
 
   const RenderSearchedUsers = () => {
@@ -214,6 +202,7 @@ const AdminUserList = () => {
           userPlans={planList}
           isVisible={isModalOpen}
           onClose={() => handleCloseModal()}
+          navigation={navigation}
         />
         )}
 

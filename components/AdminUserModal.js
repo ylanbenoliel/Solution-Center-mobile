@@ -10,7 +10,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  FlatList,
   Alert,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,6 +21,7 @@ import { Feather } from '@expo/vector-icons';
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
+// import { PLAN_DATA } from '@constants/fixedValues';
 
 const UserDetails = ({ data, dataField }) => (
   <View style={{ marginVertical: verticalScale(2) }}>
@@ -33,24 +33,27 @@ const UserDetails = ({ data, dataField }) => (
   </View>
 );
 
-const Plan = ({ plan }) => {
-  const [text, setText] = useState('');
-  if (plan == 1) {
-    return setText('Hora avulsa');
-  }
+// const Plan = ({ plan }) => {
+//   function showPlanName() {
+//     const planName = PLAN_DATA.filter((PLAN) => {
+//       if (PLAN.plan == plan) { return PLAN.text; }
+//       return false;
+//     });
+//     return planName;
+//   }
 
-  return (
-    <View style={{ backgroundColor: 'green' }}>
-      <Text style={styles.text}>
-        plano:
-        {text}
-      </Text>
-    </View>
-  );
-};
+//   return (
+//     <View style={{ backgroundColor: 'red' }}>
+//       <Text style={styles.text}>
+//         plano:
+//         {showPlanName()}
+//       </Text>
+//     </View>
+//   );
+// };
 
 const AdminUserModal = ({
-  isVisible, onClose, userInfo, userEvents, userPlans,
+  isVisible, onClose, userInfo, userEvents, userPlans, navigation,
 }) => {
   const [userDetails, setUserDetails] = useState(userInfo);
   const [eventList, setEventList] = useState(userEvents);
@@ -89,6 +92,7 @@ const AdminUserModal = ({
           ]);
       });
   }
+
   function toggleAdminAccess() {
     api.patch(`/users/${userDetails.id}`, {
       is_admin: !userDetails.is_admin,
@@ -108,86 +112,7 @@ const AdminUserModal = ({
       });
   }
 
-  function confirmEventPayment(eventId) {
-    api.patch('/admin/events/update', {
-      id: eventId,
-      status_payment: 1,
-    })
-      .then(() => {
-        setEventList(eventList.filter((evt) => {
-          if (evt.id !== eventId) { return evt; } return false;
-        }));
-      })
-      .catch(() => {
-        Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
-          [
-            {
-              text: 'Ok',
-            },
-          ]);
-      });
-  }
-
-  const ShowNotPaidEvent = ({ singleEvent }) => {
-    if (singleEvent.status_payment === 0) {
-      const onlyDate = singleEvent.date.split('T')[0];
-      const dateWithBars = onlyDate.split('-').reverse().join('/');
-      return (
-        <View
-          key={singleEvent.id}
-          style={styles.eventsNotPaidContainer}
-        >
-          <Text style={styles.text}>
-            Data:
-            {' '}
-            {dateWithBars}
-          </Text>
-          <Text style={styles.text}>
-            Hora:
-            {' '}
-            {singleEvent.time}
-          </Text>
-          <Text style={styles.text}>
-            Sala:
-            {' '}
-            {singleEvent.room}
-          </Text>
-
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: colors.accentColor,
-                width: scale(80),
-                height: verticalScale(40),
-                borderRadius: scale(8),
-              }}
-              onLongPress={() => {
-                Alert.alert('Aviso',
-                  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Dia: ${dateWithBars}?`,
-                  [{
-                    text:
-                    'Cancelar',
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Ok',
-                    onPress: () => { confirmEventPayment(singleEvent.id); },
-                  }]);
-              }}
-            >
-              <Text style={[styles.text, { color: 'white' }]}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const ToogleUserPermission = ({ status }) => (
-
+  const ToggleUserPermission = ({ status }) => (
     <View style={{ flexDirection: 'row' }}>
       <Text style={styles.text}>
         Admin:
@@ -211,8 +136,8 @@ const AdminUserModal = ({
       </TouchableOpacity>
     </View>
   );
-  const ToogleUserLoginSituation = ({ status }) => (
 
+  const ToggleUserLoginSituation = ({ status }) => (
     <View style={{ flexDirection: 'row' }}>
       <Text style={styles.text}>
         Status:
@@ -267,39 +192,65 @@ const AdminUserModal = ({
             <UserDetails data={userDetails.address} dataField="Endereço" />
             <UserDetails data={userDetails.cpf} dataField="CPF" />
             <UserDetails data={userDetails.rg} dataField="RG" />
-            <ToogleUserPermission status={userDetails.is_admin} />
-            <ToogleUserLoginSituation status={userDetails.active} />
+            <ToggleUserPermission status={userDetails.is_admin} />
+            <ToggleUserLoginSituation status={userDetails.active} />
           </View>
 
-          {/* <Text style={styles.text}>Planos</Text> */}
+          <View>
+            <Text style={styles.text}>Reservas</Text>
+          </View>
 
-          {/* {!!planList && planList.map((p) => {
-            const { plan, id } = p;
-            return (
-              <Plan key={id} plan={plan} />
-            );
-          })} */}
-
-          {/* <FlatList
-            data={planList}
-            contentContainerStyle={{ flex: 1 }}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Plan key={item.id} plan={item.plan} />
-            )}
-          /> */}
-
-          <Text style={styles.text}>Horários não pagos</Text>
-          <FlatList
-            horizontal
-            data={eventList}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <ShowNotPaidEvent
-                singleEvent={item}
+          <View style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: verticalScale(10),
+          }}
+          >
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: scale(130),
+                backgroundColor: colors.accentColor,
+                padding: scale(10),
+                borderRadius: scale(16),
+                marginRight: scale(10),
+              }}
+            >
+              <Feather
+                name="plus"
+                size={scale(30)}
+                color={colors.whiteColor}
               />
-            )}
-          />
+              <Text style={[styles.text, { color: colors.whiteColor }]}>Adicionar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: scale(130),
+                backgroundColor: colors.navigationColor,
+                padding: scale(10),
+                borderRadius: scale(16),
+              }}
+              onPress={() => {
+                navigation.navigate('Eventos', { events: eventList, user: userDetails });
+                onClose();
+              }}
+            >
+              <Feather
+                name="edit-2"
+                size={scale(28)}
+                color={colors.whiteColor}
+              />
+              <Text style={[styles.text, { color: colors.whiteColor }]}>Editar</Text>
+            </TouchableOpacity>
+          </View>
+
         </ScrollView>
 
       </View>
@@ -332,13 +283,12 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   userContainer: {
+    height: verticalScale(240),
     alignItems: 'flex-start',
+    justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
   },
-  eventsNotPaidContainer: {
-    marginVertical: verticalScale(5),
-    marginHorizontal: scale(5),
-  },
+
 });
 
 export default AdminUserModal;
