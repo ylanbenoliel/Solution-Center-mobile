@@ -12,8 +12,8 @@ function chunkArray(array, chunkSize) {
   }
   return results;
 }
-function sanitazeString(string) {
-  const sanitazedString = string.trim()
+function sanitizeString(string) {
+  const sanitizedString = string.trim()
     .toLowerCase()
     .replace(' ', '')
     .replace(new RegExp(/[àáâãäå]/g), 'a')
@@ -28,9 +28,9 @@ function sanitazeString(string) {
     .replace(new RegExp(/[ýÿ]/g), 'y')
     .replace(new RegExp(/\W/g), '')
     .split(',')[0];
-  return sanitazedString;
+  return sanitizedString;
 }
 
 export {
-  removeDuplicates, chunkArray, sanitazeString,
+  removeDuplicates, chunkArray, sanitizeString,
 };

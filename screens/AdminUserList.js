@@ -21,7 +21,7 @@ import {
   UserItem, ShowInfo, AdminUserModal, Loading,
 } from '@components';
 
-import { sanitazeString } from '@helpers/functions';
+import { sanitizeString } from '@helpers/functions';
 
 import { api } from '@services/api';
 
@@ -79,7 +79,7 @@ const AdminUserList = ({ navigation }) => {
     Keyboard.dismiss();
     const searchUsers = totalUsers
       .filter((user) => {
-        if (sanitazeString(user.name).includes(sanitazeString(nameInput))) {
+        if (sanitizeString(user.name).includes(sanitizeString(nameInput))) {
           return user;
         }
         return false;
