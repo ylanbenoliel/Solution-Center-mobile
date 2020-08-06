@@ -9,12 +9,13 @@ import {
   StyleSheet,
   Alert,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar, Separator } from '@components';
+import { GeneralStatusBar, Separator, Loading } from '@components';
 
 import { api } from '@services/api';
 
@@ -24,10 +25,11 @@ const UserEventsDetails = ({ route, navigation }) => {
   const { events } = route.params;
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
   const [totalEvents, setTotalEvents] = useState(events);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTotalEvents(totalEvents
-      .sort((prev, next) => next.event - prev.event));
+      .sort((prev, next) => next.id - prev.id));
   }, []);
 
   function confirmEventPayment(eventId) {
@@ -49,6 +51,35 @@ const UserEventsDetails = ({ route, navigation }) => {
           ]);
       });
   }
+
+  function deleteEvent(eventId) {
+    setLoading(true);
+    api.delete(`/admin/events/${eventId}`)
+      .then(() => {
+        setTotalEvents(totalEvents.filter((event) => event.id !== eventId));
+        setEventsNotPaid(eventsNotPaid.filter((event) => event.id !== eventId));
+      })
+      .catch(() => {
+        Alert.alert('Aviso', 'Erro ao excluir reserva',
+          [
+            {
+              text: 'Ok',
+            },
+          ]);
+      })
+      .finally(() => { setLoading(false); });
+  }
+
+  const RenderLoading = () => {
+    if (loading) {
+      return (
+        <View style={styles.conditionalLoading}>
+          <Loading loading={loading} />
+        </View>
+      );
+    }
+    return null;
+  };
 
   const ShowNotPaidEvent = ({ singleEvent }) => {
     if (singleEvent.status_payment === 0) {
@@ -162,7 +193,7 @@ const UserEventsDetails = ({ route, navigation }) => {
                   style: 'cancel',
                 }, {
                   text: 'Ok',
-                  onPress: () => { },
+                  onPress: () => { deleteEvent(singleEvent.id); },
                 }]);
             }}
           >
@@ -218,6 +249,7 @@ const UserEventsDetails = ({ route, navigation }) => {
           />
         )}
       />
+      <RenderLoading />
     </SafeAreaView>
   );
 };
@@ -249,6 +281,15 @@ const styles = StyleSheet.create({
   eventsNotPaidContainer: {
     marginVertical: verticalScale(5),
     marginHorizontal: scale(5),
+  },
+  conditionalLoading: {
+    zIndex: 10,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
 });
 
