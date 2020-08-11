@@ -28,22 +28,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: scale(5),
-    marginVertical: verticalScale(10),
+    marginVertical: verticalScale(5),
     borderWidth: scale(2),
     borderRadius: scale(16),
     borderColor: colors.mainColor,
   },
   userName: {
-    marginLeft: scale(10),
+    marginLeft: scale(15),
     fontFamily: 'Amaranth-Regular',
-    fontSize: scale(18),
+    fontSize: scale(14),
     color: colors.mainColor,
     textAlign: 'left',
   },
   avatarImage: {
-    width: scale(100),
-    height: scale(100),
-    borderRadius: scale(16),
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
   },
 });
 

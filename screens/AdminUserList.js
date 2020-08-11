@@ -17,7 +17,7 @@ import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 
 import {
-  UserItem, ShowInfo, AdminUserModal, Loading,
+  UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar,
 } from '@components';
 
 import { sanitizeString } from '@helpers/functions';
@@ -68,7 +68,8 @@ const AdminUserList = ({ navigation }) => {
             avatarUrl = user.avatar.url;
           }
           return { avatarUrl, ...user };
-        });
+        }).sort((a, b) => a.name.localeCompare(b.name));
+
         setTotalUsers(users);
       })
       .catch(() => setError('Erro ao buscar usuários.'));
@@ -83,7 +84,7 @@ const AdminUserList = ({ navigation }) => {
         }
         return false;
       });
-    setFilteredUsers(searchUsers);
+    setFilteredUsers(searchUsers.sort((a, b) => a.name.localeCompare(b.name)));
   }
 
   function handleOpenModal(user) {
@@ -105,7 +106,6 @@ const AdminUserList = ({ navigation }) => {
 
         setPlanList(responsePlans.data);
         setEventList(events);
-        // setEventList(pastEvents);
       }))
       .catch(() => {
       })
@@ -121,11 +121,13 @@ const AdminUserList = ({ navigation }) => {
   }
 
   const RenderSearchedUsers = () => {
-    const hasFilteredUsers = filteredUsers !== null ? filteredUsers : totalUsers;
+    const hasFilteredUsers = filteredUsers !== null
+      ? filteredUsers
+      : totalUsers;
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: verticalScale(110) }}
+        contentContainerStyle={{ paddingBottom: verticalScale(130) }}
         data={hasFilteredUsers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: user }) => (
@@ -151,6 +153,10 @@ const AdminUserList = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <GeneralStatusBar
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
+      />
       <View style={styles.container}>
 
         <View style={styles.inputContainer}>
@@ -210,14 +216,14 @@ const AdminUserList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: scale(10),
-    marginTop: verticalScale(40),
+    marginTop: verticalScale(20),
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: verticalScale(20),
-    borderRadius: scale(4),
+    marginBottom: verticalScale(10),
+    borderRadius: scale(14),
     borderWidth: scale(2),
     borderColor: colors.mainColor,
   },
@@ -237,6 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainColor,
     paddingVertical: verticalScale(10),
     borderRadius: scale(4),
+    marginBottom: verticalScale(5),
     alignItems: 'center',
     justifyContent: 'center',
   },
