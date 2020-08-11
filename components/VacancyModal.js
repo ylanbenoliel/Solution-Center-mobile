@@ -51,7 +51,7 @@ const VacancyModal = ({
   const [date, setDate] = useState('');
 
   useEffect(() => {
-    const formattedDate = showDate.split('-').reverse().join('-');
+    const formattedDate = showDate.split('-').reverse().join('.');
     setDate(formattedDate);
     return () => {
       setDate('');
@@ -61,20 +61,11 @@ const VacancyModal = ({
   return (
     <Modal isVisible={isVisible}>
       <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.whiteColor,
-          borderRadius: 4,
-        }}
+        style={styles.container}
       >
         {/*  */}
         <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 10,
-          }}
+          style={styles.modalHeader}
         >
           <View style={{ width: 32 }} />
 
@@ -113,22 +104,20 @@ const VacancyModal = ({
 
             <ScrollView showsVerticalScrollIndicator={false}>
               <Table
-                borderStyle={{
-                  borderWidth: 2,
-                  borderColor: colors.disableColor,
-                }}
+                borderStyle={styles.tableBorder}
               >
                 <TableWrapper style={styles.wrapper}>
                   <Col
                     data={tableTitle}
                     style={styles.title}
-                    heightArr={[66]}
+                    flexArr={Array(13).fill(1)}
+                    // heightArr={Array(14).fill(66)}
                     textStyle={styles.text}
                   />
                   <Rows
                     data={tableData}
-                    widthArr={[52, 52, 52, 52, 52, 52, 52, 52, 52]}
-                    style={styles.row}
+                    widthArr={Array(9).fill(52)}
+                    style={styles.rows}
                     textStyle={[styles.text, { color: colors.mainColor }]}
                   />
                 </TableWrapper>
@@ -145,21 +134,36 @@ const VacancyModal = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 30,
-    backgroundColor: '#fff',
+    backgroundColor: colors.whiteColor,
+    borderRadius: 4,
+  },
+  modalHeader: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
   },
   head: {
     height: 40,
     backgroundColor: colors.mainColor,
     justifyContent: 'center',
   },
+  tableBorder: {
+    borderWidth: 2,
+    borderColor: colors.disableColor,
+  },
   wrapper: { flexDirection: 'row' },
-  title: { flex: 1, backgroundColor: colors.mainColor },
-  row: { height: 66, backgroundColor: colors.whiteColor },
+  title: {
+    flex: 1,
+    backgroundColor: colors.mainColor,
+  },
+  rows: {
+    height: 66,
+    backgroundColor: colors.whiteColor,
+  },
   text: {
     textAlign: 'center',
-    // fontFamily: 'Amaranth-Regular',
+    fontFamily: 'Amaranth-Regular',
     fontSize: 14,
     color: colors.whiteColor,
   },

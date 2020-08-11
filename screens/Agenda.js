@@ -100,7 +100,7 @@ export default function Agenda() {
         const totalUsers = withoutDuplicates
           .sort((a, b) => a.index - b.index)
           .map((el) => el.name);
-        const chunkUsers = chunkArray(totalUsers, 10);
+        const chunkUsers = chunkArray(totalUsers, ROOM_IDS.length);
         setUsers(chunkUsers);
       }
       setLoading(false);
