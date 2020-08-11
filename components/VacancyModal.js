@@ -40,7 +40,6 @@ const tableHead = [
   roomsName[6],
   roomsName[7],
   roomsName[8],
-  roomsName[9],
 
 ];
 
@@ -52,8 +51,8 @@ const VacancyModal = ({
   const [date, setDate] = useState('');
 
   useEffect(() => {
-    const formatedDate = showDate.split('-').reverse().join('-');
-    setDate(formatedDate);
+    const formattedDate = showDate.split('-').reverse().join('-');
+    setDate(formattedDate);
     return () => {
       setDate('');
     };
@@ -107,7 +106,7 @@ const VacancyModal = ({
           <Table>
             <Row
               data={tableHead}
-              widthArr={[35, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52]}
+              widthArr={[35, 52, 52, 52, 52, 52, 52, 52, 52, 52]}
               style={styles.head}
               textStyle={styles.text}
             />
@@ -128,7 +127,7 @@ const VacancyModal = ({
                   />
                   <Rows
                     data={tableData}
-                    widthArr={[52, 52, 52, 52, 52, 52, 52, 52, 52, 52]}
+                    widthArr={[52, 52, 52, 52, 52, 52, 52, 52, 52]}
                     style={styles.row}
                     textStyle={[styles.text, { color: colors.mainColor }]}
                   />

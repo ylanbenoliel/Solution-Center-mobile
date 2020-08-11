@@ -189,17 +189,6 @@ export default function Ambients({ navigation }) {
             />
 
             <Place
-              name="Sala de Reunião"
-              photo={require('@assets/rooms/reuniao-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, cadeiras,
-             poltrona, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para a realização de reuniões,
-             cursos, workshops, palestras exclusivas, grupos terapêuticos,
-              entre outras atividades."
-              extra="- Capacidade: 10 (dez) pessoas."
-            />
-            <Place
               name="Recepção"
               photo={require('@assets/rooms/recepcao-min.jpeg')}
               support="- Equipada com central de ar, telefone, cadeiras, recamier,

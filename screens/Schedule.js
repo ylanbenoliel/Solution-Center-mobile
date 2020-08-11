@@ -335,11 +335,7 @@ export default function Schedule() {
                 name={ROOM_DATA[8].name}
                 onClick={() => getEventsByDate(ROOM_DATA[8].room)}
               />
-              <RoomButton
-                photo={require('@assets/rooms/reuniao-min.jpeg')}
-                name={ROOM_DATA[9].name}
-                onClick={() => getEventsByDate(ROOM_DATA[9].room)}
-              />
+
             </ScrollView>
           </View>
 
