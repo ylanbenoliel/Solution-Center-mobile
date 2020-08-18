@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   avatarImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 50,
+    borderRadius: 100,
   },
   galleryButtonContainer: {
     zIndex: 2,
@@ -417,12 +417,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: { width: '80%' },
   textInputContainer: {
-    borderRadius: scale(4),
-    borderWidth: scale(2),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderWidth: scale(1),
     height: verticalScale(40),
-    borderColor: colors.mainColor,
+    borderRadius: scale(4),
+    borderColor: colors.placeholderColor,
     marginBottom: scale(20),
-    justifyContent: 'center',
   },
   textInput: {
     marginLeft: scale(5),

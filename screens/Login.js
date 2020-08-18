@@ -15,7 +15,6 @@ import {
   Platform,
   ActivityIndicator,
   SafeAreaView,
-  Dimensions,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -117,12 +116,7 @@ export default function Login({ navigation }) {
         backgroundColor="rgba(255,255,255,0.1)"
         barStyle="dark-content"
       />
-      {/* <ImageBackground
-        style={{ flex: 1 }}
-        imageStyle={styles.imageBackground}
-        source={require('../assets/LogoHorizontal.png')}
-        resizeMode="center"
-      > */}
+
       <View style={styles.header}>
         <View
           style={{
@@ -151,26 +145,19 @@ export default function Login({ navigation }) {
       >
 
         <View style={styles.loginContainer}>
-          <Logo width={200} height={70} />
-
-          <View style={{
-            flexDirection: 'row',
-            width: '55%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          >
-            <Text style={[styles.text, styles.headerText]}>
-              Entre com sua
-              conta Solution
-            </Text>
-          </View>
+          <Logo width={250} height={100} />
 
           <View style={{ margin: verticalScale(20) }} />
 
           <View style={styles.inputContainer}>
             <Text style={styles.text}>Email</Text>
+
             <View style={styles.textInputContainer}>
+              <Feather
+                name="user"
+                size={scale(26)}
+                color={colors.placeholderColor}
+              />
               <TextInput
                 style={[styles.text, styles.textInput]}
                 value={email}
@@ -190,6 +177,11 @@ export default function Login({ navigation }) {
           <View style={styles.inputContainer}>
             <Text style={styles.text}>Senha</Text>
             <View style={styles.textInputContainer}>
+              <Feather
+                name="key"
+                size={scale(26)}
+                color={colors.placeholderColor}
+              />
               <TextInput
                 ref={field2}
                 value={password}
@@ -215,17 +207,22 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.buttonContainer}
+            // style={styles.buttonContainer}
             onPress={() => {
               handleRegister();
             }}
           >
-            <Text style={[styles.text, styles.buttonText]}>Registre-se</Text>
+            <Text style={[
+              styles.text,
+              // styles.buttonText,
+            ]}
+            >
+              Registre-se
+            </Text>
           </TouchableOpacity>
           <ShowInfo error={error} />
         </View>
       </KeyboardAvoidingView>
-      {/* </ImageBackground> */}
     </SafeAreaView>
   );
 }
@@ -236,14 +233,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imageBackground: {
-    opacity: 0.1,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
-  },
+
   headerText: {
     fontSize: scale(28),
     color: colors.mainColor,
@@ -257,12 +247,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: { width: '80%' },
   textInputContainer: {
-    borderRadius: scale(4),
-    borderWidth: scale(2),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderWidth: scale(1),
     height: verticalScale(40),
-    borderColor: colors.mainColor,
+    borderRadius: scale(4),
+    borderColor: colors.placeholderColor,
     marginBottom: scale(20),
-    justifyContent: 'center',
   },
   textInput: {
     marginLeft: scale(5),
