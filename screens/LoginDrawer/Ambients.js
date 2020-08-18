@@ -1,71 +1,96 @@
 /* eslint-disable global-require */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Image,
   ScrollView,
   Dimensions,
 } from 'react-native';
+import { SliderBox } from 'react-native-image-slider-box';
 import { verticalScale, scale } from 'react-native-size-matters';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
 
 import { GeneralStatusBar } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
+import Spa from '@assets/spa.svg';
 
 import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
 
-const width = Dimensions.get('window').width * 0.9;
-const height = width * 0.6;
-
-const Place = ({
-  name, photo, support, com, indication, extra,
-}) => (
-  <View style={{
-    width,
-    marginHorizontal: verticalScale(20),
-  }}
-  >
-
-    <Text style={[styles.text, { fontSize: scale(20), textAlign: 'center' }]}>
-      {name.trim()}
-    </Text>
-    <View style={{ alignItems: 'center' }}>
-
-      <Image
-        source={photo}
-        style={{
-          width,
-          height,
-          borderRadius: scale(6),
-          marginVertical: verticalScale(4),
-        }}
-      />
-    </View>
-
-    <Text style={styles.text}>{support.trim()}</Text>
-    <Text style={[styles.text]}>{com.trim()}</Text>
-    <Text style={styles.text}>
-      {indication.trim()}
-    </Text>
-    {extra && (
-      <Text style={styles.text}>
-        {extra.trim()}
-      </Text>
-    )}
-  </View>
-
-);
+const widthImage = Dimensions.get('window').width * 0.9;
+const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default function Ambients({ navigation }) {
+  const clarice = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+    // require('@assets/rooms/cecilia-min.jpeg'),
+  ];
+
+  const scrollRef = useRef();
+
+  function handleScrollDown(size) {
+    scrollRef.current.scrollTo({
+      y: height * size,
+      animated: true,
+    });
+  }
+
+  function Slide({
+    name, images, icons, goTo,
+  }) {
+    return (
+      <View>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={[styles.text, { fontSize: scale(20) }]}>
+            {name}
+          </Text>
+        </View>
+
+        <SliderBox
+          images={images}
+          dotColor={colors.accentColor}
+          paginationBoxVerticalPadding={20}
+          ImageComponentStyle={{ borderRadius: 15, width: widthImage, marginTop: 5 }}
+        />
+
+        <View style={styles.iconContainer}>
+          {icons.map((icon) => {
+            if (icon === 'spa') {
+              return <Spa width={scale(24)} height={scale(24)} />;
+            }
+
+            return (
+              <FontAwesome5
+                name={icon}
+                size={scale(24)}
+                color={colors.mainColor}
+              />
+            );
+          })}
+
+        </View>
+        <View style={{ alignItems: 'center', marginTop: verticalScale(30) }}>
+          <TouchableOpacity
+            style={styles.knowMoreButton}
+            onPress={() => { handleScrollDown(goTo); }}
+          >
+            <Text style={styles.text}>{goTo === 0 ? 'Início' : 'Mais salas'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <GeneralStatusBar
@@ -82,7 +107,7 @@ export default function Ambients({ navigation }) {
       >
         {/*  */}
         <View style={styles.header}>
-          <View style={{ paddingLeft: verticalScale(20) }} />
+          <View style={{ width: scale(32) }} />
           <Text style={[styles.text, styles.headerName]}>Ambientes</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Feather
@@ -94,109 +119,156 @@ export default function Ambients({ navigation }) {
         </View>
         {/*  */}
 
-        <View style={{ flex: 8 }}>
+        <View style={{ flex: 9 }}>
+          <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: verticalScale(50) }}>
 
-          <ScrollView horizontal>
+            <View style={{
+              paddingLeft: 10, marginTop: verticalScale(20), height,
+            }}
+            >
+              <>
+                <Text style={styles.text}>Espaços privativos, sofisticados e confortáveis.</Text>
+                <Text style={styles.text}>Acesso à internet e ligações ilimitadas.</Text>
+                <Text style={styles.text}>Segurança e praticidade.</Text>
+              </>
+              <View style={{
+                flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: verticalScale(180),
+              }}
+              >
+                <TouchableOpacity
+                  style={styles.knowMoreButton}
+                  onPress={() => { handleScrollDown(1); }}
+                >
+                  <Text style={styles.text}>Saiba mais</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-            <Place
-              name="Sala Clarice Lispector"
-              photo={require('@assets/rooms/clarice-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e maca."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Médicos, Enfermeiros, Biomédicos,
-              Farmacêuticos, Fisioterapeutas, Nutricionistas, Terapeutas Manuais, Profissionais da área
-              de estética, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[0].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                  'spa']}
+                goTo={2}
+              />
+            </View>
 
-            <Place
-              name="Sala Carlos Drummond de Andrade"
-              photo={require('@assets/rooms/carlos-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e divã."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Psicólogos,
-             Terapeutas Ocupacionais, Advogados, Contadores, Coach, entre outros profissionais"
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[1].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                ]}
+                goTo={3}
+              />
+            </View>
 
-            <Place
-              name="Sala Cecília Meireles"
-              photo={require('@assets/rooms/cecilia-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa de apoio, poltrona e divã."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Psicólogos,
-             Terapeutas, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[2].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch']}
+                goTo={4}
+              />
+            </View>
 
-            <Place
-              name="Sala Rui Barbosa"
-              photo={require('@assets/rooms/rui-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeiras e divã."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Médicos,
-             Psicólogos, Nutricionistas, Advogados, Contadores, Terapeutas Ocupacionais,
-              Coach, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[3].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch']}
+                goTo={5}
+              />
+            </View>
 
-            <Place
-              name="Sala Machado de Assis"
-              photo={require('@assets/rooms/machado-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona,
-             cadeiras, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Médicos,
-             Psicólogos, Nutricionistas, Advogados, Contadores, Engenheiros, Arquitetos,
-              Terapeutas Ocupacionais, Cerimonialistas de Eventos, Fotógrafos, Decoradores,
-               Coach, Terapeutas Manuais, Profissionais da área de estética, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[4].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                  'tv',
+                ]}
+                goTo={6}
+              />
+            </View>
 
-            <Place
-              name="Sala Monteiro Lobato"
-              photo={require('@assets/rooms/monteiro-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa de apoio,
-             poltrona e sofá."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Psicólogos,
-             Terapeutas, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[5].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                ]}
+                goTo={7}
+              />
+            </View>
 
-            <Place
-              name="Sala Luís Fernando Veríssimo"
-              photo={require('@assets/rooms/luis-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona, cadeira e sofá."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Médicos,
-             Psicólogos, Nutricionistas, Advogados, Contadores, Terapeutas Ocupacionais,
-              Coach, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[6].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                ]}
+                goTo={8}
+              />
+            </View>
 
-            <Place
-              name="Sala Cora Coralina"
-              photo={require('@assets/rooms/cora-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa de apoio e poltronas"
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Psicólogos, Terapeutas, entre outros profissionais."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[7].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                ]}
+                goTo={9}
+              />
+            </View>
 
-            <Place
-              name="Sala Carolina de Jesus"
-              photo={require('@assets/rooms/carolina-min.jpeg')}
-              support="- Sala equipada com central de ar, telefone, mesa, poltrona,
-             cadeiras, sofá, Smart TV de 29” e cabo HDMI disponível para conexão multimídia."
-              com="- Acesso à internet e ligações ilimitadas."
-              indication="- Sala excelente para atendimentos realizados por Médicos,
-             Psicólogos, Nutricionistas, Advogados, Contadores, Engenheiros, Arquitetos,
-              Terapeutas Ocupacionais, Cerimonialistas de Eventos, Fotógrafos, Decoradores,
-               Coach, entre outros profissionais."
-            />
-
-            <Place
-              name="Recepção"
-              photo={require('@assets/rooms/recepcao-min.jpeg')}
-              support="- Equipada com central de ar, telefone, cadeiras, recamier,
-            Smart TV, som ambiente, dispensador de álcool líquido e um lindo lavabo."
-              com="- Acesso à internet ilimitado."
-              indication="- Solicite auxílio aos nossos recepcionistas para cópias e impressões,
-             água, café, chocolate quente ou cappuccino, além de bombons e biscoitos."
-            />
+            <View style={{ width, height }}>
+              <Slide
+                name={ROOM_DATA[8].name}
+                images={clarice}
+                icons={[
+                  'wifi',
+                  'snowflake',
+                  'phone',
+                  'couch',
+                  'tv',
+                ]}
+                goTo={0}
+              />
+            </View>
 
           </ScrollView>
         </View>
@@ -226,6 +298,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
+  },
+  knowMoreButton: {
+    height: 50,
+    width: 200,
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: '#ccc',
+    marginTop: verticalScale(14),
+    paddingHorizontal: scale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
+    marginTop: verticalScale(10),
   },
 
 });
