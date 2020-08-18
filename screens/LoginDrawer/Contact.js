@@ -12,6 +12,7 @@ import {
   Platform,
   Image,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { verticalScale, scale } from 'react-native-size-matters';
 
@@ -26,7 +27,7 @@ import colors from '@constants/colors';
 
 const ICON_SIZE = scale(24);
 
-const Separator = () => <View style={{ marginTop: scale(8) }} />;
+const Separator = () => <View style={{ marginVertical: scale(8) }} />;
 
 export default function Contact({ navigation }) {
   function openWpp(phone) {
@@ -67,7 +68,7 @@ export default function Contact({ navigation }) {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
@@ -103,9 +104,7 @@ export default function Contact({ navigation }) {
             <View style={styles.whatsappNumbers}>
               <WppPhone phone="(91) 99118-8681" />
               <WppPhone phone="(91) 98131-9689" />
-              <View style={styles.lastNumber}>
-                <WppPhone phone="(91) 98252-0417" />
-              </View>
+              <WppPhone phone="(91) 98252-0417" />
             </View>
           </View>
           {/*  */}
@@ -177,7 +176,7 @@ export default function Contact({ navigation }) {
         {/*  */}
         <Separator />
         {/*  */}
-        <ScrollView style={styles.localizationScrollView}>
+        <ScrollView style={styles.localizationScrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.localizationContainer}>
             <Text style={[styles.text, styles.headerName]}>Localização</Text>
             <View style={{ alignItems: 'center' }}>
@@ -202,21 +201,20 @@ export default function Contact({ navigation }) {
                     {'\n'}
                     Ed. Vitta Office, Sala
                     1414
-                    {/* {"\n"}Marco. CEP: 66093-672 */}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
             <Separator />
             <Image
-              source={require('../../assets/Maps.jpeg')}
+              source={require('@assets/Maps.jpeg')}
               resizeMode="stretch"
               style={{ width: scale(300), height: verticalScale(200) }}
             />
           </View>
         </ScrollView>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -251,10 +249,7 @@ const styles = StyleSheet.create({
   },
   contactContainer: {
     flex: 1,
-    alignItems: 'flex-start',
-    marginTop: verticalScale(10),
-    marginHorizontal: scale(10),
-    paddingLeft: scale(10),
+    paddingLeft: scale(15),
   },
   linksContainer: {
     flexDirection: 'row',
@@ -262,22 +257,14 @@ const styles = StyleSheet.create({
   },
   whatsappNumbers: {
     marginLeft: scale(20),
-    width: scale(230),
-    height: verticalScale(55),
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-end',
+    height: verticalScale(70),
     justifyContent: 'space-between',
   },
-  lastNumber: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: verticalScale(5),
-  },
+
   localizationScrollView: {
-    flex: 1,
-    marginTop: verticalScale(-180),
-    marginBottom: verticalScale(30),
+    flex: 2,
+    marginTop: verticalScale(-130),
+    marginBottom: verticalScale(50),
   },
   localizationContainer: {
     flex: 2,
