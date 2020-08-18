@@ -56,10 +56,10 @@ const INITIALDATERANGE = [
 export default function Schedule() {
   const calendarRef = useRef();
 
-  const [isFirstRun, setIsFirstRun] = useState(true);
   const [datesBlacklist, setDatesBlacklist] = useState([
     formatISO(add(new Date(), { days: 8 })),
   ]);
+
   const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState('');
@@ -67,33 +67,24 @@ export default function Schedule() {
   const [loading, setLoading] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [date, setDate] = useState('');
 
   useEffect(() => {
-    if (isFirstRun) {
-      return setIsFirstRun(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isFirstRun) {
-      const timer = setTimeout(() => {
-        setError('');
-      }, 2200);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
+    const timer = setTimeout(() => {
+      setError('');
+    }, 2200);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [error]);
 
   useEffect(() => {
-    if (!isFirstRun) {
-      const timer = setTimeout(() => {
-        setSuccess('');
-      }, 2200);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
+    const timer = setTimeout(() => {
+      setSuccess('');
+    }, 2200);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [success]);
 
   useEffect(() => {
@@ -227,6 +218,7 @@ export default function Schedule() {
       })
       .catch(() => {})
       .finally(() => {
+        setDate(calendarDateFormatted);
         setIsEventModalOpen(true);
         setLoading(false);
       });
@@ -342,6 +334,7 @@ export default function Schedule() {
         </View>
 
         <EventModal
+          dateHeader={date}
           eventList={scheduleList}
           roomName={roomName}
           isVisible={isEventModalOpen}

@@ -17,7 +17,7 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 
 const EventModal = ({
-  isVisible, onClose, roomName, eventList,
+  isVisible, onClose, roomName, eventList, dateHeader,
 }) => {
   const [localEventList, setLocalEventList] = useState(null);
 
@@ -90,12 +90,8 @@ const EventModal = ({
       style={styles.scheduleItemContainer}
     >
       {/*  */}
-      <View
-        style={styles.scheduleItemHourContainer}
-      >
-        <Text
-          style={styles.scheduleItemHour}
-        >
+      <View style={styles.scheduleItemHourContainer}>
+        <Text style={styles.text}>
           {time.split(':')[0]}
           h
         </Text>
@@ -124,6 +120,7 @@ const EventModal = ({
         <View style={styles.header}>
           <View style={{ height: scale(20), width: scale(20) }} />
           <Text style={[styles.text]}>{roomName}</Text>
+          <Text style={[styles.text]}>{dateHeader.split('-').reverse().join('/')}</Text>
           <TouchableOpacity
             style={styles.closeModal}
             onPress={() => {
@@ -186,13 +183,11 @@ const styles = StyleSheet.create({
   },
   scheduleItemHourContainer: {
     height: '100%',
+    width: scale(60),
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  scheduleItemHour: {
-    marginHorizontal: scale(10),
-    color: colors.mainColor,
-    fontSize: scale(22),
-  },
+
   statusButtonContainer: {
     flex: 1,
     height: '100%',
