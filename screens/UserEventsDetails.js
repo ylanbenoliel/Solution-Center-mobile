@@ -19,6 +19,7 @@ import { GeneralStatusBar, Separator, Loading } from '@components';
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
 
 const UserEventsDetails = ({ route, navigation }) => {
   const { events } = route.params;
@@ -129,6 +130,10 @@ const UserEventsDetails = ({ route, navigation }) => {
   const EventList = ({ singleEvent }) => {
     const onlyDate = singleEvent.date.split('T')[0];
     const dateWithBars = onlyDate.split('-').reverse().join('/');
+    const roomName = ROOM_DATA.map((data) => {
+      if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
+      return false;
+    });
     return (
       <View
         key={singleEvent.id}
@@ -156,7 +161,7 @@ const UserEventsDetails = ({ route, navigation }) => {
             <Text style={styles.text}>
               Sala:
               {' '}
-              {singleEvent.room}
+              {roomName}
             </Text>
           </View>
 
@@ -174,7 +179,12 @@ const UserEventsDetails = ({ route, navigation }) => {
                 }]);
             }}
           >
-            <Text style={[styles.text, styles.buttonText]}>Editar</Text>
+            <Feather
+              name="edit-2"
+              size={scale(28)}
+              color={colors.whiteColor}
+            />
+            {/* <Text style={[styles.text, styles.buttonText]}>Editar</Text> */}
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -191,7 +201,12 @@ const UserEventsDetails = ({ route, navigation }) => {
                 }]);
             }}
           >
-            <Text style={[styles.text, styles.buttonText]}>Excluir</Text>
+            <Feather
+              name="x"
+              size={scale(28)}
+              color={colors.whiteColor}
+            />
+            {/* <Text style={[styles.text, styles.buttonText]}>Excluir</Text> */}
           </TouchableOpacity>
         </View>
         <Separator />
