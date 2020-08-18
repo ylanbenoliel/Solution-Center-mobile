@@ -167,20 +167,12 @@ export default function Plans({ navigation }) {
             />
             <View style={{ marginVertical: verticalScale(12) }} />
             <Plan
-              state={4}
-              touchText="Sala de reunião"
-              description={[
-                '– Capacidade: 10 pessoas.',
-                '– Valor da hora: R$ 70,00.',
-              ]}
-            />
-            <View style={{ marginVertical: verticalScale(12) }} />
-            <Plan
               state={5}
               touchText="Fidelidade"
               description={[
                 '– Mensalidade de R$ 120,00',
                 '– Valor da hora: R$ 30,00.',
+                '– Renovação não obrigatória.',
                 '– Marketing nos canais\n de comunicação.',
                 '– Prioridade para agendamento\n de horários e escolha de salas.',
               ]}
@@ -192,7 +184,10 @@ export default function Plans({ navigation }) {
               description={[
                 '– Sala exclusiva',
                 '– Mensalidade de R$ 2000,00.',
+                '– Renovação não obrigatória.',
+                '– Todas as despesas inclusas.',
                 '– Período matutino, de 08h às 13h.',
+                '– Hora fora do turno: R$ 30,00.',
               ]}
             />
           </ScrollView>
