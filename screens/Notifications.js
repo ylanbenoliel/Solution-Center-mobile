@@ -2,7 +2,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect } from 'react';
 import {
-  View, StyleSheet, TextInput, FlatList, SafeAreaView, Text, TouchableOpacity,
+  View,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -61,7 +68,7 @@ const Notifications = () => {
       return false;
     }).map((user) => user.id);
     if (selectedUsers === [] || textToSend === '') {
-      return null;
+      return setError('Nada para enviar.');
     }
     api.post('/messages', {
       user: selectedUsers,
@@ -83,36 +90,39 @@ const Notifications = () => {
             avatarUrl = user.avatar.url;
           }
           return { avatarUrl, selected, ...user };
-        });
+        }).sort((a, b) => a.name.localeCompare(b.name));
         setTotalUsers(users);
       })
       .catch(() => {});
   }
 
-  const SelectUserList = ({ user }) => (
-    <TouchableOpacity
-      style={{
-        marginVertical: verticalScale(2),
-        paddingVertical: verticalScale(6),
-        borderBottomWidth: 2,
-        borderColor: '#ccc',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}
-      key={user.id}
-      onPress={() => handleSelection(user)}
-    >
+  const SelectedUser = ({ user }) => {
+    const avatarImageUrl = user.avatarUrl
+      ? { uri: `${user.avatarUrl}` }
+      // eslint-disable-next-line global-require
+      : require('@assets/icon.png');
 
-      {user.selected === false
-        ? (<Feather name="x" color="red" size={scale(22)} />)
-        : (<Feather name="check" color={colors.accentColor} size={scale(22)} />)}
+    return (
+      <TouchableOpacity
+        style={styles.selectedUserContainer}
+        key={user.id}
+        onPress={() => handleSelection(user)}
+      >
 
-      <Text style={[styles.text, { fontSize: scale(22) }]}>
-        {' '}
-        {user.name}
-      </Text>
-    </TouchableOpacity>
-  );
+        {user.selected === false
+          ? (<Feather name="x" color="red" size={scale(20)} />)
+          : (<Feather name="check" color={colors.accentColor} size={scale(20)} />)}
+
+        <View style={{ marginHorizontal: scale(5) }}>
+          <Image source={avatarImageUrl} style={styles.avatarImage} />
+        </View>
+        <Text style={[styles.text, { fontSize: scale(16) }]}>
+          {' '}
+          {user.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -130,7 +140,7 @@ const Notifications = () => {
             onChangeText={(text) => {
               setTextToSend(text);
             }}
-            onSubmitEditing={() => {}}
+            onSubmitEditing={() => { handleSendMessage(); }}
             placeholder="Mensagem"
             autoCorrect={false}
             placeholderTextColor={colors.placeholderColor}
@@ -172,7 +182,7 @@ const Notifications = () => {
         <View style={{
           width: '100%',
           alignItems: 'center',
-          marginVertical: verticalScale(20),
+          marginBottom: verticalScale(4),
         }}
         >
           <ShowInfo error={error} success={success} />
@@ -180,19 +190,18 @@ const Notifications = () => {
 
         <FlatList
           data={totalUsers}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            marginTop: verticalScale(10),
             borderTopWidth: 2,
             borderColor: '#ccc',
-            paddingBottom: verticalScale(230),
+            paddingBottom: verticalScale(160),
           }}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <SelectUserList user={item} />
+            <SelectedUser user={item} />
           )}
         />
       </View>
-
     </SafeAreaView>
   );
 };
@@ -200,14 +209,14 @@ const Notifications = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: scale(10),
-    marginTop: verticalScale(40),
+    marginTop: verticalScale(20),
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: verticalScale(20),
-    borderRadius: scale(4),
+    marginBottom: verticalScale(10),
+    borderRadius: scale(14),
     borderWidth: scale(2),
     borderColor: colors.mainColor,
   },
@@ -230,6 +239,20 @@ const styles = StyleSheet.create({
     borderRadius: scale(4),
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: verticalScale(5),
+  },
+  selectedUserContainer: {
+    marginVertical: verticalScale(2),
+    paddingVertical: verticalScale(6),
+    borderBottomWidth: 2,
+    borderColor: '#ccc',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    width: scale(20),
+    height: scale(20),
+    borderRadius: scale(10),
   },
 });
 
