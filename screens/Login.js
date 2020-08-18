@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    paddingLeft: scale(4),
     borderWidth: scale(1),
     height: verticalScale(40),
     borderRadius: scale(4),
@@ -257,6 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(20),
   },
   textInput: {
+    width: '100%',
     marginLeft: scale(5),
     fontSize: scale(18),
     height: verticalScale(32),
