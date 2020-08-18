@@ -151,8 +151,10 @@ const EventModal = ({
 
         <View style={styles.header}>
           <View style={{ height: scale(20), width: scale(20) }} />
-          <Text style={[styles.text]}>{roomName}</Text>
-          <Text style={[styles.text]}>{dateHeader.split('-').reverse().join('/')}</Text>
+          <View style={{ alignItems: 'center' }}>
+            <Text style={[styles.text, styles.headerText]}>{roomName}</Text>
+            <Text style={[styles.text, styles.headerText]}>{dateHeader.split('-').reverse().join('/')}</Text>
+          </View>
           <TouchableOpacity
             style={styles.closeModal}
             onPress={() => {
@@ -203,6 +205,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(20),
     color: colors.mainColor,
+  },
+  headerText: {
+    fontSize: scale(18),
   },
   closeModal: {
     marginRight: scale(6),
