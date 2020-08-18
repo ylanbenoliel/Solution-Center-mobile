@@ -27,25 +27,25 @@ const UserEventsDetails = ({ route, navigation }) => {
   const [totalEvents, setTotalEvents] = useState(events);
   const [loading, setLoading] = useState(false);
 
-  function confirmEventPayment(eventId) {
-    api.patch('/admin/events/update', {
-      id: eventId,
-      status_payment: 1,
-    })
-      .then(() => {
-        setEventsNotPaid(eventsNotPaid.filter((evt) => {
-          if (evt.id !== eventId) { return evt; } return false;
-        }));
-      })
-      .catch(() => {
-        Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
-          [
-            {
-              text: 'Ok',
-            },
-          ]);
-      });
-  }
+  // function confirmEventPayment(eventId) {
+  //   api.patch('/admin/events/update', {
+  //     id: eventId,
+  //     status_payment: 1,
+  //   })
+  //     .then(() => {
+  //       setEventsNotPaid(eventsNotPaid.filter((evt) => {
+  //         if (evt.id !== eventId) { return evt; } return false;
+  //       }));
+  //     })
+  //     .catch(() => {
+  //       Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
+  //         [
+  //           {
+  //             text: 'Ok',
+  //           },
+  //         ]);
+  //     });
+  // }
 
   function deleteEvent(eventId) {
     setLoading(true);
@@ -76,56 +76,60 @@ const UserEventsDetails = ({ route, navigation }) => {
     return null;
   };
 
-  const ShowNotPaidEvent = ({ singleEvent }) => {
-    if (singleEvent.status_payment === 0) {
-      const onlyDate = singleEvent.date.split('T')[0];
-      const dateWithBars = onlyDate.split('-').reverse().join('/');
-      return (
-        <View
-          key={singleEvent.id}
-          style={styles.eventsNotPaidContainer}
-        >
-          <Text style={styles.text}>
-            Data:
-            {' '}
-            {dateWithBars}
-          </Text>
-          <Text style={styles.text}>
-            Hora:
-            {' '}
-            {singleEvent.time}
-          </Text>
-          <Text style={styles.text}>
-            Sala:
-            {' '}
-            {singleEvent.room}
-          </Text>
+  // const ShowNotPaidEvent = ({ singleEvent }) => {
+  //   if (singleEvent.status_payment === 0) {
+  //     const onlyDate = singleEvent.date.split('T')[0];
+  //     const dateWithBars = onlyDate.split('-').reverse().join('/');
+  //     const roomName = ROOM_DATA.map((data) => {
+  //       if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
+  //       return false;
+  //     });
+  //     return (
+  //       <View
+  //         key={singleEvent.id}
+  //         style={styles.eventsNotPaidContainer}
+  //       >
+  //         <Text style={styles.text}>
+  //           Data:
+  //           {' '}
+  //           {dateWithBars}
+  //         </Text>
+  //         <Text style={styles.text}>
+  //           Hora:
+  //           {' '}
+  //           {singleEvent.time}
+  //         </Text>
+  //         <Text style={styles.text}>
+  //           Sala:
+  //           {' '}
+  //           {roomName}
+  //         </Text>
 
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity
-              style={[styles.button, styles.confirmButton]}
-              onPress={() => {
-                Alert.alert('Aviso',
-                  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Dia: ${dateWithBars}?`,
-                  [{
-                    text:
-                    'Cancelar',
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Ok',
-                    onPress: () => { confirmEventPayment(singleEvent.id); },
-                  }]);
-              }}
-            >
-              <Text style={[styles.text, styles.buttonText]}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      );
-    }
-    return null;
-  };
+  //         <View style={{ alignItems: 'center' }}>
+  //           <TouchableOpacity
+  //             style={[styles.button, styles.confirmButton]}
+  //             onPress={() => {
+  //               Alert.alert('Aviso',
+  //  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Dia: ${dateWithBars}?`,
+  //                 [{
+  //                   text:
+  //                   'Cancelar',
+  //                   style: 'cancel',
+  //                 },
+  //                 {
+  //                   text: 'Ok',
+  //                   onPress: () => { confirmEventPayment(singleEvent.id); },
+  //                 }]);
+  //             }}
+  //           >
+  //             <Text style={[styles.text, styles.buttonText]}>OK</Text>
+  //           </TouchableOpacity>
+  //         </View>
+  //       </View>
+  //     );
+  //   }
+  //   return null;
+  // };
 
   const EventList = ({ singleEvent }) => {
     const onlyDate = singleEvent.date.split('T')[0];
@@ -231,7 +235,7 @@ const UserEventsDetails = ({ route, navigation }) => {
           color={colors.navigationColor}
         />
       </TouchableOpacity>
-      <View style={{ alignItems: 'center' }}>
+      {/* <View style={{ alignItems: 'center' }}>
         <Text style={styles.text}>Horários não pagos</Text>
         <FlatList
           horizontal
@@ -243,7 +247,7 @@ const UserEventsDetails = ({ route, navigation }) => {
             />
           )}
         />
-      </View>
+      </View> */}
       <View style={{ alignItems: 'center', marginTop: 5 }}>
         <Text style={styles.text}>Horários</Text>
         <Separator />
@@ -287,10 +291,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: colors.errorColor,
   },
-  eventsNotPaidContainer: {
-    marginVertical: verticalScale(5),
-    marginHorizontal: scale(5),
-  },
+
   conditionalLoading: {
     zIndex: 10,
     position: 'absolute',

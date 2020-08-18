@@ -23,6 +23,8 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 // import { PLAN_DATA } from '@constants/fixedValues';
 
+// #FIXME request plans and events only when admin clicks in buttons
+
 const UserDetails = ({ data, dataField }) => (
   <View style={{ marginVertical: verticalScale(2) }}>
     <Text style={styles.text}>
@@ -167,6 +169,7 @@ const AdminUserModal = ({
       <View
         style={styles.container}
       >
+        {/* #TODO send userInfo Userslist to not reload all users */}
         <TouchableOpacity
           style={styles.closeModal}
           onPress={() => {
@@ -200,24 +203,25 @@ const AdminUserModal = ({
             <Text style={styles.text}>Reservas</Text>
           </View>
 
-          <View style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: verticalScale(10),
-          }}
+          <View
+            style={{
+              flex: 1,
+              width: 300,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              marginTop: verticalScale(10),
+            }}
           >
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-around',
-                width: scale(130),
+                width: scale(60),
                 backgroundColor: colors.accentColor,
                 padding: scale(10),
                 borderRadius: scale(16),
-                marginRight: scale(10),
               }}
               onPress={() => {
                 navigation.push('Adicionar', { user: userDetails });
@@ -229,15 +233,16 @@ const AdminUserModal = ({
                 size={scale(30)}
                 color={colors.whiteColor}
               />
-              <Text style={[styles.text, { color: colors.whiteColor }]}>Adicionar</Text>
+              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Adicionar</Text> */}
             </TouchableOpacity>
+
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-around',
-                width: scale(130),
-                backgroundColor: colors.navigationColor,
+                width: scale(60),
+                backgroundColor: '#804d00',
                 padding: scale(10),
                 borderRadius: scale(16),
               }}
@@ -251,7 +256,30 @@ const AdminUserModal = ({
                 size={scale(28)}
                 color={colors.whiteColor}
               />
-              <Text style={[styles.text, { color: colors.whiteColor }]}>Editar</Text>
+              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Editar</Text> */}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: scale(60),
+                backgroundColor: 'green',
+                padding: scale(10),
+                borderRadius: scale(16),
+              }}
+              onPress={() => {
+                navigation.push('Pagamentos', { events: eventList });
+                onClose();
+              }}
+            >
+              <Feather
+                name="dollar-sign"
+                size={scale(28)}
+                color={colors.whiteColor}
+              />
+              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Pagamentos</Text> */}
             </TouchableOpacity>
           </View>
 
