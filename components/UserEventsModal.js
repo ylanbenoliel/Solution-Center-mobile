@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, FlatList,
+  View, Text, StyleSheet, TouchableOpacity, FlatList, Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -10,34 +10,77 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { Feather } from '@expo/vector-icons';
 
 import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
 
 const EventInfo = ({
   date, time, room, status_payment: status,
-}) => (
-  <View style={styles.eventInfoContainer}>
-    <Text style={styles.text}>
-      Hora:
-      {' '}
-      {time.split(':')[0]}
-      H
-    </Text>
-    <Text style={styles.text}>
-      Dia:
-      {' '}
-      {date.split('T')[0].split('-').reverse().join('-')}
-    </Text>
-    <Text style={styles.text}>
-      Sala:
-      {' '}
-      {room}
-    </Text>
-    <Text style={styles.text}>
-      Status da reserva:
-      {' '}
-      {Number(status) === 1 ? 'Pago' : 'Não pago'}
-    </Text>
-  </View>
-);
+}) => {
+  const roomName = ROOM_DATA.map((data) => {
+    if (data.room === Number(room)) { return data.name.split(' ')[0]; }
+    return false;
+  });
+
+  return (
+    <View style={styles.eventInfoContainer}>
+      <View style={{
+        flex: 1,
+      }}
+      >
+
+        <Text style={styles.text}>
+          Dia:
+          {' '}
+          {date.split('T')[0].split('-').reverse().join('/')}
+        </Text>
+
+        <Text style={styles.text}>
+          Hora:
+          {' '}
+          {time.split(':')[0]}
+          h
+        </Text>
+
+        <Text style={styles.text}>
+          Sala:
+          {' '}
+          {roomName}
+        </Text>
+      </View>
+
+      <View style={{
+        flex: 1, height: '100%', alignItems: 'center',
+      }}
+      >
+        <Text style={styles.text}>Pagamento</Text>
+        {Number(status) === 0 ? (
+          <TouchableOpacity onPress={() => {
+            Alert.alert('', 'Pagamento em aberto',
+              [
+                {
+                  text: 'Ok',
+                },
+              ]);
+          }}
+          >
+
+            <Feather
+              name="x"
+              size={scale(24)}
+              color={colors.errorColor}
+            />
+          </TouchableOpacity>
+        ) : (
+          <Feather
+            name="check"
+            size={scale(22)}
+            color={colors.accentColor}
+          />
+        )}
+      </View>
+
+    </View>
+  );
+};
 
 const UserEventsModal = ({ isVisible, onClose, events }) => (
 
@@ -87,9 +130,13 @@ const UserEventsModal = ({ isVisible, onClose, events }) => (
 
 const styles = StyleSheet.create({
   eventInfoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderBottomWidth: 2,
+    // borderWidth: 2,
     borderColor: '#ccc',
-    paddingVertical: verticalScale(4),
+    paddingVertical: verticalScale(12),
     paddingLeft: scale(10),
   },
   container: {
@@ -110,7 +157,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Amaranth-Regular',
-    fontSize: scale(20),
+    fontSize: scale(18),
     color: colors.mainColor,
   },
 });
