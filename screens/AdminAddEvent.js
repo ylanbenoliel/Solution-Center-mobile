@@ -145,7 +145,6 @@ const AdminAddEvent = ({ route, navigation }) => {
             <Picker.Item label={`${ROOM_DATA[6].name}`} value={`${ROOM_DATA[6].room}`} />
             <Picker.Item label={`${ROOM_DATA[7].name}`} value={`${ROOM_DATA[7].room}`} />
             <Picker.Item label={`${ROOM_DATA[8].name}`} value={`${ROOM_DATA[8].room}`} />
-            <Picker.Item label={`${ROOM_DATA[9].name}`} value={`${ROOM_DATA[9].room}`} />
           </Picker>
         </View>
 
@@ -180,7 +179,7 @@ const AdminAddEvent = ({ route, navigation }) => {
 
         <TouchableOpacity
           onPress={() => {
-            Alert.alert('', `Salvar horário para ${user.name}`,
+            Alert.alert('', `Salvar horário para ${user.name}?`,
               [{
                 text:
             'Cancelar',
