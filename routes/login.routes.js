@@ -8,7 +8,6 @@ import {
   WhoWeAre,
   Ambients,
   Plans,
-  Partners,
   Contact,
 } from '@screens/LoginDrawer/index';
 
@@ -28,7 +27,6 @@ export default function LoginDrawer() {
       <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
-      <Drawer.Screen name="Parceiros" component={Partners} />
       <Drawer.Screen name="Contato" component={Contact} />
     </Drawer.Navigator>
   );
