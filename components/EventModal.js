@@ -3,7 +3,12 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, FlatList,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -82,6 +87,33 @@ const EventModal = ({
       });
   }
 
+  function confirmReserve(room, date, time) {
+    Alert.alert('', `Deseja reservar o horário de ${time.split(':')[0]} horas?`, [{
+      text:
+      'Não',
+      style: 'cancel',
+    },
+    {
+      text: 'Sim',
+      onPress: () => {
+        reserveRoom(room, date, time);
+      },
+    }]);
+  }
+  function dismissReserve(event, room, date, time) {
+    Alert.alert('', `Deseja desmarcar o horário de ${time.split(':')[0]} horas?`, [{
+      text:
+      'Não',
+      style: 'cancel',
+    },
+    {
+      text: 'Sim',
+      onPress: () => {
+        dismissRoom(event);
+      },
+    }]);
+  }
+
   const ScheduleItem = ({
     event, date, room, time, code,
   }) => (
@@ -104,8 +136,8 @@ const EventModal = ({
       >
         <StatusButton
           code={code}
-          onCheckIn={() => reserveRoom(room, date, time)}
-          onDismiss={() => dismissRoom(event)}
+          onCheckIn={() => confirmReserve(room, date, time)}
+          onDismiss={() => dismissReserve(event, room, date, time)}
         />
       </View>
     </View>

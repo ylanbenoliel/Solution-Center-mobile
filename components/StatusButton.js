@@ -13,9 +13,9 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
       <>
         <TouchableOpacity
           onPress={() => onCheckIn()}
-          style={styles.availableButton}
+          style={[styles.defaultButton, styles.availableButton]}
         >
-          <Text style={styles.text}>Pressione para reservar</Text>
+          <Text style={styles.text}>Clique para reservar</Text>
         </TouchableOpacity>
       </>
     );
@@ -63,11 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   availableButton: {
-    width: '80%',
-    height: '65%',
-    borderRadius: 8,
-    paddingVertical: 4,
-    justifyContent: 'center',
     backgroundColor: colors.accentColor,
   },
   reservedButton: {
@@ -81,7 +76,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Amaranth-Regular',
-    fontSize: scale(18),
+    fontSize: scale(16),
     textAlign: 'center',
     color: colors.whiteColor,
   },

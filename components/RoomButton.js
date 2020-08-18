@@ -25,27 +25,26 @@ const RoomButton = ({ name, photo, onClick }) => (
   </TouchableOpacity>
 );
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  },
   roomButton: {
     width: '95%',
     height: verticalScale(100),
     borderRadius: scale(16),
     margin: scale(10),
   },
-  roomText: {
-    margin: scale(10),
-    fontSize: scale(22),
-    color: colors.whiteColor,
+  background: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
   },
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
-    color: colors.mainColor,
+  },
+  roomText: {
+    margin: scale(10),
+    fontSize: scale(20),
+    color: colors.whiteColor,
   },
 });
 export default RoomButton;
