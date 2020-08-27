@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ImageBackground,
   ScrollView,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import { SliderBox } from 'react-native-image-slider-box';
 import { verticalScale, scale } from 'react-native-size-matters';
@@ -20,79 +21,63 @@ import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { GeneralStatusBar } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
-import Spa from '@assets/spa.svg';
+import Armchair from '@assets/svgs/armchair.svg';
+import Spa from '@assets/svgs/spa.svg';
 
 import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
 const widthImage = Dimensions.get('window').width * 0.9;
-const { height } = Dimensions.get('window');
+const height = Dimensions.get('window').height * 0.4;
 const { width } = Dimensions.get('window');
 
 export default function Ambients({ navigation }) {
   const clarice = [
     require('@assets/rooms/clarice-min.jpeg'),
     require('@assets/rooms/carlos-min.jpeg'),
-    // require('@assets/rooms/cecilia-min.jpeg'),
   ];
 
-  const scrollRef = useRef();
-
-  function handleScrollDown(size) {
-    scrollRef.current.scrollTo({
-      y: height * size,
-      animated: true,
-    });
-  }
-
-  function Slide({
-    id, name, images, icons, goTo,
-  }) {
-    return (
-      <View key={id}>
-        <View style={{ alignItems: 'center' }}>
-          <Text style={[styles.text, { fontSize: scale(20) }]}>
-            {name}
-          </Text>
-        </View>
-
-        <SliderBox
-          images={images}
-          dotColor={colors.accentColor}
-          paginationBoxVerticalPadding={20}
-          ImageComponentStyle={{ borderRadius: 15, width: widthImage, marginTop: 5 }}
-        />
-
-        <View style={styles.iconContainer}>
-          {icons.map((icon) => {
-            if (icon === 'spa') {
-              return <Spa width={scale(24)} height={scale(24)} />;
-            }
-
-            return (
-              <FontAwesome5
-                name={icon}
-                size={scale(24)}
-                color={colors.mainColor}
-              />
-            );
-          })}
-
-        </View>
-        <View style={{ alignItems: 'center', marginTop: verticalScale(30) }}>
-          <TouchableOpacity
-            style={styles.knowMoreButton}
-            onPress={() => { handleScrollDown(goTo); }}
-          >
-            <Text style={styles.text}>{goTo === 0 ? 'Início' : 'Próxima sala'}</Text>
-          </TouchableOpacity>
-        </View>
+  const Slide = ({
+    id, name, images, icons,
+  }) => (
+    <View key={id}>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={[styles.text, { fontSize: scale(20) }]}>
+          {name}
+        </Text>
       </View>
-    );
-  }
+
+      <SliderBox
+        images={images}
+        dotColor={colors.accentColor}
+        paginationBoxVerticalPadding={20}
+        ImageComponentStyle={{ borderRadius: 15, width: widthImage, marginTop: 5 }}
+      />
+
+      <View style={styles.iconContainer}>
+        {icons.map((icon) => {
+          if (icon === 'spa') {
+            return <Spa width={scale(24)} height={scale(24)} />;
+          }
+          if (icon === 'armchair') {
+            return <Armchair width={scale(24)} height={scale(24)} />;
+          }
+
+          return (
+            <FontAwesome5
+              name={icon}
+              size={scale(24)}
+              color={colors.secondaryColor}
+            />
+          );
+        })}
+
+      </View>
+    </View>
+  );
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
@@ -120,28 +105,61 @@ export default function Ambients({ navigation }) {
         {/*  */}
 
         <View style={{ flex: 9 }}>
-          <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: verticalScale(50) }}>
+          <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(20) }}>
 
             <View style={{
-              paddingLeft: 10, marginTop: verticalScale(20), height,
+              paddingLeft: scale(5), marginVertical: verticalScale(20),
             }}
             >
-              <>
-                <Text style={styles.text}>Espaços privativos, sofisticados e confortáveis.</Text>
-                <Text style={styles.text}>Acesso à internet e ligações ilimitadas.</Text>
-                <Text style={styles.text}>Segurança e praticidade.</Text>
-              </>
-              <View style={{
-                flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: verticalScale(180),
-              }}
-              >
-                <TouchableOpacity
-                  style={styles.knowMoreButton}
-                  onPress={() => { handleScrollDown(1); }}
-                >
-                  <Text style={styles.text}>Saiba mais</Text>
-                </TouchableOpacity>
+              <Text style={styles.text}>
+                Nossos ambientes foram elaborados para
+                atender à sua necessidade.
+              </Text>
+
+              <View style={styles.iconAndText}>
+                <View style={styles.headerIconContainer}>
+                  <FontAwesome5
+                    name="wifi"
+                    size={scale(16)}
+                    color={colors.mainColor}
+                  />
+                </View>
+                <Text style={styles.text}>Internet ilimitada.</Text>
               </View>
+
+              <View style={styles.iconAndText}>
+                <View style={styles.headerIconContainer}>
+                  <FontAwesome5
+                    name="phone"
+                    size={scale(16)}
+                    color={colors.mainColor}
+                  />
+                </View>
+                <Text style={styles.text}>Ligações ilimitadas.</Text>
+              </View>
+
+              <View style={styles.iconAndText}>
+                <View style={styles.headerIconContainer}>
+                  <FontAwesome5
+                    name="snowflake"
+                    size={scale(16)}
+                    color={colors.mainColor}
+                  />
+                </View>
+                <Text style={styles.text}>Salas climatizadas.</Text>
+              </View>
+
+              <View style={styles.iconAndText}>
+                <View style={styles.headerIconContainer}>
+                  <FontAwesome5
+                    name="shield-alt"
+                    size={scale(16)}
+                    color={colors.mainColor}
+                  />
+                </View>
+                <Text style={styles.text}>Segurança e praticidade.</Text>
+              </View>
+
             </View>
 
             <View style={{ width, height }}>
@@ -150,12 +168,11 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[0].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
-                  'spa']}
-                goTo={2}
+                  'armchair',
+                  'spa',
+                ]}
               />
             </View>
 
@@ -165,12 +182,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[1].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                 ]}
-                goTo={3}
               />
             </View>
 
@@ -180,11 +195,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[2].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
-                  'couch']}
-                goTo={4}
+                  'couch',
+                  'armchair',
+                ]}
               />
             </View>
 
@@ -194,11 +208,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[3].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
-                  'couch']}
-                goTo={5}
+                  'couch',
+                  'armchair',
+                ]}
               />
             </View>
 
@@ -208,13 +221,11 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[4].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                   'tv',
                 ]}
-                goTo={6}
               />
             </View>
 
@@ -224,12 +235,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[5].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                 ]}
-                goTo={7}
               />
             </View>
 
@@ -239,12 +248,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[6].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                 ]}
-                goTo={8}
               />
             </View>
 
@@ -254,12 +261,10 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[7].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                 ]}
-                goTo={9}
               />
             </View>
 
@@ -269,13 +274,11 @@ export default function Ambients({ navigation }) {
                 name={ROOM_DATA[8].name}
                 images={clarice}
                 icons={[
-                  'wifi',
                   'snowflake',
-                  'phone',
                   'couch',
+                  'armchair',
                   'tv',
                 ]}
-                goTo={0}
               />
             </View>
 
@@ -283,7 +286,7 @@ export default function Ambients({ navigation }) {
         </View>
 
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -307,18 +310,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
+    flexShrink: 1,
   },
-  knowMoreButton: {
-    height: 50,
-    width: 200,
-    borderWidth: 2,
-    borderRadius: 4,
-    borderColor: '#ccc',
-    marginTop: verticalScale(14),
-    paddingHorizontal: scale(30),
+
+  iconAndText: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
+  headerIconContainer: { width: '10%', alignItems: 'center' },
   iconContainer: {
     flexDirection: 'row',
     width: '100%',
