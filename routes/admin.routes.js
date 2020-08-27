@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Info from '@components/Info';
 
 import AdminAddEvent from '@screens/AdminAddEvent';
+import AdminEditEvent from '@screens/AdminEditEvent';
 import AdminPayment from '@screens/AdminPayment';
 import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
@@ -35,6 +36,7 @@ function UserStack() {
       <Stack.Screen name="Usuários" component={AdminUserList} />
       <Stack.Screen name="Eventos" component={UserEventsDetails} />
       <Stack.Screen name="Adicionar" component={AdminAddEvent} />
+      <Stack.Screen name="Editar" component={AdminEditEvent} />
       <Stack.Screen name="Pagamentos" component={AdminPayment} />
     </Stack.Navigator>
   );

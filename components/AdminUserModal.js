@@ -164,12 +164,12 @@ const AdminUserModal = ({
     </View>
   );
 
+  /* #TODO send userInfo Userslist to not reload all users */
   return (
     <Modal isVisible={isVisible}>
       <View
         style={styles.container}
       >
-        {/* #TODO send userInfo Userslist to not reload all users */}
         <TouchableOpacity
           style={styles.closeModal}
           onPress={() => {
@@ -233,7 +233,6 @@ const AdminUserModal = ({
                 size={scale(30)}
                 color={colors.whiteColor}
               />
-              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Adicionar</Text> */}
             </TouchableOpacity>
 
             <TouchableOpacity

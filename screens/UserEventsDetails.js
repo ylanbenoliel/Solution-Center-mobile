@@ -22,30 +22,10 @@ import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
 const UserEventsDetails = ({ route, navigation }) => {
-  const { events } = route.params;
+  const { events, user } = route.params;
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
   const [totalEvents, setTotalEvents] = useState(events);
   const [loading, setLoading] = useState(false);
-
-  // function confirmEventPayment(eventId) {
-  //   api.patch('/admin/events/update', {
-  //     id: eventId,
-  //     status_payment: 1,
-  //   })
-  //     .then(() => {
-  //       setEventsNotPaid(eventsNotPaid.filter((evt) => {
-  //         if (evt.id !== eventId) { return evt; } return false;
-  //       }));
-  //     })
-  //     .catch(() => {
-  //       Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
-  //         [
-  //           {
-  //             text: 'Ok',
-  //           },
-  //         ]);
-  //     });
-  // }
 
   function deleteEvent(eventId) {
     setLoading(true);
@@ -76,68 +56,15 @@ const UserEventsDetails = ({ route, navigation }) => {
     return null;
   };
 
-  // const ShowNotPaidEvent = ({ singleEvent }) => {
-  //   if (singleEvent.status_payment === 0) {
-  //     const onlyDate = singleEvent.date.split('T')[0];
-  //     const dateWithBars = onlyDate.split('-').reverse().join('/');
-  //     const roomName = ROOM_DATA.map((data) => {
-  //       if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
-  //       return false;
-  //     });
-  //     return (
-  //       <View
-  //         key={singleEvent.id}
-  //         style={styles.eventsNotPaidContainer}
-  //       >
-  //         <Text style={styles.text}>
-  //           Data:
-  //           {' '}
-  //           {dateWithBars}
-  //         </Text>
-  //         <Text style={styles.text}>
-  //           Hora:
-  //           {' '}
-  //           {singleEvent.time}
-  //         </Text>
-  //         <Text style={styles.text}>
-  //           Sala:
-  //           {' '}
-  //           {roomName}
-  //         </Text>
-
-  //         <View style={{ alignItems: 'center' }}>
-  //           <TouchableOpacity
-  //             style={[styles.button, styles.confirmButton]}
-  //             onPress={() => {
-  //               Alert.alert('Aviso',
-  //  `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h Dia: ${dateWithBars}?`,
-  //                 [{
-  //                   text:
-  //                   'Cancelar',
-  //                   style: 'cancel',
-  //                 },
-  //                 {
-  //                   text: 'Ok',
-  //                   onPress: () => { confirmEventPayment(singleEvent.id); },
-  //                 }]);
-  //             }}
-  //           >
-  //             <Text style={[styles.text, styles.buttonText]}>OK</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     );
-  //   }
-  //   return null;
-  // };
-
   const EventList = ({ singleEvent }) => {
     const onlyDate = singleEvent.date.split('T')[0];
     const dateWithBars = onlyDate.split('-').reverse().join('/');
     const roomName = ROOM_DATA.map((data) => {
       if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
       return false;
-    });
+    })
+      .filter((room) => room);
+
     return (
       <View
         key={singleEvent.id}
@@ -179,7 +106,15 @@ const UserEventsDetails = ({ route, navigation }) => {
                   style: 'cancel',
                 }, {
                   text: 'Ok',
-                  onPress: () => { },
+                  onPress: () => {
+                    navigation.navigate('Editar', {
+                      user,
+                      previousDate: dateWithBars,
+                      previousRoom: roomName,
+                      previousTime: singleEvent.time,
+                      eventId: singleEvent.id,
+                    });
+                  },
                 }]);
             }}
           >
@@ -188,7 +123,6 @@ const UserEventsDetails = ({ route, navigation }) => {
               size={scale(28)}
               color={colors.whiteColor}
             />
-            {/* <Text style={[styles.text, styles.buttonText]}>Editar</Text> */}
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -210,7 +144,6 @@ const UserEventsDetails = ({ route, navigation }) => {
               size={scale(28)}
               color={colors.whiteColor}
             />
-            {/* <Text style={[styles.text, styles.buttonText]}>Excluir</Text> */}
           </TouchableOpacity>
         </View>
         <Separator />
