@@ -46,10 +46,10 @@ export default function Ambients({ navigation }) {
   }
 
   function Slide({
-    name, images, icons, goTo,
+    id, name, images, icons, goTo,
   }) {
     return (
-      <View>
+      <View key={id}>
         <View style={{ alignItems: 'center' }}>
           <Text style={[styles.text, { fontSize: scale(20) }]}>
             {name}
@@ -84,7 +84,7 @@ export default function Ambients({ navigation }) {
             style={styles.knowMoreButton}
             onPress={() => { handleScrollDown(goTo); }}
           >
-            <Text style={styles.text}>{goTo === 0 ? 'Início' : 'Mais salas'}</Text>
+            <Text style={styles.text}>{goTo === 0 ? 'Início' : 'Próxima sala'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -146,6 +146,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[0].room}
                 name={ROOM_DATA[0].name}
                 images={clarice}
                 icons={[
@@ -160,6 +161,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[1].room}
                 name={ROOM_DATA[1].name}
                 images={clarice}
                 icons={[
@@ -174,6 +176,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[2].room}
                 name={ROOM_DATA[2].name}
                 images={clarice}
                 icons={[
@@ -187,6 +190,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[3].room}
                 name={ROOM_DATA[3].name}
                 images={clarice}
                 icons={[
@@ -200,6 +204,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[4].room}
                 name={ROOM_DATA[4].name}
                 images={clarice}
                 icons={[
@@ -215,6 +220,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[5].room}
                 name={ROOM_DATA[5].name}
                 images={clarice}
                 icons={[
@@ -229,6 +235,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[6].room}
                 name={ROOM_DATA[6].name}
                 images={clarice}
                 icons={[
@@ -243,6 +250,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[7].room}
                 name={ROOM_DATA[7].name}
                 images={clarice}
                 icons={[
@@ -257,6 +265,7 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
+                id={ROOM_DATA[8].room}
                 name={ROOM_DATA[8].name}
                 images={clarice}
                 icons={[

@@ -125,7 +125,7 @@ export default function Plans({ navigation }) {
           <View style={styles.textContainer}>
             <Text style={styles.text}>
               {'\t\t'}
-              Nossos planos atendem à sua necessidade. E em todos eles,
+              Nossos planos atendem a sua necessidade. Em todos eles,
               os custos com recepcionista, água, café, energia elétrica,
               segurança, internet e limpeza, estão inclusos no valor do aluguel.
             </Text>
@@ -160,7 +160,7 @@ export default function Plans({ navigation }) {
               state={3}
               touchText="Diária"
               description={[
-                '– De 08h às 18h',
+                '– De 08h às 18h.',
                 '– Valor: R$ 250,00.',
                 '– Hora adicional: R$ 30,00.',
               ]}
@@ -170,7 +170,7 @@ export default function Plans({ navigation }) {
               state={5}
               touchText="Fidelidade"
               description={[
-                '– Mensalidade de R$ 120,00',
+                '– Mensalidade de R$ 120,00.',
                 '– Valor da hora: R$ 30,00.',
                 '– Renovação não obrigatória.',
                 '– Marketing nos canais\n de comunicação.',
@@ -182,7 +182,7 @@ export default function Plans({ navigation }) {
               state={6}
               touchText="Mensal"
               description={[
-                '– Sala exclusiva',
+                '– Sala exclusiva.',
                 '– Mensalidade de R$ 2000,00.',
                 '– Renovação não obrigatória.',
                 '– Todas as despesas inclusas.',

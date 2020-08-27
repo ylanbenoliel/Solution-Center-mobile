@@ -329,7 +329,7 @@ export default function Register({ navigation }) {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.text}>Telefone</Text>
+              <Text style={styles.text}>Telefone/Whatsapp</Text>
               <View style={styles.textInputContainer}>
                 <TextInput
                   ref={field7}
