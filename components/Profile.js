@@ -121,7 +121,7 @@ const Profile = ({ navigation }) => {
   }
 
   function handleOpenInfoStack() {
-    navigation.push('Info', { details: userInfo });
+    navigation.push('Info', { details: userInfo, photo: avatarUrl });
   }
 
   function handleCloseModal(func) {

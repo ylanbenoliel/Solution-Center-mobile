@@ -3,11 +3,21 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Keyboard,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+  ScrollView,
+  Keyboard,
+  Alert,
+  Image,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 import {
   GeneralStatusBar,
@@ -18,7 +28,7 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 
 const Info = ({ route, navigation }) => {
-  const { details } = route.params;
+  const { details, photo } = route.params;
 
   const [name, setName] = useState(details.name);
   const [email, setEmail] = useState(details.email);
@@ -27,8 +37,9 @@ const Info = ({ route, navigation }) => {
   const [cpf, setCpf] = useState(details.cpf);
   const [rg, setRg] = useState(details.rg);
   const [password, setPassword] = useState('');
+  const [image, setImage] = useState(photo);
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   function handleUpdate() {
     if (
@@ -72,35 +83,67 @@ const Info = ({ route, navigation }) => {
     return null;
   }
 
+  async function handlePickImage() {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setImage(result);
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível carregar a galeria.');
+    }
+  }
   return (
-
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
         backgroundColor="white"
         barStyle="dark-content"
       />
+      <ScrollView>
+        <View style={styles.header}>
+          <View style={{ height: scale(32), width: scale(32) }} />
+          <Text style={[styles.text, { fontSize: scale(24) }]}>Perfil</Text>
+          <TouchableOpacity
+            style={styles.closeModal}
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.pop();
+            }}
+          >
+            <Feather
+              name="x"
+              size={scale(32)}
+              color={colors.navigationColor}
+            />
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.header}>
-        <View style={{ height: scale(32), width: scale(32) }} />
-        <Text style={[styles.text, { fontSize: scale(24) }]}>Perfil</Text>
-        <TouchableOpacity
-          style={styles.closeModal}
-          onPress={() => {
-            Keyboard.dismiss();
-            navigation.pop();
-          }}
-        >
-          <Feather
-            name="x"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ flex: 9, width: '90%' }}>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatarImageContainer}>
+            {image && (
+              <Image source={{ uri: image.uri }} style={styles.avatarImage} />
+            )}
+          </View>
+          <View style={styles.galleryButtonContainer}>
+            <TouchableOpacity
+              style={styles.galleryButton}
+              onPress={() => handlePickImage()}
+            >
+              <Feather
+                name="camera"
+                size={scale(24)}
+                color={colors.whiteColor}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={styles.infoContainer}>
+
           <Text style={styles.text}>
             Nome:
           </Text>
@@ -207,15 +250,11 @@ const Info = ({ route, navigation }) => {
           style={styles.button}
           onPress={() => handleUpdate()}
         >
-          <Text
-            style={
-            [styles.text, { color: colors.whiteColor }]
-            }
-          >
+          <Text style={[styles.text, { color: colors.whiteColor }]}>
             Atualizar
           </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 
     </SafeAreaView>
   );
@@ -225,8 +264,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.whiteColor,
-    borderRadius: 4,
-    alignItems: 'center',
   },
   infoContainer: {
     flexDirection: 'row',
@@ -243,6 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginVertical: scale(10),
   },
   closeModal: {
     marginRight: scale(4),
@@ -263,6 +301,34 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
     marginVertical: verticalScale(20),
     borderRadius: scale(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  avatarImageContainer: {
+    backgroundColor: colors.disableColor,
+    width: scale(150),
+    height: scale(150),
+    borderRadius: scale(75),
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
+  },
+  galleryButtonContainer: {
+    zIndex: 2,
+    justifyContent: 'flex-end',
+    marginLeft: scale(-30),
+  },
+  galleryButton: {
+    backgroundColor: colors.mainColor,
+    width: scale(50),
+    height: scale(50),
+    borderRadius: scale(25),
     alignItems: 'center',
     justifyContent: 'center',
   },
