@@ -28,7 +28,7 @@ import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
 const widthImage = Dimensions.get('window').width * 0.9;
-const height = Dimensions.get('window').height * 0.4;
+const height = Dimensions.get('window').height * 0.5;
 const { width } = Dimensions.get('window');
 
 export default function Ambients({ navigation }) {
