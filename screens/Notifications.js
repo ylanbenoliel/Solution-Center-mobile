@@ -24,6 +24,7 @@ import colors from '@constants/colors';
 const Notifications = () => {
   const [textToSend, setTextToSend] = useState('');
   const [totalUsers, setTotalUsers] = useState(null);
+  const [allSelected, setAllSelected] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -58,6 +59,13 @@ const Notifications = () => {
   function handleSelectAll(list) {
     const selectAllUsers = list.map((user) => ({ ...user, selected: true }));
     setTotalUsers(selectAllUsers);
+    setAllSelected(true);
+  }
+
+  function handleDeselectAll(list) {
+    const selectAllUsers = list.map((user) => ({ ...user, selected: false }));
+    setTotalUsers(selectAllUsers);
+    setAllSelected(false);
   }
 
   function handleSendMessage() {
@@ -140,6 +148,7 @@ const Notifications = () => {
             onChangeText={(text) => {
               setTextToSend(text);
             }}
+            multiline
             onSubmitEditing={() => { handleSendMessage(); }}
             placeholder="Mensagem"
             autoCorrect={false}
@@ -156,16 +165,25 @@ const Notifications = () => {
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => { handleSelectAll(totalUsers); }}
-          >
-            <Text
-              style={[styles.text, { color: colors.whiteColor }]}
+          {allSelected === false ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => { handleSelectAll(totalUsers); }}
             >
-              Selecionar todos
-            </Text>
-          </TouchableOpacity>
+              <Text style={[styles.text, { color: colors.whiteColor }]}>
+                Marcar todos
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => { handleDeselectAll(totalUsers); }}
+            >
+              <Text style={[styles.text, { color: colors.whiteColor }]}>
+                Desmarcar todos
+              </Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.accentColor }]}
