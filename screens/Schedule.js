@@ -208,18 +208,21 @@ export default function Schedule() {
         room,
       })
       .then((response) => {
-        const { hoursInterval, validEvents } = response.data;
+        const { hoursInterval, validEvents, active } = response.data;
+        if (active === 0) {
+          return setError('Usuário pendente de liberação.');
+        }
         transformEventToSchedule(
           hoursInterval,
           validEvents,
           room,
           calendarDateFormatted,
         );
+        setDate(calendarDateFormatted);
+        setIsEventModalOpen(true);
       })
       .catch(() => {})
       .finally(() => {
-        setDate(calendarDateFormatted);
-        setIsEventModalOpen(true);
         setLoading(false);
       });
   }
