@@ -149,7 +149,6 @@ const Notifications = () => {
               setTextToSend(text);
             }}
             multiline
-            onSubmitEditing={() => { handleSendMessage(); }}
             placeholder="Mensagem"
             autoCorrect={false}
             placeholderTextColor={colors.placeholderColor}

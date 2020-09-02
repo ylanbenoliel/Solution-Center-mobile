@@ -117,7 +117,7 @@ const AdminUserList = ({ navigation }) => {
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    // fetchUsers();
+    fetchUsers();
   }
 
   const RenderSearchedUsers = () => {

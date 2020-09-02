@@ -87,7 +87,7 @@ const UserEventsModal = ({ isVisible, onClose, events }) => (
   <Modal isVisible={isVisible} style={styles.container}>
     <View style={styles.header}>
       <View style={{ height: scale(32), width: scale(32) }} />
-      <Text style={[styles.text, { fontSize: scale(24) }]}>Eventos</Text>
+      <Text style={[styles.text, { fontSize: scale(24) }]}>Reservas</Text>
       <TouchableOpacity
         style={styles.closeModal}
         onPress={() => {
