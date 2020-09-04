@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Image,
   Alert,
+  Picker,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
@@ -71,6 +72,13 @@ const AdminUserModal = ({
       setPlanList(null);
     };
   }, [!!isVisible]);
+
+  useEffect(() => {
+    api.post(`/plans/${userInfo.id}`, {
+      plan: planList,
+    }).then(() => {})
+      .catch(() => {});
+  }, [planList]);
 
   const avatarUrl = !!userInfo && userInfo.avatarUrl !== null
     ? { uri: `${userInfo.avatarUrl}` }
@@ -183,7 +191,7 @@ const AdminUserModal = ({
           />
         </TouchableOpacity>
 
-        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+        <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 30 }}>
           <Image
             source={avatarUrl}
             style={styles.avatarImage}
@@ -198,6 +206,21 @@ const AdminUserModal = ({
             <ToggleUserPermission status={userDetails.is_admin} />
             <ToggleUserLoginSituation status={userDetails.active} />
           </View>
+
+          <View>
+            <Text style={styles.text}>Plano</Text>
+          </View>
+          <Picker
+            selectedValue={planList}
+            onValueChange={(value) => { setPlanList(value); }}
+            style={{
+              height: 50, width: 170, color: colors.mainColor,
+            }}
+          >
+            <Picker.Item label="Hora avulsa" value={1} />
+            <Picker.Item label="Mensalidade" value={2} />
+            <Picker.Item label="Fidelidade" value={3} />
+          </Picker>
 
           <View>
             <Text style={styles.text}>Reservas</Text>
