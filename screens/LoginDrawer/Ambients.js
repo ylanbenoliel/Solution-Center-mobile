@@ -22,6 +22,7 @@ import { GeneralStatusBar } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
 import Armchair from '@assets/svgs/armchair.svg';
+import Chair from '@assets/svgs/chair.svg';
 import Spa from '@assets/svgs/spa.svg';
 
 import colors from '@constants/colors';
@@ -36,11 +37,43 @@ export default function Ambients({ navigation }) {
     require('@assets/rooms/clarice-min.jpeg'),
     require('@assets/rooms/carlos-min.jpeg'),
   ];
+  const carlos = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const cecilia = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const rui = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const machado = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const monteiro = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const luis = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const cora = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
+  const carolina = [
+    require('@assets/rooms/clarice-min.jpeg'),
+    require('@assets/rooms/carlos-min.jpeg'),
+  ];
 
   const Slide = ({
-    id, name, images, icons,
+    name, images, icons,
   }) => (
-    <View key={id}>
+    <View>
       <View style={{ alignItems: 'center' }}>
         <Text style={[styles.text, { fontSize: scale(20) }]}>
           {name}
@@ -62,6 +95,9 @@ export default function Ambients({ navigation }) {
           if (icon === 'armchair') {
             return <Armchair width={scale(24)} height={scale(24)} />;
           }
+          if (icon === 'chair') {
+            return <Chair width={scale(24)} height={scale(24)} fill={colors.secondaryColor} />;
+          }
 
           return (
             <FontAwesome5
@@ -73,6 +109,20 @@ export default function Ambients({ navigation }) {
         })}
 
       </View>
+    </View>
+  );
+
+  const Description = ({ text, icon }) => (
+
+    <View style={styles.iconAndText}>
+      <View style={styles.headerIconContainer}>
+        <FontAwesome5
+          name={icon}
+          size={scale(16)}
+          color={colors.mainColor}
+        />
+      </View>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 
@@ -108,122 +158,87 @@ export default function Ambients({ navigation }) {
           <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(20) }}>
 
             <View style={{
-              paddingLeft: scale(5), marginVertical: verticalScale(20),
+              marginHorizontal: verticalScale(16),
+              marginBottom: verticalScale(20),
             }}
             >
               <Text style={styles.text}>
                 Nossos ambientes foram elaborados para
                 atender à sua necessidade.
+                Todas as salas possuem:
+                {'\n'}
               </Text>
 
-              <View style={styles.iconAndText}>
-                <View style={styles.headerIconContainer}>
-                  <FontAwesome5
-                    name="wifi"
-                    size={scale(16)}
-                    color={colors.mainColor}
-                  />
-                </View>
-                <Text style={styles.text}>Internet ilimitada.</Text>
-              </View>
-
-              <View style={styles.iconAndText}>
-                <View style={styles.headerIconContainer}>
-                  <FontAwesome5
-                    name="phone"
-                    size={scale(16)}
-                    color={colors.mainColor}
-                  />
-                </View>
-                <Text style={styles.text}>Ligações ilimitadas.</Text>
-              </View>
-
-              <View style={styles.iconAndText}>
-                <View style={styles.headerIconContainer}>
-                  <FontAwesome5
-                    name="snowflake"
-                    size={scale(16)}
-                    color={colors.mainColor}
-                  />
-                </View>
-                <Text style={styles.text}>Salas climatizadas.</Text>
-              </View>
-
-              <View style={styles.iconAndText}>
-                <View style={styles.headerIconContainer}>
-                  <FontAwesome5
-                    name="shield-alt"
-                    size={scale(16)}
-                    color={colors.mainColor}
-                  />
-                </View>
-                <Text style={styles.text}>Segurança e praticidade.</Text>
-              </View>
+              <Description text="Internet ilimitada." icon="wifi" />
+              <Description text="Ligações ilimitadas." icon="phone" />
+              <Description text="Salas climatizadas." icon="snowflake" />
+              <Description text="Segurança e praticidade." icon="shield-alt" />
 
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[0].room}
+                key={ROOM_DATA[0].room}
                 name={ROOM_DATA[0].name}
                 images={clarice}
                 icons={[
-                  'snowflake',
-                  'couch',
-                  'armchair',
                   'spa',
+                  'armchair',
+                  'chair',
+                  'chair',
                 ]}
               />
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[1].room}
+                key={ROOM_DATA[1].room}
                 name={ROOM_DATA[1].name}
-                images={clarice}
+                images={carlos}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
+                  'chair',
                 ]}
               />
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[2].room}
+                key={ROOM_DATA[2].room}
                 name={ROOM_DATA[2].name}
-                images={clarice}
+                images={cecilia}
                 icons={[
-                  'snowflake',
-                  'couch',
                   'armchair',
+                  'couch',
                 ]}
               />
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[3].room}
+                key={ROOM_DATA[3].room}
                 name={ROOM_DATA[3].name}
-                images={clarice}
+                images={rui}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
+                  'chair',
+                  'chair',
                 ]}
               />
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[4].room}
+                key={ROOM_DATA[4].room}
                 name={ROOM_DATA[4].name}
-                images={clarice}
+                images={machado}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
+                  'chair',
+                  'chair',
                   'tv',
                 ]}
               />
@@ -231,11 +246,10 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[5].room}
+                key={ROOM_DATA[5].room}
                 name={ROOM_DATA[5].name}
-                images={clarice}
+                images={monteiro}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
                 ]}
@@ -244,24 +258,23 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[6].room}
+                key={ROOM_DATA[6].room}
                 name={ROOM_DATA[6].name}
-                images={clarice}
+                images={luis}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
+                  'chair',
                 ]}
               />
             </View>
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[7].room}
+                key={ROOM_DATA[7].room}
                 name={ROOM_DATA[7].name}
-                images={clarice}
+                images={cora}
                 icons={[
-                  'snowflake',
                   'couch',
                   'armchair',
                 ]}
@@ -270,13 +283,14 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                id={ROOM_DATA[8].room}
+                key={ROOM_DATA[8].room}
                 name={ROOM_DATA[8].name}
-                images={clarice}
+                images={carolina}
                 icons={[
-                  'snowflake',
-                  'couch',
+                  'spa',
                   'armchair',
+                  'chair',
+                  'chair',
                   'tv',
                 ]}
               />
