@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Text,
   Keyboard,
+  RefreshControl,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -36,6 +37,7 @@ const AdminUserList = ({ navigation }) => {
   const [eventList, setEventList] = useState(null);
   const [planList, setPlanList] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -58,7 +60,10 @@ const AdminUserList = ({ navigation }) => {
     setFilteredUsers(null);
   }, [nameInput === '']);
 
-  function fetchUsers() {
+  function fetchUsers(refresh = null) {
+    if (refresh) {
+      setIsRefreshing(true);
+    }
     api.get('/users')
       .then((res) => {
         const responseUsers = res.data;
@@ -69,10 +74,16 @@ const AdminUserList = ({ navigation }) => {
           }
           return { avatarUrl, ...user };
         }).sort((a, b) => a.name.localeCompare(b.name));
-
         setTotalUsers(users);
+        if (refresh) {
+          setIsRefreshing(false);
+        }
       })
       .catch(() => setError('Erro ao buscar usuários.'));
+  }
+
+  function handleRefresh() {
+    fetchUsers(true);
   }
 
   function handleSearch() {
@@ -129,6 +140,12 @@ const AdminUserList = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: verticalScale(130) }}
         data={hasFilteredUsers}
+        refreshControl={(
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: user }) => (
           <UserItem

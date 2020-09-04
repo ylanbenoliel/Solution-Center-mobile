@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -27,6 +28,7 @@ const Notifications = () => {
   const [allSelected, setAllSelected] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -87,7 +89,10 @@ const Notifications = () => {
     return null;
   }
 
-  function fetchUsers() {
+  function fetchUsers(refresh = null) {
+    if (refresh) {
+      setRefreshing(true);
+    }
     api.get('/users')
       .then((res) => {
         const responseUsers = res.data;
@@ -100,8 +105,15 @@ const Notifications = () => {
           return { avatarUrl, selected, ...user };
         }).sort((a, b) => a.name.localeCompare(b.name));
         setTotalUsers(users);
+        if (refresh) {
+          setRefreshing(false);
+        }
       })
       .catch(() => {});
+  }
+
+  function handleRefresh() {
+    fetchUsers(true);
   }
 
   const SelectedUser = ({ user }) => {
@@ -213,6 +225,13 @@ const Notifications = () => {
             borderColor: '#ccc',
             paddingBottom: verticalScale(160),
           }}
+          refreshControl={(
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+            />
+          )}
+
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <SelectedUser user={item} />
