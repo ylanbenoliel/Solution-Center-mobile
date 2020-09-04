@@ -82,7 +82,7 @@ const Profile = ({ navigation }) => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: 'drawer' }],
+              routes: [{ name: 'Login' }],
             }),
           );
         },

@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Register from '@screens/Register';
 
 import Admin from './admin.routes';
-import LoginDrawer from './login.routes';
+import Login from './login.routes';
 import User from './user.routes';
 
 const Stack = createStackNavigator();
@@ -13,7 +13,7 @@ const LoggedStack = createStackNavigator();
 
 const NonLoggedStack = () => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="LoginDrawer" component={LoginDrawer} />
+    <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="Registro" component={Register} />
     <Stack.Screen name="User" component={User} />
     <Stack.Screen name="Admin" component={Admin} />
@@ -26,7 +26,7 @@ export default function Route({ admin }) {
     return (
       <LoggedStack.Navigator headerMode="none">
         <LoggedStack.Screen name="User" component={User} />
-        <LoggedStack.Screen name="LoginDrawer" component={LoginDrawer} />
+        <LoggedStack.Screen name="Login" component={Login} />
         <LoggedStack.Screen name="Registro" component={Register} />
         <LoggedStack.Screen name="Admin" component={Admin} />
       </LoggedStack.Navigator>
@@ -36,7 +36,7 @@ export default function Route({ admin }) {
     return (
       <LoggedStack.Navigator headerMode="none">
         <LoggedStack.Screen name="Admin" component={Admin} />
-        <LoggedStack.Screen name="LoginDrawer" component={LoginDrawer} />
+        <LoggedStack.Screen name="Login" component={Login} />
         <LoggedStack.Screen name="Registro" component={Register} />
         <LoggedStack.Screen name="User" component={User} />
       </LoggedStack.Navigator>
