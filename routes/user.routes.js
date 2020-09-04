@@ -1,19 +1,30 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
+import { scale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Info from '@components/Info';
 
+import {
+  WhoWeAre,
+  Ambients,
+  Plans,
+  Contact,
+} from '@screens/Drawer/index';
 import Schedule from '@screens/Schedule';
 import UserProfile from '@screens/UserProfile';
 
 import colors from '@constants/colors';
 
+const Drawer = createDrawerNavigator();
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const StackShell = createStackNavigator();
 
 function UserInfo() {
   return (
@@ -24,7 +35,7 @@ function UserInfo() {
   );
 }
 
-export default function User() {
+function User() {
   return (
     <Tab.Navigator
       lazy={false}
@@ -52,5 +63,30 @@ export default function User() {
       <Tab.Screen name="Salas" component={Schedule} />
       <Tab.Screen name="Perfil" component={UserInfo} />
     </Tab.Navigator>
+  );
+}
+
+function UserDrawer() {
+  return (
+    <Drawer.Navigator
+      drawerStyle={{
+        backgroundColor: colors.whiteColor,
+        width: scale(180),
+      }}
+    >
+      <Drawer.Screen name="Home" component={User} options={{ title: 'Início' }} />
+      <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
+      <Drawer.Screen name="Ambientes" component={Ambients} />
+      <Drawer.Screen name="Planos" component={Plans} />
+      <Drawer.Screen name="Contato" component={Contact} />
+    </Drawer.Navigator>
+  );
+}
+
+export default function Shell() {
+  return (
+    <StackShell.Navigator headerMode="none">
+      <StackShell.Screen name="Shell" component={UserDrawer} />
+    </StackShell.Navigator>
   );
 }

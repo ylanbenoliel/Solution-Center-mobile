@@ -12,11 +12,11 @@ import colors from '@constants/colors';
 
 // import { Container } from './styles';
 
-const HeaderDrawer = ({ title, navigation, gotToScreen }) => (
+const HeaderDrawer = ({ title, navigation }) => (
   <View style={styles.header}>
     <View style={{ width: scale(32) }} />
     <Text style={[styles.text, styles.headerName]}>{title}</Text>
-    <TouchableOpacity onPress={() => navigation.navigate(gotToScreen)}>
+    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
       <Feather
         name="x"
         size={scale(32)}

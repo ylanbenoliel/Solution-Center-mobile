@@ -3,13 +3,13 @@ import { scale } from 'react-native-size-matters';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import Login from '@screens/Login';
 import {
   WhoWeAre,
   Ambients,
   Plans,
   Contact,
-} from '@screens/LoginDrawer/index';
+} from '@screens/Drawer/index';
+import Login from '@screens/Login';
 
 import colors from '@constants/colors';
 
@@ -23,7 +23,7 @@ export default function LoginDrawer() {
         width: scale(180),
       }}
     >
-      <Drawer.Screen name="Login" component={Login} />
+      <Drawer.Screen name="Home" component={Login} options={{ title: 'Login' }} />
       <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
