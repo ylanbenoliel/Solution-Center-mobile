@@ -35,7 +35,7 @@ import Logo from '@assets/logo-solution-azul.svg';
 import colors from '@constants/colors';
 
 // eslint-disable-next-line no-undef
-const Profile = ({ navigation }) => {
+const Profile = ({ navigation, menu }) => {
   const { signOut } = useContext(AuthContext);
 
   const [userInfo, setUserInfo] = useState(null);
@@ -200,9 +200,30 @@ const Profile = ({ navigation }) => {
         source={require('@assets/mapa-fundo.png')}
         style={{ width: '100%', height: '50%' }}
       >
-        <View style={styles.logoContainer}>
-          <Logo width={200} height={45} />
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginHorizontal: 16,
+        }}
+        >
+          {menu ? (
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Feather
+                name="menu"
+                size={scale(32)}
+                color={colors.navigationColor}
+              />
+            </TouchableOpacity>
+          ) : (<View style={{ width: scale(32) }} />)}
+
+          <View style={styles.logoContainer}>
+            <Logo width={200} height={45} />
+          </View>
+
+          <View style={{ width: scale(32) }} />
         </View>
+
         {/*  */}
 
         <View style={{

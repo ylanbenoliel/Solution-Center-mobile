@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 /* eslint-disable react/prop-types */
@@ -12,10 +13,12 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { scale, verticalScale } from 'react-native-size-matters';
 
+import { Feather } from '@expo/vector-icons';
 import {
   format,
   parseISO,
@@ -53,7 +56,7 @@ const INITIALDATERANGE = [
   },
 ];
 
-export default function Schedule() {
+export default function Schedule({ navigation }) {
   const calendarRef = useRef();
 
   const [datesBlacklist, setDatesBlacklist] = useState([
@@ -244,32 +247,45 @@ export default function Schedule() {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
+      <View style={{ flex: 1, justifyContent: 'center', marginLeft: 16 }}>
+
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Feather
+            name="menu"
+            size={scale(32)}
+            color={colors.navigationColor}
+          />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.calendarContainer}>
-        <View style={styles.calendarStrip}>
-          <CalendarStrip
-            ref={calendarRef}
-            selectedDate={INITIALDATE}
-            startingDate={INITIALDATE}
-            locale={LOCALE}
-            calendarAnimation={{ type: 'sequence', duration: 300 }}
-            daySelectionAnimation={{
-              type: 'border',
-              duration: 100,
-              borderWidth: 3,
-              borderHighlightColor: colors.accentColor,
-            }}
-            style={styles.calendarStyle}
-            calendarHeaderStyle={styles.text}
-            dateNumberStyle={styles.dateStyle}
-            dateNameStyle={styles.dateStyle}
-            highlightDateNumberStyle={styles.highlightDateStyle}
-            highlightDateNameStyle={styles.highlightDateStyle}
-            disabledDateNameStyle={styles.disabledDateStyle}
-            disabledDateNumberStyle={styles.disabledDateStyle}
-            datesBlacklist={datesBlacklist}
-            datesWhitelist={datesWhitelist}
-          />
+        <View style={{ flex: 2, width: '100%', alignItems: 'center' }}>
+
+          <View style={styles.calendarStrip}>
+            <CalendarStrip
+              ref={calendarRef}
+              selectedDate={INITIALDATE}
+              startingDate={INITIALDATE}
+              locale={LOCALE}
+              calendarAnimation={{ type: 'sequence', duration: 300 }}
+              daySelectionAnimation={{
+                type: 'border',
+                duration: 100,
+                borderWidth: 3,
+                borderHighlightColor: colors.accentColor,
+              }}
+              style={styles.calendarStyle}
+              calendarHeaderStyle={styles.text}
+              dateNumberStyle={styles.dateStyle}
+              dateNameStyle={styles.dateStyle}
+              highlightDateNumberStyle={styles.highlightDateStyle}
+              highlightDateNameStyle={styles.highlightDateStyle}
+              disabledDateNameStyle={styles.disabledDateStyle}
+              disabledDateNumberStyle={styles.disabledDateStyle}
+              datesBlacklist={datesBlacklist}
+              datesWhitelist={datesWhitelist}
+            />
+          </View>
         </View>
 
         <View style={{ alignItems: 'center' }}>
@@ -359,12 +375,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   calendarContainer: {
-    flex: 1,
+    flex: 9,
   },
   calendarStrip: {
-    flex: 2,
-    justifyContent: 'center',
-
+    width: '90%',
   },
   roomsContainer: {
     flex: 7,
