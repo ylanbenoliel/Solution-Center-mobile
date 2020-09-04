@@ -6,7 +6,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ImageBackground,
   ScrollView,
   Dimensions,
@@ -16,9 +15,9 @@ import { SliderBox } from 'react-native-image-slider-box';
 import { verticalScale, scale } from 'react-native-size-matters';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, HeaderDrawer } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
 import Armchair from '@assets/svgs/armchair.svg';
@@ -113,7 +112,6 @@ export default function Ambients({ navigation }) {
   );
 
   const Description = ({ text, icon }) => (
-
     <View style={styles.iconAndText}>
       <View style={styles.headerIconContainer}>
         <FontAwesome5
@@ -140,19 +138,8 @@ export default function Ambients({ navigation }) {
         }}
         style={styles.imageBackground}
       >
-        {/*  */}
-        <View style={styles.header}>
-          <View style={{ width: scale(32) }} />
-          <Text style={[styles.text, styles.headerName]}>Ambientes</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Feather
-              name="x"
-              size={scale(32)}
-              color={colors.navigationColor}
-            />
-          </TouchableOpacity>
-        </View>
-        {/*  */}
+
+        <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Ambientes" />
 
         <View style={{ flex: 9 }}>
           <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(20) }}>
@@ -309,22 +296,10 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  header: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: verticalScale(10),
-  },
-  headerName: {
-    fontWeight: 'bold',
-    fontSize: scale(36),
-  },
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     color: colors.mainColor,
-    flexShrink: 1,
   },
 
   iconAndText: {

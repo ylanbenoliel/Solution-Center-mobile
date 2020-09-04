@@ -19,7 +19,7 @@ import { verticalScale, scale } from 'react-native-size-matters';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, HeaderDrawer } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
 
@@ -81,19 +81,8 @@ export default function Contact({ navigation }) {
         }}
         style={styles.imageBackground}
       >
-        {/*  */}
-        <View style={styles.header}>
-          <View style={{ paddingLeft: verticalScale(20) }} />
-          <Text style={[styles.text, styles.headerName]}>Contato</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <MaterialCommunityIcons
-              name="close"
-              size={scale(32)}
-              color={colors.navigationColor}
-            />
-          </TouchableOpacity>
-        </View>
-        {/*  */}
+        <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Contato" />
+
         <View style={styles.contactContainer}>
           <View style={styles.linksContainer}>
             <MaterialCommunityIcons

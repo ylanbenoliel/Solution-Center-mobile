@@ -7,11 +7,11 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import { verticalScale, scale } from 'react-native-size-matters';
 
-import { Feather } from '@expo/vector-icons';
+import { HeaderDrawer } from '@components';
 
 import Logo from '@assets/logo-solution-azul.svg';
 import background from '@assets/whoweare.png';
@@ -20,21 +20,11 @@ import colors from '@constants/colors';
 
 export default function WhoWeAre({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.whiteColor }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
 
       <ImageBackground source={background} style={styles.imageBackground}>
         {/*  */}
-        <View style={styles.header}>
-          <View style={{ paddingLeft: scale(20) }} />
-          <Text style={[styles.text, styles.headerName]}>Sobre nós</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Feather
-              name="x"
-              size={32}
-              color={colors.navigationColor}
-            />
-          </TouchableOpacity>
-        </View>
+        <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Sobre nós" />
 
         <View style={{ flex: 1, justifyContent: 'space-around' }}>
           <View style={styles.textContainer}>
@@ -68,7 +58,7 @@ export default function WhoWeAre({ navigation }) {
           </View>
         </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
 

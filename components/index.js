@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import AdminUserModal from './AdminUserModal';
 import GeneralStatusBar from './GeneralStatusBar';
+import HeaderDrawer from './HeaderDrawer';
 import Loading from './Loading';
 import RoomButton from './RoomButton';
 import Separator from './Separator';
@@ -23,4 +24,5 @@ export {
   RoomButton,
   UserEventsModal,
   UserMessagesModal,
+  HeaderDrawer,
 };

@@ -10,12 +10,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, HeaderDrawer } from '@components';
 
 import backgroundLogo from '@assets/LogoHorizontal.png';
 
@@ -82,7 +83,7 @@ export default function Plans({ navigation }) {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: colors.whiteColor,
@@ -102,23 +103,12 @@ export default function Plans({ navigation }) {
       >
         {/*  */}
 
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'space-around',
-          }}
+        <View style={{
+          flex: 1,
+          justifyContent: 'space-around',
+        }}
         >
-          <View style={styles.header}>
-            <View style={{ paddingLeft: verticalScale(20) }} />
-            <Text style={[styles.text, styles.headerName]}>Planos</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Feather
-                name="x"
-                size={32}
-                color={colors.navigationColor}
-              />
-            </TouchableOpacity>
-          </View>
+          <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Planos" />
 
           <View style={{ marginVertical: verticalScale(14) }} />
 
@@ -193,25 +183,13 @@ export default function Plans({ navigation }) {
           </ScrollView>
         </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
-  },
-  header: {
-    width: '100%',
-    height: verticalScale(56),
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: verticalScale(40),
-  },
-  headerName: {
-    fontWeight: 'bold',
-    fontSize: scale(36),
   },
   textContainer: {
     marginHorizontal: verticalScale(20),
