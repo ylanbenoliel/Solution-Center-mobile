@@ -24,9 +24,13 @@ const UserItem = ({
         <Image source={avatarImageUrl} style={styles.avatarImage} />
         <View style={styles.textAndIconContainer}>
           <Text style={styles.userName}>{name}</Text>
-          {active
-            ? (<Feather name="check" size={scale(20)} color={colors.accentColor} />)
-            : (<Feather name="x" size={scale(20)} color={colors.errorColor} />)}
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text style={styles.userName}>Status</Text>
+
+            {active
+              ? (<Feather name="check" size={scale(20)} color={colors.accentColor} />)
+              : (<Feather name="x" size={scale(20)} color={colors.errorColor} />)}
+          </View>
         </View>
       </View>
     </TouchableOpacity>
