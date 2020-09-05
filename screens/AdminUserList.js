@@ -16,6 +16,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
+import { de } from 'date-fns/esm/locale';
 
 import {
   UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar,
@@ -38,6 +39,7 @@ const AdminUserList = ({ navigation }) => {
   const [planList, setPlanList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [debt, setDebt] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -64,9 +66,13 @@ const AdminUserList = ({ navigation }) => {
     if (refresh) {
       setIsRefreshing(true);
     }
-    api.get('/users')
-      .then((res) => {
-        const responseUsers = res.data;
+
+    const requestUsers = api.get('/users');
+    const requestUsersWithDebt = api.get('/users/debt');
+
+    axios.all([requestUsers, requestUsersWithDebt])
+      .then(axios.spread((...responses) => {
+        const responseUsers = responses[0].data;
         const users = responseUsers.map((user) => {
           let avatarUrl = null;
           if (user.avatar) {
@@ -74,12 +80,17 @@ const AdminUserList = ({ navigation }) => {
           }
           return { avatarUrl, ...user };
         }).sort((a, b) => a.name.localeCompare(b.name));
+
+        const { ids } = responses[1].data;
         setTotalUsers(users);
+        setDebt(ids);
+      }))
+      .catch(() => setError('Erro ao buscar usuários.'))
+      .finally(() => {
         if (refresh) {
           setIsRefreshing(false);
         }
-      })
-      .catch(() => setError('Erro ao buscar usuários.'));
+      });
   }
 
   function handleRefresh() {
@@ -98,6 +109,21 @@ const AdminUserList = ({ navigation }) => {
     setFilteredUsers(searchUsers.sort((a, b) => a.name.localeCompare(b.name)));
   }
 
+  function handleSeeDebts() {
+    Keyboard.dismiss();
+    if (filteredUsers) {
+      return setFilteredUsers(null);
+    }
+    const searchUsers = totalUsers
+      .flatMap((user) => debt.flatMap((debtID) => {
+        if (user.id === debtID) return user;
+        return false;
+      }))
+      .filter((hasUser) => hasUser);
+    return setFilteredUsers(searchUsers.sort((a, b) => a.name.localeCompare(b.name)));
+  }
+
+  // #TODO move events to modal
   function handleOpenModal(user) {
     setLoading(true);
     setUserInfo(user);
@@ -199,12 +225,21 @@ const AdminUserList = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.searchButton}
-          onPress={() => handleSearch()}
-        >
-          <Text style={[styles.text, { color: colors.whiteColor }]}>Buscar</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+
+          <TouchableOpacity
+            style={styles.searchButton}
+            onPress={() => handleSearch()}
+          >
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Buscar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.searchButton, { backgroundColor: 'green' }]}
+            onPress={() => handleSeeDebts()}
+          >
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Pgto. pendente</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={{ alignItems: 'center' }}>
           <ShowInfo error={error} />
@@ -257,12 +292,13 @@ const styles = StyleSheet.create({
     height: verticalScale(42),
   },
   searchButton: {
+    width: '46%',
     backgroundColor: colors.mainColor,
     paddingVertical: verticalScale(10),
     borderRadius: scale(4),
-    marginBottom: verticalScale(5),
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: verticalScale(5),
   },
   conditionalLoading: {
     zIndex: 10,
