@@ -99,6 +99,7 @@ export default function Register({ navigation }) {
       || cpf === ''
       || rg === ''
       || phone === ''
+      || image === {}
     ) {
       setError('Preencha todos os campos.');
       setLoading(false);
@@ -106,28 +107,28 @@ export default function Register({ navigation }) {
     }
 
     api.post('/users', {
-      name,
-      email,
-      password,
-      address,
-      cpf,
-      rg,
-      phone,
+      name: name.trim(),
+      email: email.trim(),
+      password: password.trim(),
+      address: address.trim(),
+      cpf: cpf.trim(),
+      rg: rg.trim(),
+      phone: phone.trim(),
     })
       .then((response) => {
         sendAvatarImage(response.data.id)
           .then(() => {
-            setSuccess('Usuário salvo, redirecionando ao login');
+            setSuccess('Usuário salvo, redirecionando ao login.');
             setTimeout(() => {
-              navigation.push('LoginDrawer');
+              navigation.push('Home');
             }, 2500);
           })
           .catch(() => {
-            setError('Erro ao enviar imagem');
+            setError('Erro ao enviar imagem.');
           });
       })
       .catch(() => {
-        setError('Erro ao salvar usuário');
+        setError('Erro ao salvar usuário.');
       })
       .finally(() => {
         setLoading(false);
@@ -169,7 +170,7 @@ export default function Register({ navigation }) {
             alignItems: 'center',
             paddingLeft: scale(20),
           }}
-          onPress={() => navigation.push('LoginDrawer')}
+          onPress={() => navigation.pop()}
         >
           <Feather
             name="chevron-left"
