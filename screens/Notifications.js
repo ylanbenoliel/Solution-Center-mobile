@@ -24,6 +24,7 @@ import colors from '@constants/colors';
 
 const Notifications = () => {
   const [textToSend, setTextToSend] = useState('');
+  const [inputHeight, setInputHeight] = useState(42);
   const [totalUsers, setTotalUsers] = useState(null);
   const [allSelected, setAllSelected] = useState(false);
   const [error, setError] = useState(null);
@@ -156,12 +157,13 @@ const Notifications = () => {
         <View style={styles.inputContainer}>
           <TextInput
             value={textToSend}
-            style={[styles.text, styles.textInput]}
+            style={[styles.text, styles.textInput, { height: inputHeight }]}
             onChangeText={(text) => {
               setTextToSend(text);
             }}
             multiline
-            placeholder="Mensagem"
+            onContentSizeChange={(e) => { setInputHeight(e.nativeEvent.contentSize.height + 5); }}
+            placeholder="Mensagem."
             autoCorrect={false}
             placeholderTextColor={colors.placeholderColor}
           />
@@ -266,7 +268,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: scale(15),
     fontSize: scale(18),
-    height: verticalScale(52),
+    // height: verticalScale(52),
   },
   button: {
     width: '46%',
