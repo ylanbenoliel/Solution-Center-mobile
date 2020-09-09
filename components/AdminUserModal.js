@@ -36,25 +36,6 @@ const UserDetails = ({ data, dataField }) => (
   </View>
 );
 
-// const Plan = ({ plan }) => {
-//   function showPlanName() {
-//     const planName = PLAN_DATA.filter((PLAN) => {
-//       if (PLAN.plan == plan) { return PLAN.text; }
-//       return false;
-//     });
-//     return planName;
-//   }
-
-//   return (
-//     <View style={{ backgroundColor: 'red' }}>
-//       <Text style={styles.text}>
-//         plano:
-//         {showPlanName()}
-//       </Text>
-//     </View>
-//   );
-// };
-
 const AdminUserModal = ({
   isVisible, onClose, userInfo, userEvents, userPlans, navigation,
 }) => {
@@ -72,13 +53,6 @@ const AdminUserModal = ({
       setPlanList(null);
     };
   }, [!!isVisible]);
-
-  useEffect(() => {
-    api.post(`/plans/${userInfo.id}`, {
-      plan: planList,
-    }).then(() => {})
-      .catch(() => {});
-  }, [planList]);
 
   const avatarUrl = !!userInfo && userInfo.avatarUrl !== null
     ? { uri: `${userInfo.avatarUrl}` }
@@ -212,7 +186,11 @@ const AdminUserModal = ({
           </View>
           <Picker
             selectedValue={planList}
-            onValueChange={(value) => { setPlanList(value); }}
+            onValueChange={(value) => {
+              api.post(`/plans/${userDetails.id}`, {
+                plan: value,
+              }).then(() => { setPlanList(value); });
+            }}
             style={{
               height: 50, width: 170, color: colors.mainColor,
             }}
@@ -278,7 +256,6 @@ const AdminUserModal = ({
                 size={scale(28)}
                 color={colors.whiteColor}
               />
-              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Editar</Text> */}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -301,7 +278,6 @@ const AdminUserModal = ({
                 size={scale(28)}
                 color={colors.whiteColor}
               />
-              {/* <Text style={[styles.text, { color: colors.whiteColor }]}>Pagamentos</Text> */}
             </TouchableOpacity>
           </View>
 

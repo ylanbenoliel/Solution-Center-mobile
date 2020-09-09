@@ -16,7 +16,6 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
-import { de } from 'date-fns/esm/locale';
 
 import {
   UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar,
@@ -128,6 +127,7 @@ const AdminUserList = ({ navigation }) => {
     setLoading(true);
     setUserInfo(user);
     setEventList(null);
+    setPlanList(null);
 
     const requestEvents = api.post('/admin/events/list/user', {
       user: user.id,
@@ -141,14 +141,14 @@ const AdminUserList = ({ navigation }) => {
         const responsePlans = responses[1];
         const { events } = responseEvents.data;
 
-        setPlanList(responsePlans.data);
+        setPlanList(Number(responsePlans.data.plan));
         setEventList(events);
-      }))
-      .catch(() => {
-      })
-      .finally(() => {
         setLoading(false);
         setIsModalOpen(true);
+      }))
+      .catch(() => {
+        setLoading(false);
+        setError('Erro ao buscar informações.');
       });
   }
 
