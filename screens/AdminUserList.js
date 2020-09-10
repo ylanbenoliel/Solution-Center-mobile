@@ -62,6 +62,7 @@ const AdminUserList = ({ navigation }) => {
   }, [nameInput === '']);
 
   function fetchUsers(refresh = null) {
+    setFilteredUsers(null);
     if (refresh) {
       setIsRefreshing(true);
     }
@@ -78,7 +79,7 @@ const AdminUserList = ({ navigation }) => {
             avatarUrl = user.avatar.url;
           }
           return { avatarUrl, ...user };
-        }).sort((a, b) => a.name.localeCompare(b.name));
+        });
 
         const { ids } = responses[1].data;
         setTotalUsers(users);
@@ -98,6 +99,9 @@ const AdminUserList = ({ navigation }) => {
 
   function handleSearch() {
     Keyboard.dismiss();
+    if (filteredUsers) {
+      return setFilteredUsers(null);
+    }
     const searchUsers = totalUsers
       .filter((user) => {
         if (sanitizeString(user.name).includes(sanitizeString(nameInput))) {
@@ -105,7 +109,7 @@ const AdminUserList = ({ navigation }) => {
         }
         return false;
       });
-    setFilteredUsers(searchUsers.sort((a, b) => a.name.localeCompare(b.name)));
+    return setFilteredUsers(searchUsers);
   }
 
   function handleSeeDebts() {
@@ -119,7 +123,21 @@ const AdminUserList = ({ navigation }) => {
         return false;
       }))
       .filter((hasUser) => hasUser);
-    return setFilteredUsers(searchUsers.sort((a, b) => a.name.localeCompare(b.name)));
+    return setFilteredUsers(searchUsers);
+  }
+
+  function handleSeeInactiveUsers() {
+    Keyboard.dismiss();
+    if (filteredUsers) {
+      return setFilteredUsers(null);
+    }
+    const searchUsers = totalUsers.filter((user) => {
+      if (Number(user.active) === 0) {
+        return user;
+      }
+      return false;
+    });
+    return setFilteredUsers(searchUsers);
   }
 
   // #TODO move events to modal
@@ -225,7 +243,7 @@ const AdminUserList = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
           <TouchableOpacity
             style={styles.searchButton}
@@ -233,11 +251,19 @@ const AdminUserList = ({ navigation }) => {
           >
             <Text style={[styles.text, { color: colors.whiteColor }]}>Buscar</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.searchButton, { backgroundColor: 'green' }]}
             onPress={() => handleSeeDebts()}
           >
-            <Text style={[styles.text, { color: colors.whiteColor }]}>Pgto. pendente</Text>
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Pendentes</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.searchButton, { backgroundColor: 'red' }]}
+            onPress={() => handleSeeInactiveUsers()}
+          >
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Inativos</Text>
           </TouchableOpacity>
         </View>
 
@@ -267,7 +293,7 @@ const AdminUserList = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: scale(10),
+    marginHorizontal: scale(16),
     marginTop: verticalScale(20),
   },
   inputContainer: {
@@ -292,9 +318,9 @@ const styles = StyleSheet.create({
     height: verticalScale(42),
   },
   searchButton: {
-    width: '46%',
+    width: 110,
     backgroundColor: colors.mainColor,
-    paddingVertical: verticalScale(10),
+    paddingVertical: verticalScale(5),
     borderRadius: scale(4),
     alignItems: 'center',
     justifyContent: 'center',
