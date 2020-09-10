@@ -18,6 +18,7 @@ import { ROOM_DATA } from '@constants/fixedValues';
 const AdminPayment = ({ route, navigation }) => {
   const { events } = route.params;
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
+
   function confirmEventPayment(eventId) {
     api.patch('/admin/events/update', {
       id: eventId,
@@ -37,6 +38,7 @@ const AdminPayment = ({ route, navigation }) => {
           ]);
       });
   }
+
   const ShowNotPaidEvent = ({ singleEvent }) => {
     if (singleEvent.status_payment === 0) {
       const onlyDate = singleEvent.date.split('T')[0];
@@ -45,13 +47,14 @@ const AdminPayment = ({ route, navigation }) => {
         if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
         return false;
       }).filter((element) => element);
+
       return (
         <>
           <View
             key={singleEvent.id}
             style={styles.eventsNotPaidContainer}
           >
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'column' }}>
               <Text style={styles.text}>
                 Data:
                 {' '}
@@ -69,9 +72,9 @@ const AdminPayment = ({ route, navigation }) => {
               </Text>
             </View>
 
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={[styles.text]}>Pgto.</Text>
               <TouchableOpacity
-                style={[styles.button, styles.confirmButton]}
                 onPress={() => {
                   Alert.alert('Aviso',
                     `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h, Dia: ${dateWithBars}, Sala: ${roomName}?`,
@@ -86,7 +89,8 @@ const AdminPayment = ({ route, navigation }) => {
                     }]);
                 }}
               >
-                <Text style={[styles.text, styles.buttonText]}>OK</Text>
+
+                <Feather name="x" color={colors.errorColor} size={scale(28)} />
               </TouchableOpacity>
             </View>
           </View>
@@ -96,6 +100,7 @@ const AdminPayment = ({ route, navigation }) => {
     }
     return null;
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GeneralStatusBar
@@ -103,7 +108,12 @@ const AdminPayment = ({ route, navigation }) => {
         barStyle="dark-content"
       />
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}
+      >
 
         <TouchableOpacity
           style={{ marginVertical: scale(10) }}
@@ -148,20 +158,11 @@ const styles = StyleSheet.create({
     color: colors.mainColor,
     textAlign: 'justify',
   },
-  buttonText: { color: colors.whiteColor },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: scale(80),
-    height: verticalScale(40),
-    borderRadius: scale(8),
-  },
-  confirmButton: {
-    backgroundColor: colors.accentColor,
-  },
+
   eventsNotPaidContainer: {
     margin: scale(5),
     flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 
