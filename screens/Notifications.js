@@ -146,7 +146,7 @@ const Notifications = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
@@ -205,7 +205,7 @@ const Notifications = () => {
             <Text
               style={[styles.text, { color: colors.whiteColor }]}
             >
-              Enviar Mensagem
+              Enviar
             </Text>
           </TouchableOpacity>
         </View>
@@ -246,6 +246,7 @@ const Notifications = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: colors.whiteColor,
     marginHorizontal: scale(10),
     marginTop: verticalScale(20),
   },
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Amaranth-Regular',
-    fontSize: scale(18),
+    fontSize: scale(16),
     color: colors.mainColor,
     textAlign: 'left',
   },
@@ -271,9 +272,9 @@ const styles = StyleSheet.create({
     // height: verticalScale(52),
   },
   button: {
-    width: '46%',
+    width: '38%',
     backgroundColor: colors.mainColor,
-    paddingVertical: verticalScale(10),
+    paddingVertical: verticalScale(5),
     borderRadius: scale(4),
     alignItems: 'center',
     justifyContent: 'center',
