@@ -23,6 +23,7 @@ import {
   GeneralStatusBar,
   UserEventsModal,
   UserMessagesModal,
+  UserLogModal,
 } from '@components';
 
 import AuthContext from '@contexts/auth';
@@ -34,6 +35,44 @@ import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
+const UserOptions = ({
+  leftIcon, description, last, onClick,
+}) => (
+  <TouchableOpacity
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '80%',
+      borderTopWidth: 2,
+      borderBottomWidth: last === true ? 2 : 0,
+      borderColor: '#ccc',
+      paddingVertical: verticalScale(10),
+    }}
+    onPress={() => onClick()}
+  >
+    <Feather
+      name={leftIcon}
+      size={28}
+      color={colors.navigationColor}
+    />
+    <Text
+      style={[styles.text,
+        {
+          flex: 1,
+          color: colors.navigationColor,
+          textAlign: 'center',
+        }]}
+    >
+      {description}
+    </Text>
+    <Feather
+      name="chevron-right"
+      size={28}
+      color={colors.navigationColor}
+    />
+  </TouchableOpacity>
+);
+
 // eslint-disable-next-line no-undef
 const Profile = ({ navigation, menu }) => {
   const { signOut } = useContext(AuthContext);
@@ -42,8 +81,9 @@ const Profile = ({ navigation, menu }) => {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [eventList, setEventList] = useState(null);
   const [messageList, setMessageList] = useState(null);
+  const [logList, setLogList] = useState(null);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
-  const [isModalPlanOpen, setIsModalPlanOpen] = useState(false);
+  const [isModalLogOpen, setIsModalLogOpen] = useState(false);
   const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
 
   useEffect(() => {
@@ -119,6 +159,16 @@ const Profile = ({ navigation, menu }) => {
         setIsModalMessageOpen(true);
       });
   }
+  function fetchLogs() {
+    api.get('/logs')
+      .then((res) => {
+        setLogList(res.data);
+      })
+      .catch((err) => { setLogList(null); })
+      .finally(() => {
+        setIsModalLogOpen(true);
+      });
+  }
 
   function handleOpenInfoStack() {
     navigation.push('Info', { details: userInfo, photo: avatarUrl });
@@ -150,44 +200,6 @@ const Profile = ({ navigation, menu }) => {
     }
     return null;
   };
-
-  const UserOptions = ({
-    leftIcon, description, last, onClick,
-  }) => (
-    <TouchableOpacity
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '80%',
-        borderTopWidth: 2,
-        borderBottomWidth: last === true ? 2 : 0,
-        borderColor: '#ccc',
-        paddingVertical: verticalScale(10),
-      }}
-      onPress={() => onClick()}
-    >
-      <Feather
-        name={leftIcon}
-        size={28}
-        color={colors.navigationColor}
-      />
-      <Text
-        style={[styles.text,
-          {
-            flex: 1,
-            color: colors.navigationColor,
-            textAlign: 'center',
-          }]}
-      >
-        {description}
-      </Text>
-      <Feather
-        name="chevron-right"
-        size={28}
-        color={colors.navigationColor}
-      />
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -250,17 +262,20 @@ const Profile = ({ navigation, menu }) => {
                 description="Minhas reservas"
                 onClick={() => fetchEvents()}
               />
-              {/* <UserOptions
-                leftIcon="percent"
-                description="Meus planos"
-                onClick={() => {}}
-              /> */}
               <UserOptions
-                last
                 leftIcon="bell"
                 description="Minhas notificações"
                 onClick={() => fetchMessages()}
               />
+              {!menu
+              && (
+              <UserOptions
+                last
+                leftIcon="settings"
+                description="Registros do sistema"
+                onClick={() => fetchLogs()}
+              />
+              )}
 
               <TouchableOpacity
                 style={styles.signOutButton}
@@ -288,6 +303,12 @@ const Profile = ({ navigation, menu }) => {
         isVisible={isModalMessageOpen}
         messages={messageList}
         onClose={() => handleCloseModal(setIsModalMessageOpen)}
+      />
+
+      <UserLogModal
+        isVisible={isModalLogOpen}
+        logs={logList}
+        onClose={() => handleCloseModal(setIsModalLogOpen)}
       />
 
     </SafeAreaView>

@@ -9,6 +9,7 @@ import ShowInfo from './ShowInfo';
 import StatusButton from './StatusButton';
 import UserEventsModal from './UserEventsModal';
 import UserItem from './UserItem';
+import UserLogModal from './UserLogModal';
 import UserMessagesModal from './UserMessagesModal';
 import VacancyModal from './VacancyModal';
 
@@ -24,5 +25,6 @@ export {
   RoomButton,
   UserEventsModal,
   UserMessagesModal,
+  UserLogModal,
   HeaderDrawer,
 };
