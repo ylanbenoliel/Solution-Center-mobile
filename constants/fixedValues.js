@@ -12,10 +12,4 @@ export const ROOM_DATA = [
 
 export const ROOM_IDS = ROOM_DATA.map((data) => data.room);
 
-export const PLAN_DATA = [
-  { plan: 1, text: 'Hora Avulsa' },
-  { plan: 2, text: 'Turno' },
-  { plan: 3, text: 'Diária' },
-  { plan: 4, text: 'Fidelidade' },
-  { plan: 5, text: 'Mensal' },
-];
+export const ROOM_NAME = ROOM_DATA.map((room) => room.name.split(' ')[0]);

@@ -1,3 +1,5 @@
+import { ROOM_DATA } from '@constants/fixedValues';
+
 function removeDuplicates(array, key) {
   const cache = new Set();
   return array.filter(
@@ -12,6 +14,7 @@ function chunkArray(array, chunkSize) {
   }
   return results;
 }
+
 function sanitizeString(string) {
   const sanitizedString = string.trim()
     .toLowerCase()
@@ -31,6 +34,14 @@ function sanitizeString(string) {
   return sanitizedString;
 }
 
+function roomById(id) {
+  const roomName = ROOM_DATA.map((data) => {
+    if (data.room === Number(id)) { return data.name.split(' ')[0]; }
+    return false;
+  }).filter((element) => element);
+  return roomName;
+}
+
 export {
-  removeDuplicates, chunkArray, sanitizeString,
+  removeDuplicates, chunkArray, sanitizeString, roomById,
 };
