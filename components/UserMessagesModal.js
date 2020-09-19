@@ -11,21 +11,18 @@ import { Feather } from '@expo/vector-icons';
 
 import colors from '@constants/colors';
 
-const MessageInfo = ({ message }) => (
+const MessageInfo = ({ message, date }) => (
   <View style={styles.messageInfoContainer}>
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <Text style={styles.text}>
+        {message}
+      </Text>
+    </View>
 
-    {/* <View style={{ width: '10%' }}>
-      <TouchableOpacity style={{ backgroundColor: 'cyan' }}>
-        <Feather
-          name="x"
-          size={scale(16)}
-          color="red"
-        />
-      </TouchableOpacity>
-    </View> */}
-
-    <Text style={styles.text}>
-      {message}
+    <Text style={[styles.text, styles.dateCreation]}>
+      Gerado em:
+      {' '}
+      {date}
     </Text>
   </View>
 );
@@ -61,7 +58,7 @@ const UserEventsModal = ({ isVisible, onClose, messages }) => (
           }}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <MessageInfo key={item.id} message={item.message} id={item.id} />
+            <MessageInfo key={item.id} message={item.message} date={item.created_at} />
           )}
         />
       ) : (
@@ -106,6 +103,7 @@ const styles = StyleSheet.create({
     fontSize: scale(20),
     color: colors.mainColor,
   },
+  dateCreation: { fontSize: scale(14) },
 });
 
 export default UserEventsModal;
