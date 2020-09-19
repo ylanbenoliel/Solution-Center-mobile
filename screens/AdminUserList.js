@@ -38,6 +38,7 @@ const AdminUserList = ({ navigation }) => {
   const [planList, setPlanList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [debtEnabled, setDebtEnabled] = useState(false);
   const [debt, setDebt] = useState([]);
 
   useEffect(() => {
@@ -60,6 +61,10 @@ const AdminUserList = ({ navigation }) => {
   useEffect(() => {
     setFilteredUsers(null);
   }, [nameInput === '']);
+
+  // useEffect(() => {
+  //   setDebtEnabled(false);
+  // }, [setFilteredUsers || !filteredUsers]);
 
   function fetchUsers(refresh = null) {
     setFilteredUsers(null);
@@ -100,6 +105,7 @@ const AdminUserList = ({ navigation }) => {
   function handleSearch() {
     Keyboard.dismiss();
     if (filteredUsers) {
+      setDebtEnabled(false);
       return setFilteredUsers(null);
     }
     const searchUsers = totalUsers
@@ -115,6 +121,7 @@ const AdminUserList = ({ navigation }) => {
   function handleSeeDebts() {
     Keyboard.dismiss();
     if (filteredUsers) {
+      setDebtEnabled(false);
       return setFilteredUsers(null);
     }
     const searchUsers = totalUsers
@@ -123,12 +130,14 @@ const AdminUserList = ({ navigation }) => {
         return false;
       }))
       .filter((hasUser) => hasUser);
+    setDebtEnabled(true);
     return setFilteredUsers(searchUsers);
   }
 
   function handleSeeInactiveUsers() {
     Keyboard.dismiss();
     if (filteredUsers) {
+      setDebtEnabled(false);
       return setFilteredUsers(null);
     }
     const searchUsers = totalUsers.filter((user) => {
@@ -147,32 +156,47 @@ const AdminUserList = ({ navigation }) => {
     setEventList(null);
     setPlanList(null);
 
-    const requestEvents = api.post('/admin/events/list/user', {
-      user: user.id,
-    });
-
-    const requestPlans = api.get(`/plans/${user.id}`);
-
-    axios.all([requestEvents, requestPlans])
-      .then(axios.spread((...responses) => {
-        const responseEvents = responses[0];
-        const responsePlans = responses[1];
-        const { events } = responseEvents.data;
-
-        setPlanList(Number(responsePlans.data.plan));
-        setEventList(events);
-        setLoading(false);
-        setIsModalOpen(true);
-      }))
-      .catch(() => {
-        setLoading(false);
-        setError('Erro ao buscar informações.');
+    if (debtEnabled) {
+      api.post('/admin/events/list/debts', {
+        user: user.id,
+      })
+        .then((res) => {
+          const { events } = res.data;
+          setLoading(false);
+          return navigation.push('Pagamentos', { events });
+        })
+        .catch((err) => {
+          setLoading(false);
+          setError(err.data.message);
+        });
+    } else {
+      const requestEvents = api.post('/admin/events/list/user', {
+        user: user.id,
       });
+
+      const requestPlans = api.get(`/plans/${user.id}`);
+
+      axios.all([requestEvents, requestPlans])
+        .then(axios.spread((...responses) => {
+          const responseEvents = responses[0];
+          const responsePlans = responses[1];
+          const { events } = responseEvents.data;
+
+          setPlanList(Number(responsePlans.data.plan));
+          setEventList(events);
+          setLoading(false);
+          setIsModalOpen(true);
+        }))
+        .catch(() => {
+          setLoading(false);
+          setError('Erro ao buscar informações.');
+        });
+    }
   }
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    fetchUsers();
+    // fetchUsers();
   }
 
   const RenderSearchedUsers = () => {
