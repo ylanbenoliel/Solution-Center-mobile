@@ -19,12 +19,9 @@ import { format } from 'date-fns';
 
 import { GeneralStatusBar, VacancyModal, ShowInfo } from '@components';
 
-import { chunkArray } from '@helpers/functions';
-
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
-import { ROOM_IDS } from '@constants/fixedValues';
 // eslint-disable-next-line no-unused-vars
 import LocaleConfig from '@constants/localeWixCalendar';
 
@@ -154,6 +151,7 @@ export default function Agenda() {
 
       </View>
 
+      { isModalOpen && (
       <VacancyModal
         isVisible={isModalOpen}
         onClose={() => handleCloseModal()}
@@ -161,6 +159,8 @@ export default function Agenda() {
         events={events}
         hours={hours}
       />
+      )}
+
     </SafeAreaView>
   );
 }

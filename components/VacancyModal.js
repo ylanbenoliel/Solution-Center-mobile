@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
@@ -8,13 +9,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { scale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { roomById, chunkArray } from '@helpers/functions';
+import { roomById } from '@helpers/functions';
+
+import { api } from '@services/api';
 
 import colors from '@constants/colors';
 import { ROOM_NAME, ROOM_IDS } from '@constants/fixedValues';
@@ -50,55 +54,6 @@ const TableHeader = () => (
 
 );
 
-function Row({ column, line }) {
-  const even = line % 2 === 0 ? { colorBackground: 'white' } : { colorBackground: '#bbb' };
-  return (
-    <View key={line} style={[styles.rowStyle, even]}>
-      {column.map((data, index) => (
-        <Cell data={data} room={index + 1} />
-      ))}
-    </View>
-  );
-}
-
-function Cell({ data, room }) {
-  if (data.name.length === 0) {
-    return (
-      <TouchableOpacity
-        key={data.index}
-        style={styles.cellStyle}
-        onPress={() => {
-          Alert.alert('Deseja Adicionar',
-            `Usuário na sala ${roomById(room)}, hora: ${data.time.split(':')[0]}h?`);
-        }}
-      />
-    );
-  }
-  return (
-    <View style={styles.cellStyle} key={data.index}>
-      <TouchableOpacity onPress={() => (
-        Alert.alert('Deseja excluir',
-          `Reserva de ${data.name}, hora: ${data.time.split(':')[0]}h, sala: ${roomById(room)}`))}
-      >
-        <Text style={[styles.text, { color: colors.mainColor }]}>{data.name}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          Alert.alert('Deseja alterar',
-            `Pagamento do usuário: ${data.name}, hora: ${data.time.split(':')[0]}h, sala: ${roomById(room)}?`);
-        }}
-      >
-        <Feather
-          name="dollar-sign"
-          size={scale(14)}
-          color={Number(data.status_payment) === 1 ? colors.accentColor : colors.errorColor}
-        />
-
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 const VacancyModal = ({
   hours, events, isVisible, showDate, onClose,
 }) => {
@@ -116,30 +71,55 @@ const VacancyModal = ({
   }, [isVisible === true]);
 
   useEffect(() => {
-    const chunkEvents = chunkArray(events, ROOM_IDS.length);
-    setEventTable(chunkEvents);
+    setEventTable(tableData);
   }, [isVisible === true]);
+
+  function alterEventPayment(eventIndex) {
+    const eventFilter = eventTable.find((event) => {
+      if (event.index === eventIndex) {
+        return event;
+      }
+    });
+    api.patch('admin/events/payment', {
+      id: eventFilter.id,
+      status_payment: Number(!eventFilter.status_payment),
+    }).then((res) => {
+      const { event } = res.data;
+      const hasEvent = { index: eventIndex, ...event };
+      const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
+      const rawEvents = filterEvents.push(hasEvent);
+      const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
+      setEventTable(orderEvents);
+    }).catch(() => {});
+  }
+  function deleteEvent(eventIndex) {
+    const eventFilter = eventTable.find((event) => {
+      if (event.index === eventIndex) {
+        return event;
+      }
+    });
+    api.delete(`admin/events/${eventFilter.id}`).then((res) => {
+      // const { event } = res.data;
+      // const hasEvent = { index: eventIndex, ...event };
+      // const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
+      // const rawEvents = filterEvents.push(hasEvent);
+      // const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
+      // setEventTable(orderEvents);
+    }).catch(() => {});
+  }
 
   return (
     <Modal isVisible={isVisible}>
-      <View
-        style={styles.container}
-      >
-        {/*  */}
-        <View
-          style={styles.modalHeader}
-        >
-          <View style={{ width: 32 }} />
+      <View style={styles.container}>
 
+        <View style={styles.modalHeader}>
+          <View style={{ width: 32 }} />
           <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
             {date}
           </Text>
-
           <TouchableOpacity
             style={{ justifyContent: 'flex-end' }}
-            onPress={() => {
-              onClose();
-            }}
+            onPress={() => { onClose(); }}
           >
             <Feather
               name="x"
@@ -153,6 +133,7 @@ const VacancyModal = ({
           style={{ margin: '3%' }}
           showsVerticalScrollIndicator={false}
         >
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -163,7 +144,7 @@ const VacancyModal = ({
             <View style={styles.cols}>
               <View>
                 {tableHours.map((col) => (
-                  <View style={[styles.cellStyle, styles.colDateStyle]}>
+                  <View key={col} style={[styles.cellStyle, styles.colDateStyle]}>
                     <Text style={[styles.text, { color: 'white' }]}>
                       {col}
                       h
@@ -171,10 +152,14 @@ const VacancyModal = ({
                   </View>
                 ))}
               </View>
+
               <View style={styles.gridContainer}>
-                {eventTable.map((column, index) => (
-                  <Row key={index} column={column} line={index} />
-                ))}
+                <FlatList
+                  data={eventTable}
+                  numColumns={ROOM_IDS.length}
+                  keyExtractor={(item) => item.index.toString()}
+                  renderItem={({ item }) => (<Cell key={item.index.toString()} {...item} />)}
+                />
               </View>
             </View>
           </ScrollView>
@@ -182,6 +167,68 @@ const VacancyModal = ({
       </View>
     </Modal>
   );
+
+  function Cell({
+    name, time, status_payment, room, index,
+  }) {
+    if (name.length === 0) {
+      return (
+        <TouchableOpacity
+          style={styles.cellStyle}
+          onPress={() => {
+            Alert.alert('Deseja Adicionar',
+              `Usuário na sala ${roomById(room)}, hora: ${time.split(':')[0]}h?`, [{
+                text: 'Cancelar',
+                style: 'cancel',
+              }, {
+                text: 'Ok',
+                onPress: () => { },
+              }]);
+          }}
+        />
+      );
+    }
+    return (
+      <View style={styles.cellStyle}>
+        <TouchableOpacity onPress={() => (
+          Alert.alert('Deseja excluir',
+            `Reserva de ${name}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
+            [{
+              text: 'Cancelar',
+              style: 'cancel',
+            }, {
+              text: 'Ok',
+              onPress: () => { deleteEvent(index); },
+            }]))}
+        >
+          <Text style={[styles.text, { color: colors.mainColor }]}>{name}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert('Deseja alterar',
+              `Pagamento do usuário: ${name}, hora: ${time.split(':')[0]}h, `
+              + `sala: ${roomById(room)}?`,
+              [{
+                text: 'Cancelar',
+                style: 'cancel',
+              }, {
+                text: 'Ok',
+                onPress: () => { alterEventPayment(index); },
+              }]);
+          }}
+        >
+          <Feather
+            name="dollar-sign"
+            size={scale(14)}
+            color={Number(status_payment) === 1
+              ? colors.accentColor
+              : colors.errorColor}
+          />
+
+        </TouchableOpacity>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
