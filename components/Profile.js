@@ -130,6 +130,7 @@ const Profile = ({ navigation, menu }) => {
   }
 
   function fetchEvents() {
+    setEventList(null);
     api.get('/events/list/user').then((res) => {
       const sortEvents = res.data
         .map((event) => {
@@ -148,6 +149,7 @@ const Profile = ({ navigation, menu }) => {
   }
 
   function fetchMessages() {
+    setMessageList(null);
     api.get('/messages')
       .then((res) => {
         const messages = res.data.sort((prev, next) => next.id - prev.id);
@@ -160,6 +162,7 @@ const Profile = ({ navigation, menu }) => {
       });
   }
   function fetchLogs() {
+    setLogList(null);
     api.get('/logs')
       .then((res) => {
         setLogList(res.data);

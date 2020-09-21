@@ -9,6 +9,9 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
+import ListEmpty from '@components/ListEmpty';
+import Separator from '@components/Separator';
+
 import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
@@ -104,25 +107,16 @@ const UserEventsModal = ({ isVisible, onClose, events }) => (
 
     <View style={{ flex: 9, width: '90%' }}>
 
-      {events !== null ? (
-        <FlatList
-          data={events}
-          contentContainerStyle={{
-            borderTopWidth: 2,
-            borderColor: '#ccc',
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item: event }) => (
-            <EventInfo key={event.id} {...event} />
-          )}
-        />
-      ) : (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={[styles.text, { fontSize: scale(24) }]}>
-            Não há horários marcados
-          </Text>
-        </View>
-      )}
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item: event }) => (
+          <EventInfo key={event.id} {...event} />
+        )}
+        ItemSeparatorComponent={() => (<Separator />)}
+        ListEmptyComponent={<ListEmpty modal label="Não há horários marcados." />}
+      />
+
     </View>
 
   </Modal>
@@ -133,9 +127,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderBottomWidth: 2,
-    // borderWidth: 2,
-    borderColor: '#ccc',
     paddingVertical: verticalScale(12),
     paddingLeft: scale(10),
   },

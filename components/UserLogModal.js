@@ -9,6 +9,9 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
+import ListEmpty from '@components/ListEmpty';
+import Separator from '@components/Separator';
+
 import colors from '@constants/colors';
 
 const LogInfo = ({ log, date }) => (
@@ -46,25 +49,16 @@ const UserLogModal = ({ isVisible, onClose, logs }) => (
 
     <View style={{ flex: 9, width: '90%' }}>
 
-      {logs ? (
-        <FlatList
-          data={logs}
-          contentContainerStyle={{
-            borderTopWidth: 2,
-            borderColor: '#ccc',
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <LogInfo key={item.id} log={item.log} date={item.created_at} />
-          )}
-        />
-      ) : (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={[styles.text, { fontSize: scale(24) }]}>
-            Não há registros.
-          </Text>
-        </View>
-      )}
+      <FlatList
+        data={logs}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <LogInfo key={item.id} log={item.log} date={item.created_at} />
+        )}
+        ItemSeparatorComponent={() => (<Separator />)}
+        ListEmptyComponent={<ListEmpty modal label="Não há registros." />}
+      />
+
     </View>
 
   </Modal>
@@ -74,8 +68,6 @@ const styles = StyleSheet.create({
   messageInfoContainer: {
     minHeight: verticalScale(70),
     justifyContent: 'center',
-    borderBottomWidth: 2,
-    borderColor: '#ccc',
     paddingVertical: verticalScale(4),
     paddingLeft: scale(10),
   },

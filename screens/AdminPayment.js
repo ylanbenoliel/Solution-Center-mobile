@@ -7,7 +7,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar, Separator } from '@components';
+import { GeneralStatusBar, Separator, ListEmpty } from '@components';
 
 import { api } from '@services/api';
 
@@ -146,6 +146,7 @@ const AdminPayment = ({ route, navigation }) => {
               singleEvent={item}
             />
           )}
+          ListEmptyComponent={<ListEmpty label="Usuário em dia com os pagamentos." />}
         />
       </View>
 

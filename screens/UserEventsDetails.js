@@ -14,7 +14,9 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar, Separator, Loading } from '@components';
+import {
+  GeneralStatusBar, Separator, Loading, ListEmpty,
+} from '@components';
 
 import { api } from '@services/api';
 
@@ -23,7 +25,6 @@ import { ROOM_DATA } from '@constants/fixedValues';
 
 const UserEventsDetails = ({ route, navigation }) => {
   const { events, user } = route.params;
-  const [eventsNotPaid, setEventsNotPaid] = useState(events);
   const [totalEvents, setTotalEvents] = useState(events);
   const [loading, setLoading] = useState(false);
 
@@ -32,14 +33,10 @@ const UserEventsDetails = ({ route, navigation }) => {
     api.delete(`/admin/events/${eventId}`)
       .then(() => {
         setTotalEvents(totalEvents.filter((event) => event.id !== eventId));
-        setEventsNotPaid(eventsNotPaid.filter((event) => event.id !== eventId));
       })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao excluir reserva',
-          [
-            {
-              text: 'Ok',
-            },
+          [{ text: 'Ok' },
           ]);
       })
       .finally(() => { setLoading(false); });
@@ -101,8 +98,7 @@ const UserEventsDetails = ({ route, navigation }) => {
             onPress={() => {
               Alert.alert('Aviso', 'Deseja alterar essa reserva?',
                 [{
-                  text:
-          'Cancelar',
+                  text: 'Cancelar',
                   style: 'cancel',
                 }, {
                   text: 'Ok',
@@ -130,8 +126,7 @@ const UserEventsDetails = ({ route, navigation }) => {
             onPress={() => {
               Alert.alert('Aviso', 'Deseja excluir essa reserva?',
                 [{
-                  text:
-            'Cancelar',
+                  text: 'Cancelar',
                   style: 'cancel',
                 }, {
                   text: 'Ok',
@@ -146,7 +141,6 @@ const UserEventsDetails = ({ route, navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        <Separator />
       </View>
 
     );
@@ -168,22 +162,9 @@ const UserEventsDetails = ({ route, navigation }) => {
           color={colors.navigationColor}
         />
       </TouchableOpacity>
-      {/* <View style={{ alignItems: 'center' }}>
-        <Text style={styles.text}>Horários não pagos</Text>
-        <FlatList
-          horizontal
-          data={eventsNotPaid}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <ShowNotPaidEvent
-              singleEvent={item}
-            />
-          )}
-        />
-      </View> */}
+
       <View style={{ alignItems: 'center', marginTop: 5 }}>
         <Text style={styles.text}>Horários</Text>
-        <Separator />
       </View>
 
       <FlatList
@@ -194,6 +175,8 @@ const UserEventsDetails = ({ route, navigation }) => {
             singleEvent={item}
           />
         )}
+        ItemSeparatorComponent={() => (<Separator />)}
+        ListEmptyComponent={<ListEmpty label="Não há reservas." />}
       />
       <RenderLoading />
     </SafeAreaView>

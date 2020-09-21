@@ -9,6 +9,9 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
+import ListEmpty from '@components/ListEmpty';
+import Separator from '@components/Separator';
+
 import colors from '@constants/colors';
 
 const MessageInfo = ({ message, date }) => (
@@ -49,25 +52,16 @@ const UserEventsModal = ({ isVisible, onClose, messages }) => (
 
     <View style={{ flex: 9, width: '90%' }}>
 
-      {messages ? (
-        <FlatList
-          data={messages}
-          contentContainerStyle={{
-            borderTopWidth: 2,
-            borderColor: '#ccc',
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <MessageInfo key={item.id} message={item.message} date={item.created_at} />
-          )}
-        />
-      ) : (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={[styles.text, { fontSize: scale(24) }]}>
-            Não há notificações
-          </Text>
-        </View>
-      )}
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <MessageInfo key={item.id} message={item.message} date={item.created_at} />
+        )}
+        ItemSeparatorComponent={() => (<Separator />)}
+        ListEmptyComponent={<ListEmpty modal label="Não há mensagens." />}
+      />
+
     </View>
 
   </Modal>
@@ -75,10 +69,8 @@ const UserEventsModal = ({ isVisible, onClose, messages }) => (
 
 const styles = StyleSheet.create({
   messageInfoContainer: {
-    minHeight: verticalScale(70),
+    minHeight: verticalScale(60),
     justifyContent: 'center',
-    borderBottomWidth: 2,
-    borderColor: '#ccc',
     paddingVertical: verticalScale(4),
     paddingLeft: scale(10),
   },
