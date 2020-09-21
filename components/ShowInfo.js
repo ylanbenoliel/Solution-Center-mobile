@@ -26,8 +26,9 @@ const ShowInfo = ({ error, success }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '70%',
-    height: verticalScale(36),
+    width: '72%',
+    height: verticalScale(40),
+    paddingVertical: verticalScale(10),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: scale(4),
