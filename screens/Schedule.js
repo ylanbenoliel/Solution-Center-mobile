@@ -103,7 +103,7 @@ export default function Schedule({ navigation }) {
         ];
         setDatesWhitelist(rangeData);
         setDatesBlacklist(
-          disableSundays(minDate, maxDate),
+          disableWeekends(minDate, maxDate),
         );
       })
       .catch(() => {
@@ -111,13 +111,12 @@ export default function Schedule({ navigation }) {
       });
   }, []);
 
-  function disableSundays(startDate, endDate) {
+  function disableWeekends(startDate, endDate) {
     const weekends = eachWeekendOfInterval({
       start: parseISO(startDate),
       end: parseISO(endDate),
     });
-    const sundays = weekends.filter((day) => isSunday(day));
-    return sundays;
+    return weekends;
   }
 
   function transformEventToSchedule(hrs, evts, room, date) {
