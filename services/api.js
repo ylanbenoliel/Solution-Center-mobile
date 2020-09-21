@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const url = 'https://e5861032da71.ngrok.io';
+// eslint-disable-next-line import/extensions
+import { APP_URL } from '../env.js';
+
+const url = APP_URL;
 const api = axios.create({
   baseURL: url,
 });
