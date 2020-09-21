@@ -20,14 +20,16 @@ const AdminPayment = ({ route, navigation }) => {
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
 
   function confirmEventPayment(eventId) {
-    api.patch('/admin/events/update', {
+    api.patch('/admin/events/payment', {
       id: eventId,
       status_payment: 1,
     })
       .then(() => {
-        setEventsNotPaid(eventsNotPaid.filter((evt) => {
-          if (evt.id !== eventId) { return evt; } return false;
-        }));
+        const restEvents = eventsNotPaid
+          .filter((evt) => {
+            if (evt.id !== eventId) { return evt; } return false;
+          });
+        setEventsNotPaid(restEvents);
       })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
