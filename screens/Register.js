@@ -105,7 +105,6 @@ export default function Register({ navigation }) {
       setLoading(false);
       return null;
     }
-    // FIXME when save the user, get the user id
     api.post('/users', {
       name: name.trim(),
       email: email.trim(),
@@ -118,7 +117,7 @@ export default function Register({ navigation }) {
       .then((response) => {
         sendAvatarImage(response.data.id)
           .then(() => {
-            setSuccess('Usuário salvo, redirecionando ao login.');
+            setSuccess(response.data.message);
             setTimeout(() => {
               navigation.pop();
             }, 2500);
@@ -160,8 +159,8 @@ export default function Register({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
 
       <ScrollView>
