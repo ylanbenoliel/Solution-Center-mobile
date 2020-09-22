@@ -156,34 +156,11 @@ const UserEventsDetails = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
-
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}
-      >
-        <TouchableOpacity
-          style={{ marginVertical: scale(10) }}
-          onPress={() => { navigation.pop(); }}
-        >
-          <Feather
-            name="arrow-left"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-        <View>
-          <Text style={[styles.text, { fontSize: scale(24) }]}>Horários</Text>
-        </View>
-
-        <View style={{ width: scale(32) }} />
-      </View>
 
       <FlatList
         data={totalEvents}
@@ -202,6 +179,10 @@ const UserEventsDetails = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.whiteColor,
+  },
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(18),
@@ -225,7 +206,6 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: colors.errorColor,
   },
-
   conditionalLoading: {
     zIndex: 10,
     position: 'absolute',

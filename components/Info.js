@@ -62,7 +62,7 @@ const Info = ({ route, navigation }) => {
         rg,
       }).then(() => {
         Keyboard.dismiss();
-        navigation.push('UserProfile');
+        navigation.pop();
       })
         .catch(() => {});
     } else {
@@ -76,7 +76,7 @@ const Info = ({ route, navigation }) => {
         password,
       }).then(() => {
         Keyboard.dismiss();
-        navigation.push('UserProfile');
+        navigation.pop();
       })
         .catch(() => {});
     }
@@ -100,162 +100,150 @@ const Info = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor="white"
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
-      <ScrollView>
-        <View style={styles.header}>
-          <View style={{ height: scale(32), width: scale(32) }} />
-          <Text style={[styles.text, { fontSize: scale(24) }]}>Perfil</Text>
-          <TouchableOpacity
-            style={styles.closeModal}
-            onPress={() => {
-              Keyboard.dismiss();
-              navigation.pop();
-            }}
-          >
-            <Feather
-              name="x"
-              size={scale(32)}
-              color={colors.navigationColor}
-            />
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatarImageContainer}>
-            {image && (
-              <Image source={{ uri: image.uri }} style={styles.avatarImage} />
-            )}
-          </View>
-          <View style={styles.galleryButtonContainer}>
-            <TouchableOpacity
-              style={styles.galleryButton}
-              onPress={() => handlePickImage()}
-            >
-              <Feather
-                name="camera"
-                size={scale(24)}
-                color={colors.whiteColor}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.infoContainer}>
-
-          <Text style={styles.text}>
-            Nome:
-          </Text>
-          <TextInput
-            style={[styles.text, styles.textInput]}
-            value={name}
-            placeholder="Nome"
-            onChangeText={(text) => {
-              setName(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Email:
-          </Text>
-          <TextInput
-            keyboardType="email-address"
-            style={[styles.text, styles.textInput]}
-            value={email}
-            placeholder="Email"
-            onChangeText={(text) => {
-              setEmail(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Endereço:
-          </Text>
-          <TextInput
-            style={[styles.text, styles.textInput]}
-            value={address}
-            placeholder="Endereço"
-            onChangeText={(text) => {
-              setAddress(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Telefone:
-          </Text>
-          <TextInput
-            keyboardType="number-pad"
-            style={[styles.text, styles.textInput]}
-            value={phone}
-            placeholder="Telefone"
-            onChangeText={(text) => {
-              setPhone(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Cpf:
-          </Text>
-          <TextInput
-            keyboardType="number-pad"
-            style={[styles.text, styles.textInput]}
-            value={cpf}
-            placeholder="Cpf"
-            onChangeText={(text) => {
-              setCpf(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Rg:
-          </Text>
-          <TextInput
-            keyboardType="number-pad"
-            style={[styles.text, styles.textInput]}
-            value={rg}
-            placeholder="Rg"
-            onChangeText={(text) => {
-              setRg(text);
-            }}
-          />
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>
-            Senha:
-          </Text>
-          <TextInput
-            style={[styles.text, styles.textInput]}
-            value={password}
-            placeholderTextColor={colors.disableColor}
-            placeholder="Vazia para permanecer"
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => handleUpdate()}
+      <View style={{ marginHorizontal: scale(16) }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingTop: 20 }}
         >
-          <Text style={[styles.text, { color: colors.whiteColor }]}>
-            Atualizar
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
 
+          <View style={styles.avatarContainer}>
+            <View style={styles.avatarImageContainer}>
+              {image && (
+                <Image source={{ uri: image.uri }} style={styles.avatarImage} />
+              )}
+            </View>
+            <View style={styles.galleryButtonContainer}>
+              <TouchableOpacity
+                style={styles.galleryButton}
+                onPress={() => handlePickImage()}
+              >
+                <Feather
+                  name="camera"
+                  size={scale(24)}
+                  color={colors.whiteColor}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.infoContainer}>
+
+            <Text style={styles.text}>
+              Nome:
+            </Text>
+            <TextInput
+              style={[styles.text, styles.textInput]}
+              value={name}
+              placeholder="Nome"
+              onChangeText={(text) => {
+                setName(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Email:
+            </Text>
+            <TextInput
+              keyboardType="email-address"
+              style={[styles.text, styles.textInput]}
+              value={email}
+              placeholder="Email"
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Endereço:
+            </Text>
+            <TextInput
+              style={[styles.text, styles.textInput]}
+              value={address}
+              placeholder="Endereço"
+              onChangeText={(text) => {
+                setAddress(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Telefone:
+            </Text>
+            <TextInput
+              keyboardType="number-pad"
+              style={[styles.text, styles.textInput]}
+              value={phone}
+              placeholder="Telefone"
+              onChangeText={(text) => {
+                setPhone(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Cpf:
+            </Text>
+            <TextInput
+              keyboardType="number-pad"
+              style={[styles.text, styles.textInput]}
+              value={cpf}
+              placeholder="Cpf"
+              onChangeText={(text) => {
+                setCpf(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Rg:
+            </Text>
+            <TextInput
+              keyboardType="number-pad"
+              style={[styles.text, styles.textInput]}
+              value={rg}
+              placeholder="Rg"
+              onChangeText={(text) => {
+                setRg(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>
+              Senha:
+            </Text>
+            <TextInput
+              style={[styles.text, styles.textInput]}
+              value={password}
+              placeholderTextColor={colors.disableColor}
+              placeholder="Vazia para permanecer"
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleUpdate()}
+          >
+            <Text style={[styles.text, { color: colors.whiteColor }]}>
+              Atualizar
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -273,14 +261,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     paddingVertical: verticalScale(4),
     paddingHorizontal: scale(4),
-  },
-  header: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: scale(10),
   },
   closeModal: {
     marginRight: scale(4),

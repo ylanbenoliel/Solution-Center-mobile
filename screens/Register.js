@@ -105,7 +105,7 @@ export default function Register({ navigation }) {
       setLoading(false);
       return null;
     }
-
+    // FIXME when save the user, get the user id
     api.post('/users', {
       name: name.trim(),
       email: email.trim(),
@@ -120,7 +120,7 @@ export default function Register({ navigation }) {
           .then(() => {
             setSuccess('Usuário salvo, redirecionando ao login.');
             setTimeout(() => {
-              navigation.push('Home');
+              navigation.pop();
             }, 2500);
           })
           .catch(() => {
@@ -163,22 +163,7 @@ export default function Register({ navigation }) {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: scale(20),
-          }}
-          onPress={() => navigation.pop()}
-        >
-          <Feather
-            name="chevron-left"
-            size={scale(40)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-      </View>
+
       <ScrollView>
         <View style={styles.registerContainer}>
           {/*  */}
@@ -428,6 +413,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(20),
   },
   textInput: {
+    flex: 1,
     marginLeft: scale(5),
     fontSize: scale(18),
     height: verticalScale(32),

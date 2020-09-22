@@ -15,7 +15,7 @@ import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
 // eslint-disable-next-line react/prop-types
-const AdminPayment = ({ route, navigation }) => {
+const AdminPayment = ({ route }) => {
   const { events } = route.params;
   const [eventsNotPaid, setEventsNotPaid] = useState(events);
 
@@ -104,37 +104,13 @@ const AdminPayment = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
 
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}
-      >
-
-        <TouchableOpacity
-          style={{ marginVertical: scale(10) }}
-          onPress={() => { navigation.pop(); }}
-        >
-          <Feather
-            name="arrow-left"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-        <View>
-          <Text style={[styles.text, { fontSize: scale(24) }]}>Horários não pagos</Text>
-        </View>
-
-        <View style={{ width: scale(32) }} />
-      </View>
-
-      <View>
+      <View style={{ marginTop: 10 }}>
 
         <FlatList
           data={eventsNotPaid}
@@ -155,6 +131,10 @@ const AdminPayment = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.whiteColor,
+  },
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(18),

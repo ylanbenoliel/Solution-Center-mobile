@@ -7,7 +7,6 @@ import {
 import { Calendar } from 'react-native-calendars';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { Feather } from '@expo/vector-icons';
 import { format } from 'date-fns';
 
 import { GeneralStatusBar } from '@components';
@@ -55,30 +54,13 @@ const AdminEditEvent = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
-      <View style={{
-        flexDirection: 'row',
-        margin: scale(10),
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
-      >
-        <TouchableOpacity onPress={() => { navigation.pop(); }}>
-          <Feather
-            name="arrow-left"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-        <Text style={[styles.text, styles.headerText]}>Editar reserva</Text>
-        <View style={{ width: scale(32) }} />
-      </View>
 
-      <ScrollView contentContainerStyle={{ height: '130%' }}>
+      <ScrollView contentContainerStyle={{ height: '100%' }}>
 
         <View style={styles.calendarContainer}>
           <Calendar
@@ -228,6 +210,10 @@ const AdminEditEvent = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.whiteColor,
+  },
   calendarContainer: {
     justifyContent: 'center',
   },

@@ -7,7 +7,6 @@ import {
 import { Calendar } from 'react-native-calendars';
 import { scale, verticalScale } from 'react-native-size-matters';
 
-import { Feather } from '@expo/vector-icons';
 import { format } from 'date-fns';
 
 import { GeneralStatusBar } from '@components';
@@ -17,7 +16,7 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 
-const AdminAddEvent = ({ route, navigation }) => {
+const AdminAddEvent = ({ route }) => {
   const { user } = route.params;
   const [daySelected, setDaySelected] = useState('');
   const [room, setRoom] = useState(1);
@@ -38,13 +37,13 @@ const AdminAddEvent = ({ route, navigation }) => {
       date: daySelected,
       time: hour,
       room,
-    }).then((res) => {
+    }).then(() => {
       Alert.alert('', 'Reserva salva', [{
         text: 'Ok',
         // onPress: () => { },
       }]);
     })
-      .catch((err) => {
+      .catch(() => {
         Alert.alert('', 'Erro ao salvar', [{
           text: 'Ok',
         // onPress: () => { },
@@ -53,28 +52,11 @@ const AdminAddEvent = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <View style={{
-        flexDirection: 'row',
-        margin: scale(10),
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
-      >
-        <TouchableOpacity onPress={() => { navigation.pop(); }}>
-          <Feather
-            name="arrow-left"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
-        <Text style={styles.text}>Adicionar reserva</Text>
-        <View style={{ width: scale(32) }} />
-      </View>
 
       <View style={styles.calendarContainer}>
         <Calendar
@@ -199,6 +181,10 @@ const AdminAddEvent = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.whiteColor,
+  },
   calendarContainer: {
     justifyContent: 'center',
   },
