@@ -18,10 +18,11 @@ import {
   GeneralStatusBar, Separator, Loading, ListEmpty,
 } from '@components';
 
+import { roomById } from '@helpers/functions';
+
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
-import { ROOM_DATA } from '@constants/fixedValues';
 
 const UserEventsDetails = ({ route, navigation }) => {
   const { events, user } = route.params;
@@ -56,11 +57,7 @@ const UserEventsDetails = ({ route, navigation }) => {
   const EventList = ({ singleEvent }) => {
     const onlyDate = singleEvent.date.split('T')[0];
     const dateWithBars = onlyDate.split('-').reverse().join('/');
-    const roomName = ROOM_DATA.map((data) => {
-      if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
-      return false;
-    })
-      .filter((room) => room);
+    const roomName = roomById(Number(singleEvent.room));
 
     return (
       <View
@@ -91,6 +88,18 @@ const UserEventsDetails = ({ route, navigation }) => {
               {' '}
               {roomName}
             </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.text}>
+                Pagamento:
+              </Text>
+              <Feather
+                name="dollar-sign"
+                size={scale(16)}
+                color={Number(singleEvent.status_payment) === 1
+                  ? colors.accentColor
+                  : colors.errorColor}
+              />
+            </View>
           </View>
 
           <TouchableOpacity
@@ -152,19 +161,28 @@ const UserEventsDetails = ({ route, navigation }) => {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <TouchableOpacity
-        style={{ margin: scale(10) }}
-        onPress={() => { navigation.pop(); }}
-      >
-        <Feather
-          name="arrow-left"
-          size={scale(32)}
-          color={colors.navigationColor}
-        />
-      </TouchableOpacity>
 
-      <View style={{ alignItems: 'center', marginTop: 5 }}>
-        <Text style={styles.text}>Horários</Text>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}
+      >
+        <TouchableOpacity
+          style={{ marginVertical: scale(10) }}
+          onPress={() => { navigation.pop(); }}
+        >
+          <Feather
+            name="arrow-left"
+            size={scale(32)}
+            color={colors.navigationColor}
+          />
+        </TouchableOpacity>
+        <View>
+          <Text style={[styles.text, { fontSize: scale(24) }]}>Horários</Text>
+        </View>
+
+        <View style={{ width: scale(32) }} />
       </View>
 
       <FlatList
