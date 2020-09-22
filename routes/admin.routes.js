@@ -23,21 +23,43 @@ const Stack = createStackNavigator();
 
 function AdminInfo() {
   return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen name="UserProfile" component={AdminProfile} />
-      <Stack.Screen name="Info" component={Info} />
+    <Stack.Navigator
+      headerMode="float"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.mainColor,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen name="UserProfile" component={AdminProfile} options={{ headerShown: false }} />
+      <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />
     </Stack.Navigator>
   );
 }
 
 function UserStack() {
   return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen name="Usuários" component={AdminUserList} />
-      <Stack.Screen name="Eventos" component={UserEventsDetails} />
-      <Stack.Screen name="Adicionar" component={AdminAddEvent} />
-      <Stack.Screen name="Editar" component={AdminEditEvent} />
-      <Stack.Screen name="Pagamentos" component={AdminPayment} />
+    <Stack.Navigator
+      headerMode="float"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.mainColor,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen name="Usuários" component={AdminUserList} options={{ headerShown: false }} />
+      <Stack.Screen name="Eventos" component={UserEventsDetails} options={{ title: 'Horários' }} />
+      <Stack.Screen name="Adicionar" component={AdminAddEvent} options={{ title: 'Adicionar reserva' }} />
+      <Stack.Screen name="Editar" component={AdminEditEvent} options={{ title: 'Editar reserva' }} />
+      <Stack.Screen name="Pagamentos" component={AdminPayment} options={{ title: 'Horários não pagos' }} />
     </Stack.Navigator>
   );
 }

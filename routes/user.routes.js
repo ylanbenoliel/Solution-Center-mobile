@@ -28,9 +28,20 @@ const StackShell = createStackNavigator();
 
 function UserInfo() {
   return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen name="UserProfile" component={UserProfile} />
-      <Stack.Screen name="Info" component={Info} />
+    <Stack.Navigator
+      headerMode="float"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.mainColor,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }} />
+      <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />
     </Stack.Navigator>
   );
 }

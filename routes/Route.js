@@ -12,11 +12,11 @@ const Stack = createStackNavigator();
 const LoggedStack = createStackNavigator();
 
 const NonLoggedStack = () => (
-  <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Login" component={Login} />
+  <Stack.Navigator headerMode="float">
+    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
     <Stack.Screen name="Registro" component={Register} />
-    <Stack.Screen name="User" component={User} />
-    <Stack.Screen name="Admin" component={Admin} />
+    <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
+    <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -24,21 +24,21 @@ const NonLoggedStack = () => (
 export default function Route({ admin }) {
   if (admin === '0') {
     return (
-      <LoggedStack.Navigator headerMode="none">
-        <LoggedStack.Screen name="User" component={User} />
-        <LoggedStack.Screen name="Login" component={Login} />
+      <LoggedStack.Navigator headerMode="float">
+        <LoggedStack.Screen name="User" component={User} options={{ headerShown: false }} />
+        <LoggedStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <LoggedStack.Screen name="Registro" component={Register} />
-        <LoggedStack.Screen name="Admin" component={Admin} />
+        <LoggedStack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
       </LoggedStack.Navigator>
     );
   }
   if (admin === '1') {
     return (
-      <LoggedStack.Navigator headerMode="none">
-        <LoggedStack.Screen name="Admin" component={Admin} />
-        <LoggedStack.Screen name="Login" component={Login} />
+      <LoggedStack.Navigator headerMode="float">
+        <LoggedStack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+        <LoggedStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <LoggedStack.Screen name="Registro" component={Register} />
-        <LoggedStack.Screen name="User" component={User} />
+        <LoggedStack.Screen name="User" component={User} options={{ headerShown: false }} />
       </LoggedStack.Navigator>
     );
   }
