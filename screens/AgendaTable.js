@@ -227,21 +227,28 @@ const AgendaTable = ({ route }) => {
       <View
         style={[styles.cellStyle]}
       >
-        <TouchableOpacity onPress={() => (
-          Alert.alert('Deseja excluir',
-            `Reserva de ${name}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
-            [{
-              text: 'Cancelar',
-              style: 'cancel',
-            }, {
-              text: 'Ok',
-              onPress: () => { deleteEvent(index); },
-            }]))}
+        <TouchableOpacity
+          style={{
+            flex: 2, width: '100%', justifyContent: 'center',
+          }}
+          onPress={() => (
+            Alert.alert('Deseja excluir',
+              `Reserva de ${name}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
+              [{
+                text: 'Cancelar',
+                style: 'cancel',
+              }, {
+                text: 'Ok',
+                onPress: () => { deleteEvent(index); },
+              }]))}
         >
-          <Text style={[styles.text, { color: colors.mainColor }]}>{name}</Text>
+          <Text style={[styles.text, { color: colors.mainColor, lineHeight: 14 }]}>{name}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
+          style={{
+            flex: 1, width: '90%', alignItems: 'center', justifyContent: 'center',
+          }}
           onPress={() => {
             Alert.alert('Deseja alterar',
               `Pagamento do usuário: ${name}, hora: ${time.split(':')[0]}h, `
