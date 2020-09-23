@@ -361,11 +361,9 @@ export default function Schedule({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#eee',
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-    position: 'absolute',
   },
   calendarContainer: {
     flex: 9,
@@ -376,6 +374,7 @@ const styles = StyleSheet.create({
   roomsContainer: {
     flex: 7,
     alignItems: 'center',
+    marginBottom: scale(14),
   },
   text: {
     fontFamily: 'Amaranth-Regular',
