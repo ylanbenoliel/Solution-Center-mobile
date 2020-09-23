@@ -122,16 +122,22 @@ const AgendaTable = ({ route }) => {
       }
       return null;
     });
-    api.delete(`admin/events/${eventFilter.id}`).then((
-      // res
-    ) => {
-      // const { event } = res.data;
-      // const hasEvent = { index: eventIndex, ...event };
-      // const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
-      // const rawEvents = filterEvents.push(hasEvent);
-      // const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
-      // setEventTable(orderEvents);
-    }).catch(() => {});
+    api.delete(`admin/events/${eventFilter.id}`)
+      .then(() => {
+        const hasNoEvent = {
+          index: eventIndex,
+          date: eventFilter.date,
+          time: eventFilter.time,
+          room: eventFilter.room,
+          name: '',
+        };
+
+        const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
+        const rawEvents = filterEvents.concat(hasNoEvent);
+        const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
+        setEventTable(orderEvents);
+        setRefreshFlatList(!refreshFlatList);
+      }).catch(() => {});
   }
 
   return (
