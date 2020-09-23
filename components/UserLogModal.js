@@ -8,24 +8,29 @@ import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import { format, parseISO } from 'date-fns';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
 
 import colors from '@constants/colors';
 
-const LogInfo = ({ log, date }) => (
-  <View style={styles.messageInfoContainer}>
-    <Text style={styles.text}>
-      {log}
-    </Text>
-    <Text style={[styles.text, styles.dateCreation]}>
-      Gerado em:
-      {' '}
-      {date}
-    </Text>
-  </View>
-);
+const LogInfo = ({ log, date }) => {
+  const formattedDate = format(parseISO(date), "dd/MM/yyyy à's' HH:mm");
+  return (
+    <View style={styles.messageInfoContainer}>
+      <Text style={styles.text}>
+        {log}
+      </Text>
+      <Text style={[styles.text, styles.dateCreation]}>
+        Gerado em:
+        {' '}
+        {formattedDate}
+
+      </Text>
+    </View>
+  );
+};
 
 const UserLogModal = ({ isVisible, onClose, logs }) => (
 

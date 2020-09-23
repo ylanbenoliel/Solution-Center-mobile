@@ -8,27 +8,31 @@ import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import { format, parseISO } from 'date-fns';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
 
 import colors from '@constants/colors';
 
-const MessageInfo = ({ message, date }) => (
-  <View style={styles.messageInfoContainer}>
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      <Text style={styles.text}>
-        {message}
+const MessageInfo = ({ message, date }) => {
+  const formattedDate = format(parseISO(date), "dd/MM/yyyy à's' HH:mm");
+  return (
+    <View style={styles.messageInfoContainer}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={styles.text}>
+          {message}
+        </Text>
+      </View>
+
+      <Text style={[styles.text, styles.dateCreation]}>
+        Gerado em:
+        {' '}
+        {formattedDate}
       </Text>
     </View>
-
-    <Text style={[styles.text, styles.dateCreation]}>
-      Gerado em:
-      {' '}
-      {date}
-    </Text>
-  </View>
-);
+  );
+};
 
 const UserEventsModal = ({ isVisible, onClose, messages }) => (
 
