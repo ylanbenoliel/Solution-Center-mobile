@@ -65,8 +65,7 @@ export default function Schedule({ navigation }) {
 
   const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
@@ -74,21 +73,12 @@ export default function Schedule({ navigation }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setError('');
-    }, 2200);
+      setError(null);
+    }, 2500);
     return () => {
       clearTimeout(timer);
     };
   }, [error]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSuccess('');
-    }, 2200);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [success]);
 
   useEffect(() => {
     api
@@ -119,7 +109,7 @@ export default function Schedule({ navigation }) {
     return weekends;
   }
 
-  function transformEventToSchedule(hrs, evts, room, date) {
+  function transformEventToSchedule(hrs, evts, room, dt) {
     if (evts.length === 0) {
       evts.push({
         event: '',
@@ -139,7 +129,7 @@ export default function Schedule({ navigation }) {
       new Date().getMinutes(),
     );
 
-    const dateArray = date.split('-');
+    const dateArray = dt.split('-');
 
     const eventRawList = hrs.flatMap((hour) => evts
       .flatMap((event) => {
@@ -153,7 +143,7 @@ export default function Schedule({ navigation }) {
           event: `${Math.random()}`,
           user: '',
           room: `${room}`,
-          date: `${date}`,
+          date: `${dt}`,
           time: `${hour}:00:00`,
         };
 
@@ -258,15 +248,17 @@ export default function Schedule({ navigation }) {
       </View>
 
       <View style={styles.calendarContainer}>
-        <View style={{ flex: 2, width: '100%', alignItems: 'center' }}>
+        <View
+          style={{ flex: 2, width: '100%', alignItems: 'center' }}
+        >
 
           <View style={styles.calendarStrip}>
             <CalendarStrip
+              scrollable
               ref={calendarRef}
               selectedDate={INITIALDATE}
-              startingDate={INITIALDATE}
               locale={LOCALE}
-              calendarAnimation={{ type: 'sequence', duration: 300 }}
+              calendarAnimation={{ type: 'sequence', duration: 400 }}
               daySelectionAnimation={{
                 type: 'border',
                 duration: 100,
@@ -287,9 +279,11 @@ export default function Schedule({ navigation }) {
           </View>
         </View>
 
+        {error && (
         <View style={{ alignItems: 'center' }}>
-          <ShowInfo error={error} success={success} />
+          <ShowInfo error={error} />
         </View>
+        )}
 
         <View style={styles.roomsContainer}>
           <Text style={[styles.text, styles.selectRoomText]}>
