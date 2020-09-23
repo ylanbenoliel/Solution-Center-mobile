@@ -10,11 +10,13 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { scale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+
+import { GeneralStatusBar } from '@components';
 
 import { roomById } from '@helpers/functions';
 
@@ -38,27 +40,39 @@ const tableHead = [
   roomsName[8],
 ];
 
-const TableHeader = () => (
+const TableHeader = ({ rooms }) => (
   <View style={styles.header}>
-    {tableHead.map((r, i) => {
+    {rooms.map((room, i) => {
       if (i === 0) {
-        return <View key={r} style={[styles.cellStyle, styles.headerCell, { width: 35 }]} />;
+        return <View key={room} style={[styles.cellStyle, styles.headerCell, { width: 35 }]} />;
       }
       return (
-        <View key={r} style={[styles.cellStyle, styles.headerCell]}>
-          <Text style={[styles.text, { fontSize: 12 }]}>{r}</Text>
+        <View key={room} style={[styles.cellStyle, styles.headerCell]}>
+          <Text style={[styles.text, { fontSize: 12 }]}>{room}</Text>
         </View>
       );
     })}
   </View>
-
 );
 
-const VacancyModal = ({
-  hours, events, isVisible, showDate, onClose,
-}) => {
-  const tableHours = hours;
-  const tableData = events;
+const HoursColumn = ({ hours }) => (
+  <View>
+    {hours.map((hour) => (
+      <View key={hour} style={[styles.cellStyle, styles.colDateStyle]}>
+        <Text style={[styles.text, { color: 'white' }]}>
+          {hour}
+          h
+        </Text>
+      </View>
+    ))}
+  </View>
+);
+
+const AgendaTable = ({ route }) => {
+  const { showDate, hours, events } = route.params;
+
+  const [refreshFlatList, setRefreshFlatList] = useState(false);
+
   const [date, setDate] = useState('');
   const [eventTable, setEventTable] = useState([]);
 
@@ -68,37 +82,49 @@ const VacancyModal = ({
     return () => {
       setDate('');
     };
-  }, [isVisible === true]);
+  }, []);
 
   useEffect(() => {
-    setEventTable(tableData);
-  }, [isVisible === true]);
+    setEventTable(events);
+  }, []);
 
   function alterEventPayment(eventIndex) {
     const eventFilter = eventTable.find((event) => {
       if (event.index === eventIndex) {
         return event;
       }
+      return null;
     });
     api.patch('admin/events/payment', {
       id: eventFilter.id,
       status_payment: Number(!eventFilter.status_payment),
     }).then((res) => {
       const { event } = res.data;
-      const hasEvent = { index: eventIndex, ...event };
+
+      const hasEvent = {
+        ...event,
+        index: eventIndex,
+        name: eventFilter.name,
+        date: event.date.split('T')[0],
+      };
       const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
-      const rawEvents = filterEvents.push(hasEvent);
+      const rawEvents = filterEvents.concat(hasEvent);
       const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
       setEventTable(orderEvents);
+      setRefreshFlatList(!refreshFlatList);
     }).catch(() => {});
   }
+
   function deleteEvent(eventIndex) {
     const eventFilter = eventTable.find((event) => {
       if (event.index === eventIndex) {
         return event;
       }
+      return null;
     });
-    api.delete(`admin/events/${eventFilter.id}`).then((res) => {
+    api.delete(`admin/events/${eventFilter.id}`).then((
+      // res
+    ) => {
       // const { event } = res.data;
       // const hasEvent = { index: eventIndex, ...event };
       // const filterEvents = eventTable.filter((evt) => evt.index !== eventIndex);
@@ -109,63 +135,66 @@ const VacancyModal = ({
   }
 
   return (
-    <Modal isVisible={isVisible}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
 
-        <View style={styles.modalHeader}>
-          <View style={{ width: 32 }} />
-          <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
-            {date}
-          </Text>
-          <TouchableOpacity
-            style={{ justifyContent: 'flex-end' }}
-            onPress={() => { onClose(); }}
-          >
-            <Feather
-              name="x"
-              color={colors.navigationColor}
-              size={32}
-            />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.modalHeader}>
+        <View style={{ width: 32 }} />
+        <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
+          {date}
+        </Text>
+        <TouchableOpacity
+          style={{ justifyContent: 'flex-end' }}
+          // onPress={() => { onClose(); }}
+        >
+          <Feather
+            name="x"
+            color={colors.navigationColor}
+            size={32}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        style={{ margin: '3%' }}
+        showsVerticalScrollIndicator={false}
+      >
 
         <ScrollView
-          style={{ margin: '3%' }}
-          showsVerticalScrollIndicator={false}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ flexDirection: 'column' }}
         >
+          <TableHeader rooms={tableHead} />
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ flexDirection: 'column' }}
-          >
-            <TableHeader />
+          <View style={styles.cols}>
 
-            <View style={styles.cols}>
-              <View>
-                {tableHours.map((col) => (
-                  <View key={col} style={[styles.cellStyle, styles.colDateStyle]}>
-                    <Text style={[styles.text, { color: 'white' }]}>
-                      {col}
-                      h
-                    </Text>
-                  </View>
-                ))}
-              </View>
+            <HoursColumn hours={hours} />
 
-              <View style={styles.gridContainer}>
-                <FlatList
-                  data={eventTable}
-                  numColumns={ROOM_IDS.length}
-                  keyExtractor={(item) => item.index.toString()}
-                  renderItem={({ item }) => (<Cell key={item.index.toString()} {...item} />)}
-                />
-              </View>
+            <View style={styles.gridContainer}>
+              <FlatList
+                data={eventTable}
+                extraData={refreshFlatList}
+                numColumns={ROOM_IDS.length}
+                keyExtractor={(item) => item.index.toString()}
+                  // ListHeaderComponent={() => (<TableHeader rooms={tableHead} />)}
+                  // stickyHeaderIndices={[0]}
+                renderItem={({ item }) => (
+                  <Cell
+                    {...item}
+                    key={item.index.toString()}
+                  />
+                )}
+              />
             </View>
-          </ScrollView>
+          </View>
         </ScrollView>
-      </View>
-    </Modal>
+      </ScrollView>
+
+    </SafeAreaView>
   );
 
   function Cell({
@@ -174,7 +203,7 @@ const VacancyModal = ({
     if (name.length === 0) {
       return (
         <TouchableOpacity
-          style={styles.cellStyle}
+          style={[styles.cellStyle]}
           onPress={() => {
             Alert.alert('Deseja Adicionar',
               `Usuário na sala ${roomById(room)}, hora: ${time.split(':')[0]}h?`, [{
@@ -189,7 +218,9 @@ const VacancyModal = ({
       );
     }
     return (
-      <View style={styles.cellStyle}>
+      <View
+        style={[styles.cellStyle]}
+      >
         <TouchableOpacity onPress={() => (
           Alert.alert('Deseja excluir',
             `Reserva de ${name}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
@@ -203,6 +234,7 @@ const VacancyModal = ({
         >
           <Text style={[styles.text, { color: colors.mainColor }]}>{name}</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
             Alert.alert('Deseja alterar',
@@ -235,7 +267,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.whiteColor,
-    borderRadius: 4,
   },
   modalHeader: {
     width: '100%',
@@ -272,11 +303,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
   },
   headerCell: {
     height: 40,
+    width: 55,
     justifyContent: 'center',
     backgroundColor: colors.mainColor,
   },
@@ -295,10 +327,11 @@ const styles = StyleSheet.create({
   cellStyle: {
     width: 55,
     height: 66,
+    backgroundColor: colors.whiteColor,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
   },
 });
 
-export default VacancyModal;
+export default AgendaTable;

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable eqeqeq */
 import React, {
@@ -17,7 +18,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { format } from 'date-fns';
 
-import { GeneralStatusBar, VacancyModal, ShowInfo } from '@components';
+import { GeneralStatusBar, ShowInfo } from '@components';
 
 import { api } from '@services/api';
 
@@ -25,21 +26,14 @@ import colors from '@constants/colors';
 // eslint-disable-next-line no-unused-vars
 import LocaleConfig from '@constants/localeWixCalendar';
 
-export default function Agenda() {
+export default function Agenda({ navigation }) {
   const [daySelected, setDaySelected] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hours, setHours] = useState([]);
-  const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const currentDate = format(new Date(), 'yyyy-MM-dd');
     setDaySelected(currentDate);
-    return () => {
-      setHours(null);
-      setEvents(null);
-    };
   }, []);
 
   useEffect(() => {
@@ -53,26 +47,19 @@ export default function Agenda() {
     setDaySelected(day);
   }
 
-  function handleOpenModal() {
+  function handleAgendaRequest() {
     setLoading(true);
     api.post('/admin/events/agenda', {
       date: daySelected,
     }).then((response) => {
       const { hoursInterval, events: rawEvents } = response.data;
-
-      // const chunkEvents = chunkArray(rawEvents, ROOM_IDS.length);
-      setEvents(rawEvents);
       setLoading(false);
-      setHours(hoursInterval);
-      setIsModalOpen(true);
-    }).catch((e) => {
+      navigation.navigate('AgendaTable',
+        { events: rawEvents, hours: hoursInterval, showDate: daySelected });
+    }).catch(() => {
       setLoading(false);
-      setError('Erro ao buscar registros');
+      setError('Erro ao buscar registros.');
     });
-  }
-
-  function handleCloseModal() {
-    setIsModalOpen(false);
   }
 
   const RenderFetchLoading = () => {
@@ -83,7 +70,7 @@ export default function Agenda() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
@@ -136,38 +123,30 @@ export default function Agenda() {
         />
       </View>
 
-      <View style={{ flex: 1 }}>
-
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ShowInfo error={error} />
-
-        <View style={styles.modalButtonContainer}>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => handleOpenModal()}
-          >
-            <RenderFetchLoading />
-          </TouchableOpacity>
-        </View>
-
       </View>
 
-      { isModalOpen && (
-      <VacancyModal
-        isVisible={isModalOpen}
-        onClose={() => handleCloseModal()}
-        showDate={daySelected}
-        events={events}
-        hours={hours}
-      />
-      )}
+      <View style={styles.modalButtonContainer}>
+        <TouchableOpacity
+          style={styles.modalButton}
+          onPress={() => handleAgendaRequest()}
+        >
+          <RenderFetchLoading />
+        </TouchableOpacity>
+      </View>
 
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.whiteColor,
+  },
   calendarContainer: {
-    flex: 2,
+    flex: 5,
     justifyContent: 'center',
     marginTop: verticalScale(40),
   },
@@ -177,7 +156,7 @@ const styles = StyleSheet.create({
     fontSize: scale(18),
   },
   modalButtonContainer: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },

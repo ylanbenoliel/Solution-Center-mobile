@@ -12,14 +12,12 @@ import UserEventsModal from './UserEventsModal';
 import UserItem from './UserItem';
 import UserLogModal from './UserLogModal';
 import UserMessagesModal from './UserMessagesModal';
-import VacancyModal from './VacancyModal';
 
 export {
   AdminUserModal,
   Separator,
   StatusButton,
   GeneralStatusBar,
-  VacancyModal,
   ShowInfo,
   Loading,
   UserItem,

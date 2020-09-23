@@ -13,6 +13,7 @@ import AdminPayment from '@screens/AdminPayment';
 import AdminProfile from '@screens/AdminProfile';
 import AdminUserList from '@screens/AdminUserList';
 import Agenda from '@screens/Agenda';
+import AgendaTable from '@screens/AgendaTable';
 import Notifications from '@screens/Notifications';
 import UserEventsDetails from '@screens/UserEventsDetails';
 
@@ -21,7 +22,27 @@ import colors from '@constants/colors';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function AdminInfo() {
+function AgendaStack() {
+  return (
+    <Stack.Navigator
+      headerMode="float"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.mainColor,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen name="Calendar" component={Agenda} options={{ headerShown: false, title: 'Calendário' }} />
+      <Stack.Screen name="AgendaTable" component={AgendaTable} options={{ title: 'Agenda' }} />
+    </Stack.Navigator>
+  );
+}
+
+function AdminInfoStack() {
   return (
     <Stack.Navigator
       headerMode="float"
@@ -72,7 +93,7 @@ export default function Admin() {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Agenda') {
+          if (route.name === 'Calendar') {
             iconName = 'calendar';
           }
           if (route.name === 'Usuários') {
@@ -94,10 +115,10 @@ export default function Admin() {
         keyboardHidesTabBar: true,
       }}
     >
-      <Tab.Screen name="Agenda" component={Agenda} />
+      <Tab.Screen name="Calendar" component={AgendaStack} options={{ title: 'Calendário' }} />
       <Tab.Screen name="Usuários" component={UserStack} />
       <Tab.Screen name="Notificações" component={Notifications} />
-      <Tab.Screen name="Perfil" component={AdminInfo} />
+      <Tab.Screen name="Perfil" component={AdminInfoStack} />
     </Tab.Navigator>
   );
 }
