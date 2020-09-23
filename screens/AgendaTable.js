@@ -77,7 +77,7 @@ const AgendaTable = ({ route }) => {
   const [eventTable, setEventTable] = useState([]);
 
   useEffect(() => {
-    const formattedDate = showDate.split('-').reverse().join('.');
+    const formattedDate = showDate;
     setDate(formattedDate);
     return () => {
       setDate('');
@@ -87,6 +87,16 @@ const AgendaTable = ({ route }) => {
   useEffect(() => {
     setEventTable(events);
   }, []);
+
+  function handleRefreshTable() {
+    api.post('/admin/events/agenda', {
+      date,
+    }).then((response) => {
+      const { events: rawEvents } = response.data;
+      setEventTable(rawEvents);
+      setRefreshFlatList(!refreshFlatList);
+    }).catch(() => { });
+  }
 
   function alterEventPayment(eventIndex) {
     const eventFilter = eventTable.find((event) => {
@@ -150,16 +160,15 @@ const AgendaTable = ({ route }) => {
       <View style={styles.modalHeader}>
         <View style={{ width: 32 }} />
         <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
-          {date}
+          {date.split('-').reverse().join('.')}
         </Text>
         <TouchableOpacity
-          style={{ justifyContent: 'flex-end' }}
-          // onPress={() => { onClose(); }}
+          onPress={() => { handleRefreshTable(); }}
         >
           <Feather
-            name="x"
+            name="refresh-cw"
             color={colors.navigationColor}
-            size={32}
+            size={28}
           />
         </TouchableOpacity>
       </View>
@@ -284,8 +293,8 @@ const styles = StyleSheet.create({
   modalHeader: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
+    justifyContent: 'space-around',
+    paddingVertical: 10,
   },
   head: {
     height: 40,
