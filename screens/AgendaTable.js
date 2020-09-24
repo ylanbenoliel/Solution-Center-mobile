@@ -68,7 +68,7 @@ const HoursColumn = ({ hours }) => (
   </View>
 );
 
-const AgendaTable = ({ route }) => {
+const AgendaTable = ({ route, navigation }) => {
   const { showDate, hours, events } = route.params;
 
   const [refreshFlatList, setRefreshFlatList] = useState(false);
@@ -157,7 +157,7 @@ const AgendaTable = ({ route }) => {
         barStyle="light-content"
       />
 
-      <View style={styles.modalHeader}>
+      <View style={styles.header}>
         <View style={{ width: 32 }} />
         <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
           {date.split('-').reverse().join('.')}
@@ -177,14 +177,13 @@ const AgendaTable = ({ route }) => {
         style={{ margin: '3%' }}
         showsVerticalScrollIndicator={false}
       >
-
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ flexDirection: 'column' }}
         >
-          <TableHeader rooms={tableHead} />
 
+          <TableHeader rooms={tableHead} />
           <View style={styles.cols}>
 
             <HoursColumn hours={hours} />
@@ -213,7 +212,7 @@ const AgendaTable = ({ route }) => {
   );
 
   function Cell({
-    name, time, status_payment, room, index,
+    name, time, status_payment, room, index, date: cellDate,
   }) {
     if (name.length === 0) {
       return (
@@ -226,7 +225,7 @@ const AgendaTable = ({ route }) => {
                 style: 'cancel',
               }, {
                 text: 'Ok',
-                onPress: () => { },
+                onPress: () => { navigation.navigate('AddUser', { room, time, date: cellDate }); },
               }]);
           }}
         />
@@ -251,7 +250,11 @@ const AgendaTable = ({ route }) => {
                 onPress: () => { deleteEvent(index); },
               }]))}
         >
-          <Text style={[styles.text, { color: colors.mainColor, lineHeight: 14 }]}>{name}</Text>
+          <Text
+            style={[styles.text, { color: colors.mainColor, lineHeight: 14 }]}
+          >
+            {name}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -290,16 +293,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.whiteColor,
   },
-  modalHeader: {
+  header: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
-  },
-  head: {
-    height: 40,
-    backgroundColor: colors.mainColor,
-    justifyContent: 'center',
   },
   tableBorder: {
     borderWidth: 2,
@@ -320,13 +318,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.whiteColor,
   },
-
   gridContainer: {
     flex: 1,
-  },
-  header: {
-    // flex: 1,
-    flexDirection: 'row',
   },
   headerCell: {
     height: 40,

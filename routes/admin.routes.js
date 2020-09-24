@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Info from '@components/Info';
 
 import AdminAddEvent from '@screens/AdminAddEvent';
+import AdminAddUserToEvent from '@screens/AdminAddUserToEvent';
 import AdminEditEvent from '@screens/AdminEditEvent';
 import AdminPayment from '@screens/AdminPayment';
 import AdminProfile from '@screens/AdminProfile';
@@ -38,6 +39,7 @@ function AgendaStack() {
     >
       <Stack.Screen name="Calendar" component={Agenda} options={{ headerShown: false, title: 'Calendário' }} />
       <Stack.Screen name="AgendaTable" component={AgendaTable} options={{ title: 'Agenda' }} />
+      <Stack.Screen name="AddUser" component={AdminAddUserToEvent} options={{ title: 'Selecionar usuário' }} />
     </Stack.Navigator>
   );
 }
