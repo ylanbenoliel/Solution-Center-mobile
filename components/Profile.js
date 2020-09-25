@@ -2,7 +2,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
 /* eslint-disable global-require */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext } from 'react';
 import {
   Text,
@@ -79,9 +78,6 @@ const Profile = ({ navigation, menu }) => {
 
   const [userInfo, setUserInfo] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
-  const [eventList, setEventList] = useState(null);
-  const [messageList, setMessageList] = useState(null);
-  const [logList, setLogList] = useState(null);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
   const [isModalLogOpen, setIsModalLogOpen] = useState(false);
   const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
@@ -129,48 +125,15 @@ const Profile = ({ navigation, menu }) => {
       }]));
   }
 
-  function fetchEvents() {
-    setEventList(null);
-    api.get('/events/list/user').then((res) => {
-      const sortEvents = res.data
-        .map((event) => {
-          const onlyDate = event.date.split('T')[0];
-          const datetime = `${onlyDate}T${event.time}.000Z`;
-          const eventWithDatetime = { ...event, datetime };
-          return eventWithDatetime;
-        })
-        .sort((prev, next) => next.datetime.localeCompare(prev.datetime));
-      setEventList(sortEvents);
-    })
-      .catch((err) => { })
-      .finally(() => {
-        setIsModalEventOpen(true);
-      });
+  function handleShowEvents() {
+    setIsModalEventOpen(true);
   }
 
-  function fetchMessages() {
-    setMessageList(null);
-    api.get('/messages')
-      .then((res) => {
-        const messages = res.data.sort((prev, next) => next.id - prev.id);
-
-        setMessageList(messages);
-      })
-      .catch((err) => { setMessageList(null); })
-      .finally(() => {
-        setIsModalMessageOpen(true);
-      });
+  function handleShowMessages() {
+    setIsModalMessageOpen(true);
   }
-  function fetchLogs() {
-    setLogList(null);
-    api.get('/logs')
-      .then((res) => {
-        setLogList(res.data);
-      })
-      .catch((err) => { setLogList(null); })
-      .finally(() => {
-        setIsModalLogOpen(true);
-      });
+  function handleShowLogs() {
+    setIsModalLogOpen(true);
   }
 
   function handleOpenInfoStack() {
@@ -263,12 +226,12 @@ const Profile = ({ navigation, menu }) => {
               <UserOptions
                 leftIcon="book-open"
                 description="Minhas reservas"
-                onClick={() => fetchEvents()}
+                onClick={() => handleShowEvents()}
               />
               <UserOptions
                 leftIcon="bell"
                 description="Minhas notificações"
-                onClick={() => fetchMessages()}
+                onClick={() => { handleShowMessages(); }}
               />
               {!menu
               && (
@@ -276,7 +239,7 @@ const Profile = ({ navigation, menu }) => {
                 last
                 leftIcon="settings"
                 description="Registros do sistema"
-                onClick={() => fetchLogs()}
+                onClick={() => { handleShowLogs(); }}
               />
               )}
 
@@ -298,19 +261,16 @@ const Profile = ({ navigation, menu }) => {
       {/*  */}
       <UserEventsModal
         isVisible={isModalEventOpen}
-        events={eventList}
         onClose={() => handleCloseModal(setIsModalEventOpen)}
       />
 
       <UserMessagesModal
         isVisible={isModalMessageOpen}
-        messages={messageList}
         onClose={() => handleCloseModal(setIsModalMessageOpen)}
       />
 
       <UserLogModal
         isVisible={isModalLogOpen}
-        logs={logList}
         onClose={() => handleCloseModal(setIsModalLogOpen)}
       />
 

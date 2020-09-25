@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList, Alert,
 } from 'react-native';
@@ -11,6 +11,8 @@ import { Feather } from '@expo/vector-icons';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
+
+import { api } from '@services/api';
 
 import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
@@ -85,42 +87,91 @@ const EventInfo = ({
   );
 };
 
-const UserEventsModal = ({ isVisible, onClose, events }) => (
+const UserEventsModal = ({ isVisible, onClose }) => {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [label, setLabel] = useState('Carregando...');
+  const [events, setEvents] = useState([]);
 
-  <Modal isVisible={isVisible} style={styles.container}>
-    <View style={styles.header}>
-      <View style={{ height: scale(32), width: scale(32) }} />
-      <Text style={[styles.text, { fontSize: scale(24) }]}>Reservas</Text>
-      <TouchableOpacity
-        style={styles.closeModal}
-        onPress={() => {
-          onClose();
-        }}
-      >
-        <Feather
-          name="x"
-          size={scale(32)}
-          color={colors.navigationColor}
+  useEffect(() => {
+    setTimeout(() => {
+      getData();
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [page]);
+
+  function getData() {
+    if (totalPages && (page > totalPages)) {
+      return null;
+    }
+    api.get(`/events/list/user?page=${page}`)
+      .then((res) => {
+        const incomingEvents = (res.data.data);
+        if (page === 1) {
+          if (incomingEvents.length === 0) {
+            return setEvents('Sem reservas');
+          }
+          return setEvents(incomingEvents);
+        }
+        const combineEvents = [...events, ...incomingEvents];
+        setTotalPages(res.data.lastPage);
+        return setEvents(combineEvents);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          return setLabel('Sem reservas.');
+        }
+        return setLabel('Erro ao pesquisar reservas.');
+      });
+    return null;
+  }
+
+  function handleLoadMore() {
+    setPage(page + 1);
+  }
+
+  return (
+
+    <Modal isVisible={isVisible} style={styles.container}>
+      <View style={styles.header}>
+        <View style={{ height: scale(32), width: scale(32) }} />
+        <Text style={[styles.text, { fontSize: scale(24) }]}>Reservas</Text>
+        <TouchableOpacity
+          style={styles.closeModal}
+          onPress={() => {
+            onClose();
+          }}
+        >
+          <Feather
+            name="x"
+            size={scale(32)}
+            color={colors.navigationColor}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flex: 9, width: '90%' }}>
+
+        <FlatList
+          data={events}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item: event }) => (
+            <EventInfo key={event.id} {...event} />
+          )}
+          ItemSeparatorComponent={() => (<Separator />)}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => handleLoadMore()}
+          ListEmptyComponent={<ListEmpty modal label={label} />}
         />
-      </TouchableOpacity>
-    </View>
 
-    <View style={{ flex: 9, width: '90%' }}>
+      </View>
 
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: event }) => (
-          <EventInfo key={event.id} {...event} />
-        )}
-        ItemSeparatorComponent={() => (<Separator />)}
-        ListEmptyComponent={<ListEmpty modal label="Não há horários marcados." />}
-      />
-
-    </View>
-
-  </Modal>
-);
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   eventInfoContainer: {

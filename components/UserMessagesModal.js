@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList,
 } from 'react-native';
@@ -12,6 +12,8 @@ import { format, parseISO } from 'date-fns';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
+
+import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
@@ -34,42 +36,91 @@ const MessageInfo = ({ message, date }) => {
   );
 };
 
-const UserEventsModal = ({ isVisible, onClose, messages }) => (
+const UserEventsModal = ({ isVisible, onClose }) => {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [label, setLabel] = useState('Carregando...');
+  const [messages, setMessages] = useState([]);
 
-  <Modal isVisible={isVisible} style={styles.container}>
-    <View style={styles.header}>
-      <View style={{ height: scale(32), width: scale(32) }} />
-      <Text style={[styles.text, { fontSize: scale(24) }]}>Notificações</Text>
-      <TouchableOpacity
-        style={styles.closeModal}
-        onPress={() => {
-          onClose();
-        }}
-      >
-        <Feather
-          name="x"
-          size={scale(32)}
-          color={colors.navigationColor}
+  useEffect(() => {
+    setTimeout(() => {
+      getData();
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [page]);
+
+  function getData() {
+    if (totalPages && (page > totalPages)) {
+      return null;
+    }
+    api.get(`/messages?page=${page}`)
+      .then((res) => {
+        const incomingMessages = (res.data.data);
+        if (page === 1) {
+          if (incomingMessages.length === 0) {
+            return setLabel('Sem mensagens.');
+          }
+          return setMessages(incomingMessages);
+        }
+
+        const combineMessages = [...messages, ...incomingMessages];
+        setTotalPages(res.data.lastPage);
+        return setMessages(combineMessages);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          return setLabel('Sem mensagens.');
+        }
+        return setLabel('Erro ao pesquisar mensagens.');
+      });
+    return null;
+  }
+
+  function handleLoadMore() {
+    setPage(page + 1);
+  }
+
+  return (
+    <Modal isVisible={isVisible} style={styles.container}>
+      <View style={styles.header}>
+        <View style={{ height: scale(32), width: scale(32) }} />
+        <Text style={[styles.text, { fontSize: scale(24) }]}>Notificações</Text>
+        <TouchableOpacity
+          style={styles.closeModal}
+          onPress={() => {
+            onClose();
+          }}
+        >
+          <Feather
+            name="x"
+            size={scale(32)}
+            color={colors.navigationColor}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flex: 9, width: '90%' }}>
+
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <MessageInfo key={item.id} message={item.message} date={item.created_at} />
+          )}
+          ItemSeparatorComponent={() => (<Separator />)}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => handleLoadMore()}
+          ListEmptyComponent={<ListEmpty modal label={label} />}
         />
-      </TouchableOpacity>
-    </View>
 
-    <View style={{ flex: 9, width: '90%' }}>
+      </View>
 
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <MessageInfo key={item.id} message={item.message} date={item.created_at} />
-        )}
-        ItemSeparatorComponent={() => (<Separator />)}
-        ListEmptyComponent={<ListEmpty modal label="Não há mensagens." />}
-      />
-
-    </View>
-
-  </Modal>
-);
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   messageInfoContainer: {
