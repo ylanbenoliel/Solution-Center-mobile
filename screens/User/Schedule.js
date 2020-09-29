@@ -14,6 +14,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -63,7 +64,7 @@ export default function Schedule({ navigation }) {
     formatISO(add(new Date(), { days: 8 })),
   ]);
 
-  const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
+  const [datesWhitelist, setDatesWhitelist] = useState(null);
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -97,6 +98,7 @@ export default function Schedule({ navigation }) {
         );
       })
       .catch(() => {
+        setDatesWhitelist(INITIALDATERANGE);
         setError('Erro ao buscar dias disponíveis.');
       });
   }, []);
@@ -230,6 +232,51 @@ export default function Schedule({ navigation }) {
     return null;
   };
 
+  const RenderCalendar = () => {
+    if (datesWhitelist) {
+      return (
+        <CalendarStrip
+          scrollable
+          ref={calendarRef}
+          startingDate={INITIALDATE}
+          selectedDate={INITIALDATE}
+          locale={LOCALE}
+          calendarAnimation={{ type: 'sequence', duration: 400 }}
+          daySelectionAnimation={{
+            type: 'border',
+            duration: 100,
+            borderWidth: 3,
+            borderHighlightColor: colors.accentColor,
+          }}
+          style={styles.calendarStyle}
+          calendarHeaderStyle={styles.text}
+          dateNumberStyle={styles.dateStyle}
+          dateNameStyle={styles.dateStyle}
+          highlightDateNumberStyle={styles.highlightDateStyle}
+          highlightDateNameStyle={styles.highlightDateStyle}
+          disabledDateNameStyle={styles.disabledDateStyle}
+          disabledDateNumberStyle={styles.disabledDateStyle}
+          datesBlacklist={datesBlacklist}
+          datesWhitelist={datesWhitelist}
+        />
+
+      );
+    }
+    return (
+
+      <View style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+        <ActivityIndicator size="large" color={colors.mainColor} />
+        <Text style={[styles.text, { fontSize: 24 }]}>
+          Carregando...
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -253,29 +300,7 @@ export default function Schedule({ navigation }) {
         >
 
           <View style={styles.calendarStrip}>
-            <CalendarStrip
-              scrollable
-              ref={calendarRef}
-              selectedDate={INITIALDATE}
-              locale={LOCALE}
-              calendarAnimation={{ type: 'sequence', duration: 400 }}
-              daySelectionAnimation={{
-                type: 'border',
-                duration: 100,
-                borderWidth: 3,
-                borderHighlightColor: colors.accentColor,
-              }}
-              style={styles.calendarStyle}
-              calendarHeaderStyle={styles.text}
-              dateNumberStyle={styles.dateStyle}
-              dateNameStyle={styles.dateStyle}
-              highlightDateNumberStyle={styles.highlightDateStyle}
-              highlightDateNameStyle={styles.highlightDateStyle}
-              disabledDateNameStyle={styles.disabledDateStyle}
-              disabledDateNumberStyle={styles.disabledDateStyle}
-              datesBlacklist={datesBlacklist}
-              datesWhitelist={datesWhitelist}
-            />
+            <RenderCalendar />
           </View>
         </View>
 
