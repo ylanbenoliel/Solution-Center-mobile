@@ -120,12 +120,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
         setTotalPages(res.data.lastPage);
         return setEvents(combineEvents);
       })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          return setLabel('Sem reservas.');
-        }
-        return setLabel('Erro ao pesquisar reservas.');
-      });
+      .catch(() => setLabel('Erro ao pesquisar reservas.'));
     return null;
   }
 
@@ -164,7 +159,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
           ItemSeparatorComponent={() => (<Separator />)}
           onEndReachedThreshold={0.5}
           onEndReached={() => handleLoadMore()}
-          ListEmptyComponent={<ListEmpty modal label={label} />}
+          ListEmptyComponent={<ListEmpty label={label} />}
         />
 
       </View>
