@@ -161,7 +161,7 @@ const AdminUserList = ({ navigation }) => {
         user: user.id,
       })
         .then((res) => {
-          const { events } = res.data;
+          const events = res.data.data;
           setLoading(false);
           return navigation.push('Pagamentos', { events });
         })
@@ -180,10 +180,10 @@ const AdminUserList = ({ navigation }) => {
         .then(axios.spread((...responses) => {
           const responseEvents = responses[0];
           const responsePlans = responses[1];
-          const { events } = responseEvents.data;
+          const events = responseEvents.data.data;
 
           setPlanList(Number(responsePlans.data.plan));
-          setEventList(events);
+          // setEventList(events);
           setLoading(false);
           setIsModalOpen(true);
         }))
@@ -196,7 +196,7 @@ const AdminUserList = ({ navigation }) => {
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    // fetchUsers();
+    fetchUsers();
   }
 
   const RenderSearchedUsers = () => {
