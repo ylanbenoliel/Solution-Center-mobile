@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -26,8 +26,39 @@ import colors from '@constants/colors';
 
 const UserEventsDetails = ({ route, navigation }) => {
   const { events, user } = route.params;
-  const [totalEvents, setTotalEvents] = useState(events);
+  const [totalEvents, setTotalEvents] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [label, setLabel] = useState('Carregando...');
+
+  useEffect(() => {
+    getData();
+  }, [page]);
+
+  function getData() {
+    if (totalPages && (page > totalPages)) {
+      return null;
+    }
+    api.post(`/admin/events/list/user?page=${page}`, {
+      user: user.id,
+    })
+      .then((res) => {
+        const incomingEvents = (res.data.data);
+        if (page === 1) {
+          if (incomingEvents.length === 0) {
+            setTotalEvents(null);
+            return setLabel('Sem reservas.');
+          }
+          return setTotalEvents(incomingEvents);
+        }
+        const combineEvents = [...events, ...incomingEvents];
+        setTotalPages(res.data.lastPage);
+        return setTotalEvents(combineEvents);
+      })
+      .catch(() => setLabel('Erro ao pesquisar reservas.'));
+    return null;
+  }
 
   function deleteEvent(eventId) {
     setLoading(true);
@@ -41,6 +72,10 @@ const UserEventsDetails = ({ route, navigation }) => {
           ]);
       })
       .finally(() => { setLoading(false); });
+  }
+
+  function handleLoadMore() {
+    setPage(page + 1);
   }
 
   const RenderLoading = () => {
@@ -171,8 +206,11 @@ const UserEventsDetails = ({ route, navigation }) => {
           />
         )}
         ItemSeparatorComponent={() => (<Separator />)}
-        ListEmptyComponent={<ListEmpty label="Não há reservas." />}
+        onEndReachedThreshold={0.3}
+        onEndReached={() => handleLoadMore()}
+        ListEmptyComponent={<ListEmpty label={label} />}
       />
+
       <RenderLoading />
     </SafeAreaView>
   );
