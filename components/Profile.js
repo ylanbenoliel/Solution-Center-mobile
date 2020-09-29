@@ -11,6 +11,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -72,7 +73,6 @@ const UserOptions = ({
   </TouchableOpacity>
 );
 
-// eslint-disable-next-line no-undef
 const Profile = ({ navigation, menu }) => {
   const { signOut } = useContext(AuthContext);
 
@@ -137,7 +137,7 @@ const Profile = ({ navigation, menu }) => {
   }
 
   function handleOpenInfoStack() {
-    navigation.push('Info', { details: userInfo, photo: avatarUrl });
+    navigation.navigate('Info', { details: userInfo, photo: avatarUrl });
   }
 
   function handleCloseModal(func) {
@@ -145,15 +145,16 @@ const Profile = ({ navigation, menu }) => {
   }
 
   const RenderInfo = () => {
+    const imageSize = 130;
     if (userInfo) {
       return (
         <>
           <Image
             source={avatarUrl}
             style={{
-              width: scale(130),
-              height: scale(130),
-              borderRadius: scale(10),
+              width: scale(imageSize),
+              height: scale(imageSize),
+              borderRadius: scale(imageSize / 2),
             }}
           />
           <Text
@@ -164,7 +165,20 @@ const Profile = ({ navigation, menu }) => {
         </>
       );
     }
-    return null;
+    return (
+      <View style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: scale(imageSize),
+        height: scale(imageSize),
+      }}
+      >
+        <ActivityIndicator size="large" color={colors.mainColor} />
+        <Text style={[styles.text, { fontSize: 24 }]}>
+          Carregando...
+        </Text>
+      </View>
+    );
   };
 
   return (
@@ -204,19 +218,12 @@ const Profile = ({ navigation, menu }) => {
 
         {/*  */}
 
-        <View style={{
-          alignItems: 'center',
-        }}
-        >
+        <View style={{ alignItems: 'center' }}>
           <View style={styles.userView}>
 
             <RenderInfo />
 
-            <View style={{
-              width: '100%',
-              alignItems: 'center',
-            }}
-            >
+            <View style={{ width: '100%', alignItems: 'center' }}>
 
               <UserOptions
                 leftIcon="user"
@@ -230,6 +237,7 @@ const Profile = ({ navigation, menu }) => {
               />
               <UserOptions
                 leftIcon="bell"
+                last={menu}
                 description="Minhas notificações"
                 onClick={() => { handleShowMessages(); }}
               />

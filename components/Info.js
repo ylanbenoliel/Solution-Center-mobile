@@ -17,6 +17,7 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 
 import {
@@ -36,7 +37,7 @@ const Info = ({ route, navigation }) => {
   const [phone, setPhone] = useState(details.phone);
   const [cpf, setCpf] = useState(details.cpf);
   const [rg, setRg] = useState(details.rg);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(null);
   const [image, setImage] = useState(photo);
 
   const [error, setError] = useState('');
@@ -52,21 +53,9 @@ const Info = ({ route, navigation }) => {
     ) {
       return setError('Campo vazio');
     }
-    if (!password) {
-      api.patch(`/users/${details.id}`, {
-        name,
-        email,
-        address,
-        cpf,
-        phone,
-        rg,
-      }).then(() => {
-        Keyboard.dismiss();
-        navigation.pop();
-      })
-        .catch(() => {});
-    } else {
-      api.patch(`/users/${details.id}`, {
+
+    const patchUser = api.patch(`/users/${details.id}`,
+      {
         name,
         email,
         address,
@@ -74,12 +63,32 @@ const Info = ({ route, navigation }) => {
         phone,
         rg,
         password,
-      }).then(() => {
+      });
+
+    const uriParts = image.uri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+    // eslint-disable-next-line no-undef
+    const uploadAvatarImage = new FormData();
+    uploadAvatarImage.append('avatar', {
+      name: `avatar.${fileType}`,
+      type: `image/${fileType}`,
+      uri:
+        image.uri,
+    });
+
+    const patchImage = api.put('/images', uploadAvatarImage, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    axios.all([patchUser, patchImage])
+      .then(() => {
         Keyboard.dismiss();
-        navigation.pop();
-      })
-        .catch(() => {});
-    }
+        navigation.push('UserProfile');
+      }).catch(() => {});
+
     return null;
   }
 
@@ -107,7 +116,7 @@ const Info = ({ route, navigation }) => {
       <View style={{ marginHorizontal: scale(16) }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingTop: 20 }}
+          contentContainerStyle={{ paddingVertical: scale(20) }}
         >
 
           <View style={styles.avatarContainer}>
@@ -227,7 +236,7 @@ const Info = ({ route, navigation }) => {
               style={[styles.text, styles.textInput]}
               value={password}
               placeholderTextColor={colors.disableColor}
-              placeholder="Vazia para permanecer"
+              placeholder="Preencha para alterar."
               onChangeText={(text) => {
                 setPassword(text);
               }}
