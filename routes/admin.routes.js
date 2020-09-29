@@ -7,16 +7,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Info from '@components/Info';
 
-import AdminAddEvent from '@screens/AdminAddEvent';
-import AdminAddUserToEvent from '@screens/AdminAddUserToEvent';
-import AdminEditEvent from '@screens/AdminEditEvent';
-import AdminPayment from '@screens/AdminPayment';
-import AdminProfile from '@screens/AdminProfile';
-import AdminUserList from '@screens/AdminUserList';
-import Agenda from '@screens/Agenda';
-import AgendaTable from '@screens/AgendaTable';
-import Notifications from '@screens/Notifications';
-import UserEventsDetails from '@screens/UserEventsDetails';
+import AdminAddEvent from '@screens/Admin/AdminAddEvent';
+import AdminAddUserToEvent from '@screens/Admin/AdminAddUserToEvent';
+import AdminEditEvent from '@screens/Admin/AdminEditEvent';
+import AdminPayment from '@screens/Admin/AdminPayment';
+import AdminProfile from '@screens/Admin/AdminProfile';
+import AdminUserList from '@screens/Admin/AdminUserList';
+import Agenda from '@screens/Admin/Agenda';
+import AgendaTable from '@screens/Admin/AgendaTable';
+import Notifications from '@screens/Admin/Notifications';
+import UserEventsDetails from '@screens/Admin/UserEventsDetails';
 
 import colors from '@constants/colors';
 

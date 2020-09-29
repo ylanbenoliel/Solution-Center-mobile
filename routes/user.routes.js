@@ -15,8 +15,8 @@ import {
   Plans,
   Contact,
 } from '@screens/Drawer/index';
-import Schedule from '@screens/Schedule';
-import UserProfile from '@screens/UserProfile';
+import Schedule from '@screens/User/Schedule';
+import UserProfile from '@screens/User/UserProfile';
 
 import colors from '@constants/colors';
 
