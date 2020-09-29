@@ -292,10 +292,10 @@ const AdminUserModal = ({
                 padding: scale(10),
                 borderRadius: scale(16),
               }}
-              // onPress={() => {
-              //   navigation.push('Pagamentos', { events: eventList });
-              //   onClose();
-              // }}
+              onPress={() => {
+                navigation.push('Mensagens', { user: userDetails.id });
+                onClose();
+              }}
             >
               <Feather
                 name="bell"

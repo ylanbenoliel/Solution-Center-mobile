@@ -10,6 +10,7 @@ import Info from '@components/Info';
 import AdminAddEvent from '@screens/Admin/AdminAddEvent';
 import AdminAddUserToEvent from '@screens/Admin/AdminAddUserToEvent';
 import AdminEditEvent from '@screens/Admin/AdminEditEvent';
+import AdminMessages from '@screens/Admin/AdminMessages';
 import AdminPayment from '@screens/Admin/AdminPayment';
 import AdminProfile from '@screens/Admin/AdminProfile';
 import AdminUserList from '@screens/Admin/AdminUserList';
@@ -83,6 +84,7 @@ function UserStack() {
       <Stack.Screen name="Adicionar" component={AdminAddEvent} options={{ title: 'Adicionar reserva' }} />
       <Stack.Screen name="Editar" component={AdminEditEvent} options={{ title: 'Editar reserva' }} />
       <Stack.Screen name="Pagamentos" component={AdminPayment} options={{ title: 'Horários não pagos' }} />
+      <Stack.Screen name="Mensagens" component={AdminMessages} options={{ title: 'Mensagens' }} />
     </Stack.Navigator>
   );
 }
