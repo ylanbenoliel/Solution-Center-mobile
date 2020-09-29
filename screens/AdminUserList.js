@@ -31,10 +31,10 @@ const AdminUserList = ({ navigation }) => {
   const [totalUsers, setTotalUsers] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [nameInput, setNameInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [eventList, setEventList] = useState(null);
   const [planList, setPlanList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -47,7 +47,6 @@ const AdminUserList = ({ navigation }) => {
       setTotalUsers(null);
       setFilteredUsers(null);
       setUserInfo(null);
-      setEventList(null);
     };
   }, []);
 
@@ -59,12 +58,15 @@ const AdminUserList = ({ navigation }) => {
   }, [!!error]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setSuccess(null);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [!!success]);
+
+  useEffect(() => {
     setFilteredUsers(null);
   }, [nameInput === '']);
-
-  // useEffect(() => {
-  //   setDebtEnabled(false);
-  // }, [setFilteredUsers || !filteredUsers]);
 
   function fetchUsers(refresh = null) {
     setFilteredUsers(null);
@@ -104,6 +106,7 @@ const AdminUserList = ({ navigation }) => {
 
   function handleSearch() {
     Keyboard.dismiss();
+
     if (filteredUsers) {
       setDebtEnabled(false);
       return setFilteredUsers(null);
@@ -115,6 +118,7 @@ const AdminUserList = ({ navigation }) => {
         }
         return false;
       });
+    setSuccess('Todos os usuários.');
     return setFilteredUsers(searchUsers);
   }
 
@@ -131,6 +135,7 @@ const AdminUserList = ({ navigation }) => {
       }))
       .filter((hasUser) => hasUser);
     setDebtEnabled(true);
+    setSuccess('Pendentes.');
     return setFilteredUsers(searchUsers);
   }
 
@@ -146,6 +151,7 @@ const AdminUserList = ({ navigation }) => {
       }
       return false;
     });
+    setSuccess('Inativos.');
     return setFilteredUsers(searchUsers);
   }
 
@@ -153,7 +159,6 @@ const AdminUserList = ({ navigation }) => {
   function handleOpenModal(user) {
     setLoading(true);
     setUserInfo(user);
-    setEventList(null);
     setPlanList(null);
 
     if (debtEnabled) {
@@ -170,20 +175,12 @@ const AdminUserList = ({ navigation }) => {
           setError(err.data.message);
         });
     } else {
-      const requestEvents = api.post('/admin/events/list/user', {
-        user: user.id,
-      });
-
       const requestPlans = api.get(`/plans/${user.id}`);
 
-      axios.all([requestEvents, requestPlans])
+      axios.all([requestPlans])
         .then(axios.spread((...responses) => {
-          const responseEvents = responses[0];
-          const responsePlans = responses[1];
-          const events = responseEvents.data.data;
-
+          const responsePlans = responses[0];
           setPlanList(Number(responsePlans.data.plan));
-          // setEventList(events);
           setLoading(false);
           setIsModalOpen(true);
         }))
@@ -292,7 +289,7 @@ const AdminUserList = ({ navigation }) => {
         </View>
 
         <View style={{ alignItems: 'center' }}>
-          <ShowInfo error={error} />
+          <ShowInfo error={error} success={success} />
         </View>
 
         <RenderSearchedUsers />
@@ -300,7 +297,6 @@ const AdminUserList = ({ navigation }) => {
         {!!userInfo && (
         <AdminUserModal
           userInfo={userInfo}
-          userEvents={eventList}
           userPlans={planList}
           isVisible={isModalOpen}
           onClose={() => handleCloseModal()}
