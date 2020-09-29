@@ -201,13 +201,13 @@ const AdminUserModal = ({
           </Picker>
 
           <View>
-            <Text style={styles.text}>Reservas</Text>
+            <Text style={styles.text}>Opções</Text>
           </View>
 
           <View
             style={{
               flex: 1,
-              width: 300,
+              width: scale(300),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-around',
@@ -275,6 +275,28 @@ const AdminUserModal = ({
             >
               <Feather
                 name="dollar-sign"
+                size={scale(28)}
+                color={colors.whiteColor}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: scale(60),
+                backgroundColor: colors.secondaryColor,
+                padding: scale(10),
+                borderRadius: scale(16),
+              }}
+              // onPress={() => {
+              //   navigation.push('Pagamentos', { events: eventList });
+              //   onClose();
+              // }}
+            >
+              <Feather
+                name="bell"
                 size={scale(28)}
                 color={colors.whiteColor}
               />
