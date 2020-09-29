@@ -106,8 +106,8 @@ const AdminPayment = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
 
       <View style={{ marginTop: 10 }}>
