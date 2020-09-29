@@ -24,8 +24,6 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 // import { PLAN_DATA } from '@constants/fixedValues';
 
-// #FIXME request plans and events only when admin clicks in buttons
-
 const UserDetails = ({ data, dataField }) => (
   <View style={{ marginVertical: verticalScale(2) }}>
     <Text style={styles.text}>
@@ -69,10 +67,7 @@ const AdminUserModal = ({
     })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao atualizar login do cliente.',
-          [
-            {
-              text: 'Ok',
-            },
+          [{ text: 'Ok' },
           ]);
       });
   }
@@ -88,12 +83,21 @@ const AdminUserModal = ({
     })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao atualizar permissões do cliente.',
-          [
-            {
-              text: 'Ok',
-            },
+          [{ text: 'Ok' },
           ]);
       });
+  }
+
+  function handleSeeDebts() {
+    api.post('/admin/events/list/debts', {
+      user: userInfo.id,
+    })
+      .then((res) => {
+        const events = res.data.data;
+        onClose();
+        navigation.navigate('Pagamentos', { events });
+      })
+      .catch(() => { });
   }
 
   const ToggleUserPermission = ({ status }) => (
@@ -146,7 +150,6 @@ const AdminUserModal = ({
     </View>
   );
 
-  /* #TODO send userInfo Userslist to not reload all users */
   return (
     <Modal isVisible={isVisible}>
       <View
@@ -196,7 +199,7 @@ const AdminUserModal = ({
             }}
           >
             <Picker.Item label="Hora avulsa" value={1} />
-            <Picker.Item label="Mensalidade" value={2} />
+            <Picker.Item label="Mensal" value={2} />
             <Picker.Item label="Fidelidade" value={3} />
           </Picker>
 
@@ -225,7 +228,7 @@ const AdminUserModal = ({
                 borderRadius: scale(16),
               }}
               onPress={() => {
-                navigation.push('Adicionar', { user: userDetails });
+                navigation.navigate('Adicionar', { user: userDetails });
                 onClose();
               }}
             >
@@ -247,7 +250,7 @@ const AdminUserModal = ({
                 borderRadius: scale(16),
               }}
               onPress={() => {
-                navigation.push('Eventos', { events: eventList, user: userDetails });
+                navigation.navigate('Eventos', { events: eventList, user: userDetails });
                 onClose();
               }}
             >
@@ -269,8 +272,7 @@ const AdminUserModal = ({
                 borderRadius: scale(16),
               }}
               onPress={() => {
-                navigation.push('Pagamentos', { events: eventList });
-                onClose();
+                handleSeeDebts();
               }}
             >
               <Feather

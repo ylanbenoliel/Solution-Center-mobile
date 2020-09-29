@@ -9,10 +9,11 @@ import { Feather } from '@expo/vector-icons';
 
 import { GeneralStatusBar, Separator, ListEmpty } from '@components';
 
+import { roomById } from '@helpers/functions';
+
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
-import { ROOM_DATA } from '@constants/fixedValues';
 
 // eslint-disable-next-line react/prop-types
 const AdminPayment = ({ route }) => {
@@ -42,65 +43,55 @@ const AdminPayment = ({ route }) => {
   }
 
   const ShowNotPaidEvent = ({ singleEvent }) => {
-    if (singleEvent.status_payment === 0) {
-      const onlyDate = singleEvent.date.split('T')[0];
-      const dateWithBars = onlyDate.split('-').reverse().join('/');
-      const roomName = ROOM_DATA.map((data) => {
-        if (data.room === Number(singleEvent.room)) { return data.name.split(' ')[0]; }
-        return false;
-      }).filter((element) => element);
+    const onlyDate = singleEvent.date.split('T')[0];
+    const dateWithBars = onlyDate.split('-').reverse().join('/');
+    const roomName = roomById(singleEvent.room);
+    return (
+      <View
+        key={singleEvent.id}
+        style={styles.eventsNotPaidContainer}
+      >
+        <View style={{ flexDirection: 'column' }}>
+          <Text style={styles.text}>
+            Data:
+            {' '}
+            {dateWithBars}
+          </Text>
+          <Text style={styles.text}>
+            Hora:
+            {' '}
+            {singleEvent.time}
+          </Text>
+          <Text style={styles.text}>
+            Sala:
+            {' '}
+            {roomName}
+          </Text>
+        </View>
 
-      return (
-        <>
-          <View
-            key={singleEvent.id}
-            style={styles.eventsNotPaidContainer}
-          >
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.text}>
-                Data:
-                {' '}
-                {dateWithBars}
-              </Text>
-              <Text style={styles.text}>
-                Hora:
-                {' '}
-                {singleEvent.time}
-              </Text>
-              <Text style={styles.text}>
-                Sala:
-                {' '}
-                {roomName}
-              </Text>
-            </View>
-
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={[styles.text]}>Pgto.</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  Alert.alert('Aviso',
-                    `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h, Dia: ${dateWithBars}, Sala: ${roomName}?`,
-                    [{
-                      text:
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={[styles.text]}>Pgto.</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert('Aviso',
+                `O usuário pagou a reserva Hora: ${singleEvent.time.split(':')[0]}h, Dia: ${dateWithBars}, Sala: ${roomName}?`,
+                [{
+                  text:
                     'Cancelar',
-                      style: 'cancel',
-                    },
-                    {
-                      text: 'Ok',
-                      onPress: () => { confirmEventPayment(singleEvent.id); },
-                    }]);
-                }}
-              >
+                  style: 'cancel',
+                },
+                {
+                  text: 'Ok',
+                  onPress: () => { confirmEventPayment(singleEvent.id); },
+                }]);
+            }}
+          >
 
-                <Feather name="x" color={colors.errorColor} size={scale(28)} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <Separator />
-        </>
-      );
-    }
-    return null;
+            <Feather name="x" color={colors.errorColor} size={scale(28)} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -117,6 +108,7 @@ const AdminPayment = ({ route }) => {
           contentContainerStyle={{ paddingBottom: verticalScale(80) }}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => (<Separator />)}
           renderItem={({ item }) => (
             <ShowNotPaidEvent
               singleEvent={item}
