@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 import React, {
-  useState, useEffect, useRef,
+  useState, useEffect, useRef, useContext,
 } from 'react';
 import {
   View,
@@ -15,6 +15,9 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
+  Vibration,
+  Alert,
 } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -29,6 +32,9 @@ import {
   add,
   isAfter,
 } from 'date-fns';
+import { Notifications } from 'expo';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 import {
   GeneralStatusBar,
@@ -37,6 +43,8 @@ import {
   RoomButton,
 } from '@components';
 import EventModal from '@components/EventModal';
+
+import AuthContext from '@contexts/auth';
 
 import { removeDuplicates } from '@helpers/functions';
 
@@ -58,6 +66,7 @@ const INITIALDATERANGE = [
 ];
 
 export default function Schedule({ navigation }) {
+  const { email } = useContext(AuthContext);
   const calendarRef = useRef();
 
   const [datesBlacklist, setDatesBlacklist] = useState([
@@ -71,6 +80,8 @@ export default function Schedule({ navigation }) {
   const [roomName, setRoomName] = useState('');
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [date, setDate] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -82,8 +93,7 @@ export default function Schedule({ navigation }) {
   }, [error]);
 
   useEffect(() => {
-    api
-      .get('/dates')
+    api.get('/dates')
       .then((response) => {
         const { maxDate, minDate } = response.data;
         const rangeData = [
@@ -102,6 +112,55 @@ export default function Schedule({ navigation }) {
         setError('Erro ao buscar dias disponíveis.');
       });
   }, []);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (!expoPushToken.length) {
+      return;
+    }
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Não será possível receber notificações');
+        return;
+      }
+      token = await Notifications.getExpoPushTokenAsync();
+
+      if (token) {
+        await api.post('/notification/register', { email, token });
+      }
+      setExpoPushToken(token);
+    } else {
+      Alert.alert('Somente em dispositivos físicos');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+  }
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+    Notifications.addListener(handleNotification);
+    return () => {
+    };
+  }, []);
+
+  async function handleNotification(not) {
+    Vibration.vibrate();
+    // console.log(notification);
+    setNotification(not);
+  }
 
   function disableWeekends(startDate, endDate) {
     const weekends = eachWeekendOfInterval({
