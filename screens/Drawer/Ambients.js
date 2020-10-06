@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/prop-types */
@@ -69,10 +70,8 @@ export default function Ambients({ navigation }) {
     require('@assets/rooms/carlos-min.jpeg'),
   ];
 
-  const Slide = ({
-    name, images, icons,
-  }) => (
-    <View>
+  const Slide = ({ name, images, icons }) => (
+    <>
       <View style={{ alignItems: 'center' }}>
         <Text style={[styles.text, { fontSize: scale(20) }]}>
           {name}
@@ -87,28 +86,37 @@ export default function Ambients({ navigation }) {
       />
 
       <View style={styles.iconContainer}>
-        {icons.map((icon) => {
+        {icons.map((icon, index) => {
           if (icon === 'spa') {
-            return <Spa width={scale(24)} height={scale(24)} />;
+            return <Spa key={index} width={scale(24)} height={scale(24)} />;
           }
           if (icon === 'armchair') {
-            return <Armchair width={scale(24)} height={scale(24)} />;
+            return <Armchair key={index} width={scale(24)} height={scale(24)} />;
           }
           if (icon === 'chair') {
-            return <Chair width={scale(24)} height={scale(24)} fill={colors.secondaryColor} />;
+            return (
+              <Chair
+                key={index}
+                width={scale(24)}
+                height={scale(24)}
+                fill={colors.secondaryColor}
+              />
+            );
           }
 
           return (
-            <FontAwesome5
-              name={icon}
-              size={scale(24)}
-              color={colors.secondaryColor}
-            />
+            <View key={index}>
+              <FontAwesome5
+                name={icon}
+                size={scale(24)}
+                color={colors.secondaryColor}
+              />
+            </View>
           );
         })}
 
       </View>
-    </View>
+    </>
   );
 
   const Description = ({ text, icon }) => (
@@ -165,7 +173,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[0].room}
                 name={ROOM_DATA[0].name}
                 images={clarice}
                 icons={[
@@ -179,7 +186,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[1].room}
                 name={ROOM_DATA[1].name}
                 images={carlos}
                 icons={[
@@ -192,7 +198,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[2].room}
                 name={ROOM_DATA[2].name}
                 images={cecilia}
                 icons={[
@@ -204,7 +209,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[3].room}
                 name={ROOM_DATA[3].name}
                 images={rui}
                 icons={[
@@ -218,7 +222,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[4].room}
                 name={ROOM_DATA[4].name}
                 images={machado}
                 icons={[
@@ -233,7 +236,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[5].room}
                 name={ROOM_DATA[5].name}
                 images={monteiro}
                 icons={[
@@ -245,7 +247,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[6].room}
                 name={ROOM_DATA[6].name}
                 images={luis}
                 icons={[
@@ -258,7 +259,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[7].room}
                 name={ROOM_DATA[7].name}
                 images={cora}
                 icons={[
@@ -270,7 +270,6 @@ export default function Ambients({ navigation }) {
 
             <View style={{ width, height }}>
               <Slide
-                key={ROOM_DATA[8].room}
                 name={ROOM_DATA[8].name}
                 images={carolina}
                 icons={[
