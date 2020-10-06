@@ -23,6 +23,7 @@ import { GeneralStatusBar, HeaderDrawer } from '@components';
 import backgroundLogo from '@assets/LogoHorizontal.png';
 import Armchair from '@assets/svgs/armchair.svg';
 import Chair from '@assets/svgs/chair.svg';
+import Fixture from '@assets/svgs/fixture.svg';
 import Spa from '@assets/svgs/spa.svg';
 
 import colors from '@constants/colors';
@@ -70,10 +71,12 @@ export default function Ambients({ navigation }) {
     require('@assets/rooms/carlos-min.jpeg'),
   ];
 
-  const Slide = ({ name, images, icons }) => (
+  const Slide = ({
+    name, images, icons, extra,
+  }) => (
     <>
       <View style={{ alignItems: 'center' }}>
-        <Text style={[styles.text, { fontSize: scale(20) }]}>
+        <Text style={[styles.text, { fontSize: scale(22) }]}>
           {name}
         </Text>
       </View>
@@ -103,6 +106,16 @@ export default function Ambients({ navigation }) {
               />
             );
           }
+          if (icon === 'fixture') {
+            return (
+              <Fixture
+                key={index}
+                width={scale(24)}
+                height={scale(24)}
+                fill={colors.secondaryColor}
+              />
+            );
+          }
 
           return (
             <View key={index}>
@@ -114,8 +127,12 @@ export default function Ambients({ navigation }) {
             </View>
           );
         })}
-
       </View>
+      {extra && (
+      <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
+        <Text style={styles.text}>*A sala dispõe de luminária e mocho</Text>
+      </View>
+      )}
     </>
   );
 
@@ -180,7 +197,9 @@ export default function Ambients({ navigation }) {
                   'armchair',
                   'chair',
                   'chair',
+                  'fixture',
                 ]}
+                extra
               />
             </View>
 
@@ -278,7 +297,9 @@ export default function Ambients({ navigation }) {
                   'chair',
                   'chair',
                   'tv',
+                  'fixture',
                 ]}
+                extra
               />
             </View>
 
