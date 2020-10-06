@@ -290,33 +290,6 @@ export default function Schedule({ navigation }) {
     return null;
   };
 
-  const RenderCalendar = () => (
-    <CalendarStrip
-      ref={calendarRef}
-      scrollable
-      startingDate={INITIALDATE}
-      selectedDate={INITIALDATE}
-      locale={LOCALE}
-      calendarAnimation={{ type: 'sequence', duration: 50 }}
-      daySelectionAnimation={{
-        type: 'border',
-        duration: 100,
-        borderWidth: 3,
-        borderHighlightColor: colors.accentColor,
-      }}
-      style={styles.calendarStyle}
-      calendarHeaderStyle={styles.text}
-      dateNumberStyle={styles.dateStyle}
-      dateNameStyle={styles.dateStyle}
-      highlightDateNumberStyle={styles.highlightDateStyle}
-      highlightDateNameStyle={styles.highlightDateStyle}
-      disabledDateNameStyle={styles.disabledDateStyle}
-      disabledDateNumberStyle={styles.disabledDateStyle}
-      datesBlacklist={datesBlacklist}
-      datesWhitelist={datesWhitelist}
-    />
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -340,7 +313,30 @@ export default function Schedule({ navigation }) {
         >
 
           <View style={styles.calendarStrip}>
-            <RenderCalendar />
+            <CalendarStrip
+              ref={calendarRef}
+              scrollable
+              startingDate={INITIALDATE}
+              selectedDate={INITIALDATE}
+              locale={LOCALE}
+              calendarAnimation={{ type: 'sequence', duration: 50 }}
+              daySelectionAnimation={{
+                type: 'border',
+                duration: 100,
+                borderWidth: 3,
+                borderHighlightColor: colors.accentColor,
+              }}
+              style={styles.calendarStyle}
+              calendarHeaderStyle={styles.text}
+              dateNumberStyle={styles.dateStyle}
+              dateNameStyle={styles.dateStyle}
+              highlightDateNumberStyle={styles.highlightDateStyle}
+              highlightDateNameStyle={styles.highlightDateStyle}
+              disabledDateNameStyle={styles.disabledDateStyle}
+              disabledDateNumberStyle={styles.disabledDateStyle}
+              datesBlacklist={datesBlacklist}
+              datesWhitelist={datesWhitelist}
+            />
           </View>
         </View>
 
