@@ -174,35 +174,36 @@ const AgendaTable = ({ route, navigation }) => {
       </View>
 
       <ScrollView
-        style={{ margin: '3%' }}
-        showsVerticalScrollIndicator={false}
+        horizontal
+        style={{ marginHorizontal: '3%', paddingBottom: '2%' }}
+        showsHorizontalScrollIndicator={false}
+
       >
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ flexDirection: 'column' }}
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={[0]}
         >
-
           <TableHeader rooms={tableHead} />
-          <View style={styles.cols}>
 
+          <View style={styles.cols}>
             <HoursColumn hours={hours} />
 
             <View style={styles.gridContainer}>
-              <FlatList
-                data={eventTable}
-                extraData={refreshFlatList}
-                numColumns={ROOM_IDS.length}
-                keyExtractor={(item) => item.index.toString()}
-                  // ListHeaderComponent={() => (<TableHeader rooms={tableHead} />)}
-                  // stickyHeaderIndices={[0]}
-                renderItem={({ item }) => (
-                  <Cell
-                    {...item}
-                    key={item.index.toString()}
-                  />
-                )}
-              />
+              <ScrollView horizontal>
+                <FlatList
+                  data={eventTable}
+                  extraData={refreshFlatList}
+                  numColumns={ROOM_IDS.length}
+                  keyExtractor={(item) => item.index.toString()}
+                  renderItem={({ item }) => (
+                    <Cell
+                      {...item}
+                      key={item.index.toString()}
+                    />
+                  )}
+                />
+              </ScrollView>
+
             </View>
           </View>
         </ScrollView>
@@ -214,10 +215,11 @@ const AgendaTable = ({ route, navigation }) => {
   function Cell({
     name, time, status_payment, room, index, date: cellDate,
   }) {
+    const backgroundColor = Number(time.split(':')[0]) % 2 === 0 ? { backgroundColor: '#ccc' } : { backgroundColor: '#aaa' };
     if (name.length === 0) {
       return (
         <TouchableOpacity
-          style={[styles.cellStyle]}
+          style={[styles.cellStyle, backgroundColor]}
           onPress={() => {
             Alert.alert('Deseja Adicionar',
               `Usuário na sala ${roomById(room)}, hora: ${time.split(':')[0]}h?`, [{
@@ -232,9 +234,7 @@ const AgendaTable = ({ route, navigation }) => {
       );
     }
     return (
-      <View
-        style={[styles.cellStyle]}
-      >
+      <View style={[styles.cellStyle, backgroundColor]}>
         <TouchableOpacity
           style={{
             flex: 2, width: '100%', justifyContent: 'center',
