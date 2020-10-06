@@ -36,39 +36,30 @@ const { width } = Dimensions.get('window');
 export default function Ambients({ navigation }) {
   const clarice = [
     require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
   ];
   const carlos = [
-    require('@assets/rooms/clarice-min.jpeg'),
     require('@assets/rooms/carlos-min.jpeg'),
   ];
   const cecilia = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/cecilia-min.jpeg'),
   ];
   const rui = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/rui-min.jpeg'),
   ];
   const machado = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/machado-min.jpeg'),
   ];
   const monteiro = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/monteiro-min.jpeg'),
   ];
   const luis = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/luis-min.jpeg'),
   ];
   const cora = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/cora-min.jpeg'),
   ];
   const carolina = [
-    require('@assets/rooms/clarice-min.jpeg'),
-    require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/carolina-min.jpeg'),
   ];
 
   const Slide = ({
@@ -130,7 +121,7 @@ export default function Ambients({ navigation }) {
       </View>
       {extra && (
       <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
-        <Text style={styles.text}>*A sala dispõe de luminária e mocho</Text>
+        <Text style={styles.text}>*A sala dispõe de luminária e mocho.</Text>
       </View>
       )}
     </>
