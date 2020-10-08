@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "0.12.2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -28,13 +28,20 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.solucoesorigami.solutioncenter",
+      "bundleIdentifier": "br.com.solutioncenter.solutioncenter",
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "É necessário para salvar foto de perfil."
+      }
     },
     "android": {
-      "package": "com.solucoesorigami.solutioncenter",
-      "versionCode": 1
+      "package": "br.com.solutioncenter.solutioncenter",
+      "versionCode": 1,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "packagerOpts": {
       "config": "metro.config.js",
