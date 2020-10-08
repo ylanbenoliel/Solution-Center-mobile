@@ -108,9 +108,9 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
       <GeneralStatusBar
-        backgroundColor="rgba(255,255,255,0.1)"
+        backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
 
