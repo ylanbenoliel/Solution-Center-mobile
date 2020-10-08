@@ -35,18 +35,25 @@ const AdminAddEvent = ({ route }) => {
     api.post('/admin/events/new', {
       user: user.id,
       date: daySelected,
-      time: hour,
+      time: `${hour}:00:00`,
       room,
     }).then(() => {
-      Alert.alert('', 'Reserva salva', [{
+      Alert.alert('', 'Reserva salva.', [{
         text: 'Ok',
-        // onPress: () => { },
       }]);
     })
-      .catch(() => {
-        Alert.alert('', 'Erro ao salvar', [{
+      .catch((e) => {
+        if (e.response.data) {
+          return Alert.alert('', `${e.response.data.message}`, [{
+            text: 'Ok',
+          }]);
+        } if (e.request) {
+          return Alert.alert('', 'Erro de conexão.', [{
+            text: 'Ok',
+          }]);
+        }
+        return Alert.alert('', 'Erro ao salvar.', [{
           text: 'Ok',
-        // onPress: () => { },
         }]);
       });
   }
@@ -54,8 +61,8 @@ const AdminAddEvent = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
 
       <View style={styles.calendarContainer}>

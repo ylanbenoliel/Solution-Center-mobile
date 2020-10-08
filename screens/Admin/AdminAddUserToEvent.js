@@ -1,4 +1,3 @@
-/* eslint-disable no-else-return */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
@@ -65,15 +64,14 @@ const AdminAddUserToEvent = ({ route, navigation }) => {
           return Alert.alert('', `${e.response.data.message}`, [{
             text: 'Ok',
           }]);
-        } else if (e.request) {
-          return Alert.alert('', 'Erro de conexão', [{
-            text: 'Ok',
-          }]);
-        } else {
-          return Alert.alert('', 'Erro ao salvar', [{
+        } if (e.request) {
+          return Alert.alert('', 'Erro de conexão.', [{
             text: 'Ok',
           }]);
         }
+        return Alert.alert('', 'Erro ao salvar.', [{
+          text: 'Ok',
+        }]);
       });
   }
 
