@@ -91,10 +91,9 @@ export default function Login({ navigation }) {
       .catch((e) => {
         setLoading(false);
         if (e.response) {
-          return setError('Usuário não encontrado');
+          return setError(`${e.response.data.message}`);
         }
         if (e.request) {
-          setLoading(false);
           return setError('Erro na conexão.');
         }
         return null;
