@@ -41,12 +41,14 @@ const UserEventsModal = ({ isVisible, onClose }) => {
   const [totalPages, setTotalPages] = useState(null);
   const [label, setLabel] = useState('Carregando...');
   const [messages, setMessages] = useState([]);
+  const [refreshList, setRefreshList] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       getData();
+      setRefreshList(!refreshList);
     }, 2000);
-  }, []);
+  }, [!!isVisible]);
 
   useEffect(() => {
     getData();
@@ -106,6 +108,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
 
         <FlatList
           data={messages}
+          extraData={refreshList}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <MessageInfo key={item.id} message={item.message} date={item.created_at} />

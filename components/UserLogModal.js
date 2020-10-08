@@ -39,12 +39,14 @@ const UserLogModal = ({ isVisible, onClose }) => {
   const [totalPages, setTotalPages] = useState(null);
   const [label, setLabel] = useState('Carregando...');
   const [logs, setLogs] = useState([]);
+  const [refreshList, setRefreshList] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       getData();
+      setRefreshList(!refreshList);
     }, 2000);
-  }, []);
+  }, [!!isVisible]);
 
   useEffect(() => {
     getData();
@@ -103,6 +105,7 @@ const UserLogModal = ({ isVisible, onClose }) => {
 
         <FlatList
           data={logs}
+          extraData={refreshList}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <LogInfo key={item.id} log={item.log} date={item.created_at} />
