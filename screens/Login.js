@@ -96,7 +96,7 @@ export default function Login({ navigation }) {
         if (e.request) {
           return setError('Erro na conexão.');
         }
-        return null;
+        return setError('Algo deu errado.');
       });
     return null;
   }
@@ -203,7 +203,7 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // style={styles.buttonContainer}
+            style={[styles.buttonContainer, { backgroundColor: 'transparent' }]}
             onPress={() => {
               handleRegister();
             }}
