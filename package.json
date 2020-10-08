@@ -17,14 +17,12 @@
     "@use-expo/font": "^2.0.0",
     "axios": "^0.19.2",
     "date-fns": "^2.11.0",
-    "date-fns-tz": "^1.0.10",
     "expo": "~36.0.0",
     "expo-camera": "~8.0.0",
     "expo-constants": "~8.0.0",
     "expo-image-picker": "~8.0.1",
     "expo-linear-gradient": "~8.0.0",
     "expo-permissions": "~8.0.0",
-    "moment": "^2.24.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -39,9 +37,7 @@
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-size-matters": "^0.3.0",
     "react-native-svg": "9.13.3",
-    "react-native-table-component": "^1.2.1",
-    "react-native-web": "~0.11.7",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.19"
+    "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
