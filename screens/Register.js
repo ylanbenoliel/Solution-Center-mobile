@@ -20,7 +20,9 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 
 import { GeneralStatusBar, ShowInfo } from '@components';
 
@@ -61,6 +63,19 @@ export default function Register({ navigation }) {
     }, 2200);
     return () => clearTimeout(timer);
   }, [success]);
+
+  useEffect(() => {
+    getPermissionAsync();
+  }, []);
+
+  const getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        Alert.alert('Precisamos do acesso à galeria para upload de foto.');
+      }
+    }
+  };
 
   async function sendAvatarImage(userId) {
     const apiUrl = `${url}/users/${userId}/avatar`;
