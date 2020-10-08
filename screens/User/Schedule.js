@@ -116,9 +116,6 @@ export default function Schedule({ navigation }) {
 
   async function registerForPushNotificationsAsync() {
     let token;
-    if (!expoPushToken.length) {
-      return;
-    }
     if (Constants.isDevice) {
       const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
       let finalStatus = existingStatus;
@@ -127,7 +124,7 @@ export default function Schedule({ navigation }) {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        Alert.alert('Não será possível receber notificações');
+        Alert.alert('Não será possível receber notificações.');
         return;
       }
       token = await Notifications.getExpoPushTokenAsync();
@@ -137,7 +134,7 @@ export default function Schedule({ navigation }) {
       }
       setExpoPushToken(token);
     } else {
-      Alert.alert('Somente em dispositivos físicos');
+      Alert.alert('Somente em dispositivos físicos.');
     }
 
     if (Platform.OS === 'android') {
