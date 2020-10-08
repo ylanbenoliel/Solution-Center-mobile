@@ -112,7 +112,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
         const incomingEvents = (res.data.data);
         if (page === 1) {
           if (incomingEvents.length === 0) {
-            return setEvents('Sem reservas');
+            return setLabel('Sem reservas.');
           }
           return setEvents(incomingEvents);
         }
@@ -159,7 +159,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
           ItemSeparatorComponent={() => (<Separator />)}
           onEndReachedThreshold={0.5}
           onEndReached={() => handleLoadMore()}
-          ListEmptyComponent={<ListEmpty label={label} />}
+          ListEmptyComponent={<ListEmpty modal label={label} />}
         />
 
       </View>
