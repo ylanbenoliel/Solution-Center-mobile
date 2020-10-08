@@ -83,6 +83,11 @@ export default function Schedule({ navigation }) {
   const [notification, setNotification] = useState(false);
 
   useEffect(() => {
+    Alert.alert('Aviso!',
+      'Mudanças podem ocorrer em seu agendamento, mediante aviso prévio da gerência.');
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setError(null);
     }, 2500);
