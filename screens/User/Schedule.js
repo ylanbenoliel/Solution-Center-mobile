@@ -29,7 +29,6 @@ import {
   isSunday,
   formatISO,
   add,
-  isAfter,
 } from 'date-fns';
 import { Notifications } from 'expo';
 import Constants from 'expo-constants';
@@ -44,8 +43,6 @@ import {
 import EventModal from '@components/EventModal';
 
 import AuthContext from '@contexts/auth';
-
-import { removeDuplicates } from '@helpers/functions';
 
 import { api } from '@services/api';
 
@@ -174,79 +171,6 @@ export default function Schedule({ navigation }) {
     return weekends;
   }
 
-  function transformEventToSchedule(hrs, evts, room, dt) {
-    if (evts.length === 0) {
-      evts.push({
-        event: '',
-        user: '',
-        room: '',
-        date: '',
-        time: '',
-        code: '',
-      });
-    }
-
-    const currDate = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate(),
-      Number(new Date().getHours()),
-      new Date().getMinutes(),
-    );
-
-    const dateArray = dt.split('-');
-
-    const eventRawList = hrs.flatMap((hour) => evts
-      .flatMap((event) => {
-        if (event.time.includes(hour) && event.user) {
-          return {
-            ...event,
-          };
-        }
-
-        const noEvent = {
-          event: `${Math.random()}`,
-          user: '',
-          room: `${room}`,
-          date: `${dt}`,
-          time: `${hour}:00:00`,
-        };
-
-        const eventDate = new Date(
-          Number(dateArray[0]),
-          Number(dateArray[1]) - 1,
-          Number(dateArray[2]),
-          Number(hour),
-        );
-
-        if ((eventDate.toDateString() === currDate.toDateString())) {
-          if (eventDate.getHours() > currDate.getHours()) {
-            return {
-              ...noEvent,
-              code: '1',
-            };
-          }
-          return {
-            ...noEvent,
-            code: '4',
-          };
-        }
-        if (isAfter(eventDate, currDate)) {
-          return {
-            ...noEvent,
-            code: '1',
-          };
-        }
-        return {
-          ...noEvent,
-          code: '4',
-        };
-      })
-      .sort((prev, next) => next.event - prev.event));
-    const eventList = removeDuplicates(eventRawList, 'time');
-    setScheduleList(eventList);
-  }
-
   function getEventsByDate(room) {
     setLoading(true);
 
@@ -265,20 +189,16 @@ export default function Schedule({ navigation }) {
         room,
       })
       .then((response) => {
-        const { hoursInterval, validEvents, active } = response.data;
+        const { validEvents, active } = response.data;
         if (active === 0) {
           return setError('Usuário pendente de liberação.');
         }
-        transformEventToSchedule(
-          hoursInterval,
-          validEvents,
-          room,
-          calendarDateFormatted,
-        );
+
+        setScheduleList(validEvents);
         setDate(calendarDateFormatted);
         setIsEventModalOpen(true);
       })
-      .catch(() => {})
+      .catch(() => { setError('Erro ao buscar reservas.'); })
       .finally(() => {
         setLoading(false);
       });
@@ -427,7 +347,7 @@ export default function Schedule({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#eee',
+    backgroundColor: colors.whiteColor,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
