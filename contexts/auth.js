@@ -49,11 +49,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('default', {
-        name: 'default',
+      Notifications.createChannelAndroidAsync('Notifications', {
+        name: 'Notifications',
         sound: true,
         priority: 'max',
-        vibrate: [0, 250, 250, 250],
+        vibrate: true,
       });
     }
   }
