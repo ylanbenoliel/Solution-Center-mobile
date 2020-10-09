@@ -44,10 +44,8 @@ export const AuthProvider = ({ children }) => {
       token = await Notifications.getExpoPushTokenAsync();
 
       if (token) {
-        api.post('/notification/register', { eMail, token }).then(() => {}).catch(() => {});
+        api.post('/notification/register', { email: eMail, token }).then(() => {}).catch(() => {});
       }
-    } else {
-      Alert.alert('Somente em dispositivos físicos.');
     }
 
     if (Platform.OS === 'android') {
