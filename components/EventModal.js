@@ -146,7 +146,11 @@ const EventModal = ({
   const ScheduleItemMemoized = React.memo(ScheduleItem);
 
   return (
-    <Modal isVisible={isVisible}>
+    <Modal
+      isVisible={isVisible}
+      onBackButtonPress={() => { onClose(); }}
+      onBackdropPress={() => { onClose(); }}
+    >
       <View style={styles.container}>
 
         <View style={styles.header}>
