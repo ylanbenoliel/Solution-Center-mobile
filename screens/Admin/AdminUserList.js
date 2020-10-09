@@ -108,6 +108,7 @@ const AdminUserList = ({ navigation }) => {
     Keyboard.dismiss();
 
     if (filteredUsers) {
+      setSuccess('Todos os usuários.');
       setDebtEnabled(false);
       return setFilteredUsers(null);
     }
@@ -118,13 +119,13 @@ const AdminUserList = ({ navigation }) => {
         }
         return false;
       });
-    setSuccess('Todos os usuários.');
     return setFilteredUsers(searchUsers);
   }
 
   function handleSeeDebts() {
     Keyboard.dismiss();
     if (filteredUsers) {
+      setSuccess('Todos os usuários.');
       setDebtEnabled(false);
       return setFilteredUsers(null);
     }
@@ -142,6 +143,7 @@ const AdminUserList = ({ navigation }) => {
   function handleSeeInactiveUsers() {
     Keyboard.dismiss();
     if (filteredUsers) {
+      setSuccess('Todos os usuários.');
       setDebtEnabled(false);
       return setFilteredUsers(null);
     }
