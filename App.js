@@ -1,10 +1,10 @@
 /* eslint-disable global-require */
 import React, { useEffect, useState } from 'react';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Vibration } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
-import { AppLoading } from 'expo';
+import { AppLoading, Notifications } from 'expo';
 
 import { AuthProvider } from './contexts/auth';
 import Route from './routes/Route';
@@ -16,6 +16,7 @@ export default function App() {
   useEffect(() => {
     getToken();
     getPrivilegies();
+    Notifications.addListener(handleNotification);
   }, []);
 
   async function getToken() {
@@ -40,6 +41,9 @@ export default function App() {
     } catch (error) {
       setAdmin(null);
     }
+  }
+  async function handleNotification() {
+    Vibration.vibrate();
   }
 
   const [fontsLoaded] = useFonts({
