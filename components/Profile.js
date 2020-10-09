@@ -182,66 +182,67 @@ const Profile = ({ navigation, menu }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#eee' }}>
+    <>
       <GeneralStatusBar
-        backgroundColor="white"
+        backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
 
-      <ImageBackground
-        source={require('@assets/mapa-fundo.png')}
-        style={{ width: '100%', height: '50%' }}
-      >
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginHorizontal: 16,
-        }}
+        <ImageBackground
+          source={require('@assets/mapa-fundo.png')}
+          style={{ width: '100%', height: '60%', marginTop: -10 }}
         >
-          {menu ? (
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Feather
-                name="menu"
-                size={scale(32)}
-                color={colors.navigationColor}
-              />
-            </TouchableOpacity>
-          ) : (<View style={{ width: scale(32) }} />)}
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginHorizontal: 16,
+          }}
+          >
+            {menu ? (
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <Feather
+                  name="menu"
+                  size={scale(32)}
+                  color={colors.navigationColor}
+                />
+              </TouchableOpacity>
+            ) : (<View style={{ width: scale(32) }} />)}
 
-          <View style={styles.logoContainer}>
-            <Logo width={200} height={45} />
+            <View style={styles.logoContainer}>
+              <Logo width={200} height={45} />
+            </View>
+
+            <View style={{ width: scale(32) }} />
           </View>
 
-          <View style={{ width: scale(32) }} />
-        </View>
+          {/*  */}
 
-        {/*  */}
+          <View style={{ alignItems: 'center' }}>
+            <View style={styles.userView}>
 
-        <View style={{ alignItems: 'center' }}>
-          <View style={styles.userView}>
+              <RenderInfo />
 
-            <RenderInfo />
+              <View style={{ width: '100%', alignItems: 'center' }}>
 
-            <View style={{ width: '100%', alignItems: 'center' }}>
-
-              <UserOptions
-                leftIcon="user"
-                description="Editar meu perfil"
-                onClick={() => handleOpenInfoStack()}
-              />
-              <UserOptions
-                leftIcon="book-open"
-                description="Minhas reservas"
-                onClick={() => handleShowEvents()}
-              />
-              <UserOptions
-                leftIcon="bell"
-                last={menu}
-                description="Minhas notificações"
-                onClick={() => { handleShowMessages(); }}
-              />
-              {!menu
+                <UserOptions
+                  leftIcon="user"
+                  description="Editar meu perfil"
+                  onClick={() => handleOpenInfoStack()}
+                />
+                <UserOptions
+                  leftIcon="book-open"
+                  description="Minhas reservas"
+                  onClick={() => handleShowEvents()}
+                />
+                <UserOptions
+                  leftIcon="bell"
+                  last={menu}
+                  description="Minhas notificações"
+                  onClick={() => { handleShowMessages(); }}
+                />
+                {!menu
               && (
               <UserOptions
                 last
@@ -251,38 +252,39 @@ const Profile = ({ navigation, menu }) => {
               />
               )}
 
-              <TouchableOpacity
-                style={styles.signOutButton}
-                onPress={() => { handleSignOut(); }}
-              >
-                <Text
-                  style={[styles.text, { color: colors.disableColor }]}
+                <TouchableOpacity
+                  style={styles.signOutButton}
+                  onPress={() => { handleSignOut(); }}
                 >
-                  Sair da conta
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={[styles.text, { color: colors.disableColor }]}
+                  >
+                    Sair da conta
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
 
-      {/*  */}
-      <UserEventsModal
-        isVisible={isModalEventOpen}
-        onClose={() => handleCloseModal(setIsModalEventOpen)}
-      />
+        {/*  */}
+        <UserEventsModal
+          isVisible={isModalEventOpen}
+          onClose={() => handleCloseModal(setIsModalEventOpen)}
+        />
 
-      <UserMessagesModal
-        isVisible={isModalMessageOpen}
-        onClose={() => handleCloseModal(setIsModalMessageOpen)}
-      />
+        <UserMessagesModal
+          isVisible={isModalMessageOpen}
+          onClose={() => handleCloseModal(setIsModalMessageOpen)}
+        />
 
-      <UserLogModal
-        isVisible={isModalLogOpen}
-        onClose={() => handleCloseModal(setIsModalLogOpen)}
-      />
+        <UserLogModal
+          isVisible={isModalLogOpen}
+          onClose={() => handleCloseModal(setIsModalLogOpen)}
+        />
 
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 

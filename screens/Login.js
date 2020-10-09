@@ -276,6 +276,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: verticalScale(48),
     justifyContent: 'center',
-    marginTop: verticalScale(20),
+    // marginTop: verticalScale(20),
   },
 });

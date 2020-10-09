@@ -174,8 +174,8 @@ export default function Register({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
+        backgroundColor={colors.whiteColor}
+        barStyle="dark-content"
       />
 
       <ScrollView>
