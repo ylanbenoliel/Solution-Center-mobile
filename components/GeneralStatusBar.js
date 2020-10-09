@@ -1,19 +1,22 @@
 import React from 'react';
 import {
-  StatusBar,
+  StatusBar, Platform, View, StyleSheet,
 } from 'react-native';
 
-// const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
 // eslint-disable-next-line react/prop-types
 const GeneralStatusBar = ({ backgroundColor, ...props }) => (
-  <StatusBar backgroundColor={backgroundColor} {...props} />
+  <View style={styles.statusBar}>
+    <StatusBar backgroundColor={backgroundColor} {...props} />
+  </View>
 );
 
-// const styles = StyleSheet.create({
-//   statusBar: {
-//     height: STATUSBAR_HEIGHT,
-//   },
-// });
+const styles = StyleSheet.create({
+  statusBar: {
+    height: STATUSBAR_HEIGHT,
+
+  },
+});
 
 export default GeneralStatusBar;
