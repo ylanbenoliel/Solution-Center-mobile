@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList, Alert,
 } from 'react-native';
@@ -92,18 +92,17 @@ const UserEventsModal = ({ isVisible, onClose }) => {
   const [totalPages, setTotalPages] = useState(null);
   const [label, setLabel] = useState('Carregando...');
   const [events, setEvents] = useState([]);
-  const [refreshList, setRefreshList] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      getData();
-      setRefreshList(!refreshList);
-    }, 2000);
-  }, [!!isVisible]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getData();
+  //     setRefreshList(!refreshList);
+  //   }, 2000);
+  // }, [!!isVisible]);
 
-  useEffect(() => {
-    getData();
-  }, [page]);
+  // useEffect(() => {
+  //   getData();
+  // }, [page]);
 
   function getData() {
     if (totalPages && (page > totalPages)) {
@@ -128,11 +127,27 @@ const UserEventsModal = ({ isVisible, onClose }) => {
 
   function handleLoadMore() {
     setPage(page + 1);
+    getData();
+  }
+
+  function handleOpenModal() {
+    getData();
+  }
+
+  function handleCloseModal() {
+    setEvents([]);
+    setPage(1);
   }
 
   return (
-
-    <Modal isVisible={isVisible} style={styles.container}>
+    <Modal
+      isVisible={isVisible}
+      style={styles.container}
+      onModalShow={() => { handleOpenModal(); }}
+      onModalHide={() => { handleCloseModal(); }}
+      onBackButtonPress={() => { onClose(); }}
+      onBackdropPress={() => { onClose(); }}
+    >
       <View style={styles.header}>
         <View style={{ height: scale(32), width: scale(32) }} />
         <Text style={[styles.text, { fontSize: scale(24) }]}>Reservas</Text>
@@ -154,7 +169,6 @@ const UserEventsModal = ({ isVisible, onClose }) => {
 
         <FlatList
           data={events}
-          extraData={refreshList}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item: event }) => (
             <EventInfo key={event.id} {...event} />
