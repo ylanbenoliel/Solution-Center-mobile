@@ -26,19 +26,22 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const StackShell = createStackNavigator();
 
+const screenOptions = {
+  headerStyle: {
+    backgroundColor: colors.mainColor,
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+
+  },
+};
+
 function UserInfo() {
   return (
     <Stack.Navigator
       headerMode="float"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.mainColor,
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
+      screenOptions={screenOptions}
     >
       <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }} />
       <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />

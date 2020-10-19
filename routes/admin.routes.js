@@ -24,19 +24,21 @@ import colors from '@constants/colors';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const screenOptions = {
+  headerStyle: {
+    backgroundColor: colors.mainColor,
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+};
+
 function AgendaStack() {
   return (
     <Stack.Navigator
       headerMode="float"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.mainColor,
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
+      screenOptions={screenOptions}
     >
       <Stack.Screen name="Calendar" component={Agenda} options={{ headerShown: false, title: 'Calendário' }} />
       <Stack.Screen name="AgendaTable" component={AgendaTable} options={{ title: 'Agenda' }} />
@@ -49,15 +51,7 @@ function AdminInfoStack() {
   return (
     <Stack.Navigator
       headerMode="float"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.mainColor,
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
+      screenOptions={screenOptions}
     >
       <Stack.Screen name="UserProfile" component={AdminProfile} options={{ headerShown: false }} />
       <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />
@@ -69,15 +63,7 @@ function UserStack() {
   return (
     <Stack.Navigator
       headerMode="float"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.mainColor,
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
+      screenOptions={screenOptions}
     >
       <Stack.Screen name="Usuários" component={AdminUserList} options={{ headerShown: false }} />
       <Stack.Screen name="Eventos" component={UserEventsDetails} options={{ title: 'Horários' }} />
