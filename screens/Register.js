@@ -253,7 +253,7 @@ export default function Register({ navigation }) {
                 autoCapitalize="none"
                 returnKeyType="next"
                 onSubmitEditing={() => field4.current.focus()}
-                secureTextEntry
+                // secureTextEntry
                 autoCorrect={false}
                 blurOnSubmit={false}
               />

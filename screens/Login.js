@@ -187,7 +187,7 @@ export default function Login({ navigation }) {
                 placeholderTextColor={colors.placeholderColor}
                 autoCapitalize="none"
                 onSubmitEditing={() => handleLogin()}
-                secureTextEntry
+                // secureTextEntry
                 autoCorrect={false}
               />
             </View>
