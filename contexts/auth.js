@@ -1,8 +1,8 @@
 import React, { useState, createContext } from 'react';
-import { AsyncStorage, Alert, Platform } from 'react-native';
+import { AsyncStorage } from 'react-native';
 
-import { Notifications } from 'expo';
 import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 
 import { api } from '@services/api';
@@ -21,14 +21,22 @@ export const AuthProvider = ({ children }) => {
     AsyncStorage.setItem('@SC:name', res.data.user.name);
     AsyncStorage.setItem('@SC:email', res.data.user.email);
     AsyncStorage.setItem('@SC:admin', JSON.stringify(res.data.is_admin));
-    registerForPushNotificationsAsync(res.data.user.email);
+    registerForPushNotificationsAsync()
+      .then((token) => api.post('/notification/register',
+        { email: res.data.user.email, token })
+        .then(() => {
+          //  console.log('token enviado');
+        })
+        .catch(() => {
+          // console.log('token nao enviado');
+        }));
   }
 
   function signOut() {
     AsyncStorage.multiRemove(['@SC:token', '@SC:name', '@SC:email', '@SC:admin']);
   }
 
-  async function registerForPushNotificationsAsync(eMail) {
+  async function registerForPushNotificationsAsync() {
     let token;
     if (Constants.isDevice) {
       const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -38,24 +46,16 @@ export const AuthProvider = ({ children }) => {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        Alert.alert('Não será possível receber notificações.');
+        // alert('Failed to get push token for push notification!');
         return;
       }
-      token = await Notifications.getExpoPushTokenAsync();
-
-      if (token) {
-        api.post('/notification/register', { email: eMail, token }).then(() => {}).catch(() => {});
-      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      // console.log(token);
+    } else {
+      // alert('Must use physical device for Push Notifications');
     }
 
-    if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('Notifications', {
-        name: 'Notifications',
-        sound: true,
-        priority: 'max',
-        vibrate: true,
-      });
-    }
+    return token;
   }
 
   return (

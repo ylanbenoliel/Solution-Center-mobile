@@ -1,12 +1,12 @@
 // /* eslint-disable global-require */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  AsyncStorage, Vibration,
+  AsyncStorage, Platform,
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { AuthProvider } from './contexts/auth';
@@ -20,8 +20,36 @@ export default function App() {
     // eslint-disable-next-line global-require
     'Amaranth-Regular': require('./assets/fonts/Amaranth-Regular.ttf'),
   });
+
+  const notificationListener = useRef();
+  const responseListener = useRef();
   useEffect(() => {
     handleInitApp();
+  }, []);
+
+  useEffect(() => {
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      // console.log('notification', notification);
+      // setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      // console.log('response', response);
+    });
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('notification', {
+        name: 'notification',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        // lightColor: '#FF231F7C',
+      });
+    }
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
   }, []);
 
   async function handleInitApp() {
@@ -36,7 +64,6 @@ export default function App() {
   async function prepareResources() {
     getToken();
     getPrivilegies();
-    Notifications.addListener(handleNotification);
     setAppReady(true);
     await SplashScreen.hideAsync();
   }
@@ -63,10 +90,6 @@ export default function App() {
     } catch (error) {
       setAdmin(null);
     }
-  }
-
-  async function handleNotification() {
-    Vibration.vibrate();
   }
 
   if (!loaded || !appReady) {
