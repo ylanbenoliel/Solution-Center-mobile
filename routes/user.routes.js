@@ -43,8 +43,8 @@ function UserInfo() {
       headerMode="float"
       screenOptions={screenOptions}
     >
-      <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }} />
-      <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />
+      <Stack.Screen name="UserProfile" component={UserProfile} options={{ title: 'Perfil', headerShown: false }} />
+      <Stack.Screen name="Info" component={Info} options={{ title: 'Informações' }} />
     </Stack.Navigator>
   );
 }

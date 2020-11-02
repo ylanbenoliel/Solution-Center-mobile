@@ -53,8 +53,8 @@ function AdminInfoStack() {
       headerMode="float"
       screenOptions={screenOptions}
     >
-      <Stack.Screen name="UserProfile" component={AdminProfile} options={{ headerShown: false }} />
-      <Stack.Screen name="Info" component={Info} options={{ title: 'Perfil' }} />
+      <Stack.Screen name="UserProfile" component={AdminProfile} options={{ title: 'Perfil', headerShown: false }} />
+      <Stack.Screen name="Info" component={Info} options={{ title: 'Informações' }} />
     </Stack.Navigator>
   );
 }
