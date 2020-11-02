@@ -27,7 +27,7 @@ import colors from '@constants/colors';
 
 const ICON_SIZE = scale(24);
 
-const Separator = () => <View style={{ marginVertical: scale(8) }} />;
+const Separator = () => <View style={{ marginVertical: scale(4) }} />;
 
 export default function Contact({ navigation }) {
   function openWpp(phone) {
@@ -246,20 +246,17 @@ const styles = StyleSheet.create({
   },
   whatsappNumbers: {
     marginLeft: scale(20),
-    height: verticalScale(70),
     justifyContent: 'space-between',
   },
 
   localizationScrollView: {
     flex: 2,
-    marginTop: verticalScale(-130),
     marginBottom: verticalScale(50),
   },
   localizationContainer: {
     flex: 2,
     alignItems: 'center',
     marginHorizontal: scale(20),
-    // marginVertical: verticalScale(10),
   },
   localizationContent: {
     width: '80%',
