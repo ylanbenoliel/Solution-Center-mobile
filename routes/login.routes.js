@@ -8,6 +8,7 @@ import {
   Ambients,
   Plans,
   Contact,
+  About,
 } from '@screens/Drawer/index';
 import Login from '@screens/Login';
 
@@ -28,6 +29,7 @@ export default function LoginDrawer() {
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
       <Drawer.Screen name="Contato" component={Contact} />
+      <Drawer.Screen name="About" component={About} options={{ title: 'Sobre o app' }} />
     </Drawer.Navigator>
   );
 }

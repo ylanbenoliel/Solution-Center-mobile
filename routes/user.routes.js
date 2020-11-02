@@ -14,6 +14,7 @@ import {
   Ambients,
   Plans,
   Contact,
+  About,
 } from '@screens/Drawer/index';
 import Schedule from '@screens/User/Schedule';
 import UserProfile from '@screens/User/UserProfile';
@@ -93,6 +94,7 @@ function UserDrawer() {
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
       <Drawer.Screen name="Contato" component={Contact} />
+      <Drawer.Screen name="About" component={About} options={{ title: 'Sobre o app' }} />
     </Drawer.Navigator>
   );
 }
