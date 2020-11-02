@@ -170,6 +170,7 @@ const AdminUserModal = ({
 
         <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 30 }}>
           <Image
+            defaultSource={require('@assets/icon.png')}
             source={avatarUrl}
             style={styles.avatarImage}
           />
@@ -177,31 +178,13 @@ const AdminUserModal = ({
           <View style={styles.userContainer}>
             <UserDetails data={userDetails.name} dataField="Nome" />
             <UserDetails data={userDetails.phone} dataField="Telefone" />
+            <UserDetails data={userDetails.email} dataField="Email" />
             <UserDetails data={userDetails.address} dataField="Endereço" />
             <UserDetails data={userDetails.cpf} dataField="CPF" />
             <UserDetails data={userDetails.rg} dataField="RG" />
             <ToggleUserPermission status={userDetails.is_admin} />
             <ToggleUserLoginSituation status={userDetails.active} />
           </View>
-
-          <View>
-            <Text style={styles.text}>Plano</Text>
-          </View>
-          <Picker
-            selectedValue={planList}
-            onValueChange={(value) => {
-              api.post(`/plans/${userDetails.id}`, {
-                plan: value,
-              }).then(() => { setPlanList(value); });
-            }}
-            style={{
-              height: 50, width: 170, color: colors.mainColor,
-            }}
-          >
-            <Picker.Item label="Hora avulsa" value={1} />
-            <Picker.Item label="Mensal" value={2} />
-            <Picker.Item label="Fidelidade" value={3} />
-          </Picker>
 
           <View>
             <Text style={styles.text}>Opções</Text>
@@ -218,15 +201,7 @@ const AdminUserModal = ({
             }}
           >
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                width: scale(60),
-                backgroundColor: colors.accentColor,
-                padding: scale(10),
-                borderRadius: scale(16),
-              }}
+              style={[styles.button, { backgroundColor: colors.accentColor }]}
               onPress={() => {
                 navigation.navigate('Adicionar', { user: userDetails });
                 onClose();
@@ -240,15 +215,7 @@ const AdminUserModal = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                width: scale(60),
-                backgroundColor: '#804d00',
-                padding: scale(10),
-                borderRadius: scale(16),
-              }}
+              style={[styles.button, { backgroundColor: '#804d00' }]}
               onPress={() => {
                 navigation.navigate('Eventos', { events: eventList, user: userDetails });
                 onClose();
@@ -262,15 +229,9 @@ const AdminUserModal = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                width: scale(60),
+              style={[styles.button, {
                 backgroundColor: 'green',
-                padding: scale(10),
-                borderRadius: scale(16),
-              }}
+              }]}
               onPress={() => {
                 handleSeeDebts();
               }}
@@ -283,15 +244,7 @@ const AdminUserModal = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                width: scale(60),
-                backgroundColor: colors.secondaryColor,
-                padding: scale(10),
-                borderRadius: scale(16),
-              }}
+              style={[styles.button, { backgroundColor: colors.secondaryColor }]}
               onPress={() => {
                 navigation.push('Mensagens', { user: userDetails.id });
                 onClose();
@@ -304,6 +257,30 @@ const AdminUserModal = ({
               />
             </TouchableOpacity>
           </View>
+
+          <View style={{ marginTop: verticalScale(20) }}>
+            <Text style={styles.text}>Plano</Text>
+          </View>
+
+          <Picker
+            selectedValue={planList}
+            onValueChange={(value) => {
+              api.post(`/plans/${userDetails.id}`, {
+                plan: value,
+              }).then(() => { setPlanList(value); });
+            }}
+            style={{
+              height: 50,
+              width: 170,
+              color: colors.mainColor,
+            }}
+          >
+            <Picker.Item label="Hora avulsa" value={1} />
+            <Picker.Item label="Mensal" value={2} />
+            <Picker.Item label="Fidelidade" value={3} />
+          </Picker>
+
+          <View style={{ marginBottom: verticalScale(20) }} />
 
         </ScrollView>
 
@@ -337,10 +314,17 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   userContainer: {
-    height: verticalScale(240),
+    height: verticalScale(280),
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: scale(60),
+    padding: scale(10),
+    borderRadius: scale(16),
   },
 
 });

@@ -340,9 +340,8 @@ const styles = StyleSheet.create({
     height: verticalScale(42),
   },
   searchButton: {
-    width: 110,
     backgroundColor: colors.mainColor,
-    paddingVertical: verticalScale(5),
+    padding: scale(4),
     borderRadius: scale(4),
     alignItems: 'center',
     justifyContent: 'center',

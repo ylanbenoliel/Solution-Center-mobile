@@ -141,7 +141,7 @@ export default function Login({ navigation }) {
       >
 
         <View style={styles.loginContainer}>
-          <Logo width={250} height={100} />
+          <Logo width={scale(220)} height={(80)} />
 
           <View style={{ margin: verticalScale(20) }} />
 

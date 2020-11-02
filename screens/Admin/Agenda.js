@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%',
-    height: verticalScale(48),
+    paddingVertical: verticalScale(10),
     borderRadius: scale(4),
     backgroundColor: colors.navigationColor,
   },
