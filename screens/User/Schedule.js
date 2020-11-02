@@ -163,7 +163,7 @@ export default function Schedule({ navigation }) {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <View style={{ flex: 1, justifyContent: 'center', marginLeft: 16 }}>
+      <View style={{ flex: 1, justifyContent: 'center', marginLeft: scale(20) }}>
 
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Feather

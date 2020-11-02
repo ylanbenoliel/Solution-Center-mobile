@@ -197,7 +197,7 @@ const Profile = ({ navigation, menu }) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginHorizontal: 16,
+            marginHorizontal: scale(20),
           }}
           >
             {menu ? (
