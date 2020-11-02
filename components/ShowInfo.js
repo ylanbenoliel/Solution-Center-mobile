@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { verticalScale, scale } from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters';
 
 import colors from '@constants/colors';
 
@@ -27,8 +27,7 @@ const ShowInfo = ({ error, success }) => {
 const styles = StyleSheet.create({
   container: {
     width: '72%',
-    height: verticalScale(40),
-    paddingVertical: verticalScale(10),
+    padding: scale(5),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: scale(4),
