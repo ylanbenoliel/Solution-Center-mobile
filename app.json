@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -27,8 +27,8 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "br.com.solutioncenter.solutioncenter",
-      "buildNumber": "1.0.0",
+      "bundleIdentifier": "br.com.ylanbenoliel.solutioncenter",
+      "buildNumber": "1.1.0",
       "supportsTablet": false,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "É necessário para salvar foto de perfil."
@@ -36,7 +36,7 @@
     },
     "android": {
       "package": "br.com.solutioncenter.solutioncenter",
-      "versionCode": 1,
+      "versionCode": 11,
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
