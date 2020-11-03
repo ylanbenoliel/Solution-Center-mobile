@@ -1,9 +1,13 @@
+/* eslint-disable global-require */
 import React from 'react';
 import {
-  Text, SafeAreaView,
+  SafeAreaView, View,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import { GeneralStatusBar, HeaderDrawer } from '@components';
+
+import { url } from '@services/api';
 
 import colors from '@constants/colors';
 
@@ -22,12 +26,13 @@ const About = ({ navigation }) => (
 
       <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Sobre o app" />
 
-      <Text>Política de privacidade</Text>
+      <View style={{ width: '100%', paddingHorizontal: 16 }} />
 
-      <Text>Proprietário e Controlador de Dados</Text>
+      <WebView
+        source={{ uri: `${url}/privacy` }}
+      />
 
     </SafeAreaView>
   </>
 );
-
 export default About;
