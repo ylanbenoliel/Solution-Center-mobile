@@ -23,13 +23,11 @@ export const AuthProvider = ({ children }) => {
     AsyncStorage.setItem('@SC:admin', JSON.stringify(res.data.is_admin));
     registerForPushNotificationsAsync()
       .then((token) => api.post('/notification/register',
-        { email: res.data.user.email, token })
-        .then(() => {
-          //  console.log('token enviado');
-        })
-        .catch(() => {
-          // console.log('token nao enviado');
-        }));
+        { email: res.data.user.email, token }))
+
+      .catch(() => {
+        // console.log('token nao enviado');
+      });
   }
 
   function signOut() {

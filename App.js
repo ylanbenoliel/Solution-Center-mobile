@@ -1,5 +1,5 @@
 // /* eslint-disable global-require */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AsyncStorage, Platform,
 } from 'react-native';
@@ -9,9 +9,13 @@ import { useFonts } from '@use-expo/font';
 import * as Notifications from 'expo-notifications';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { AuthProvider } from './contexts/auth';
+import { AuthProvider } from '@contexts/auth';
+
+import { api } from '@services/api';
+
+import colors from '@constants/colors';
+
 import Route from './routes/Route';
-import { api } from './services/api';
 
 export default function App() {
   const [admin, setAdmin] = useState('');
@@ -21,20 +25,17 @@ export default function App() {
     'Amaranth-Regular': require('./assets/fonts/Amaranth-Regular.ttf'),
   });
 
-  const notificationListener = useRef();
-  const responseListener = useRef();
   useEffect(() => {
     handleInitApp();
   }, []);
 
   useEffect(() => {
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      // console.log('notification', notification);
-      // setNotification(notification);
-    });
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      // console.log('response', response);
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
     });
 
     if (Platform.OS === 'android') {
@@ -42,14 +43,9 @@ export default function App() {
         name: 'notification',
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        // lightColor: '#FF231F7C',
+        lightColor: `${colors.mainColor}`,
       });
     }
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
-    };
   }, []);
 
   async function handleInitApp() {
