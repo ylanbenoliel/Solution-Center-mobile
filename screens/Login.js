@@ -203,16 +203,12 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.buttonContainer, { backgroundColor: 'transparent' }]}
+            style={[styles.buttonContainer, { backgroundColor: colors.whiteColor }]}
             onPress={() => {
               handleRegister();
             }}
           >
-            <Text style={[
-              styles.text,
-              // styles.buttonText,
-            ]}
-            >
+            <Text style={styles.text}>
               Registre-se
             </Text>
           </TouchableOpacity>
