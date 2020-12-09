@@ -7,6 +7,7 @@ import Register from '@screens/Register';
 import colors from '@constants/colors';
 
 import Admin from './admin.routes';
+import Password from './forgotPassword.routes';
 import Login from './login.routes';
 import User from './user.routes';
 
@@ -29,6 +30,8 @@ const NonLoggedStack = () => (
     screenOptions={screenOptions}
   >
     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+    <Stack.Screen name="Password" component={Password} options={{ headerShown: false }} />
+
     <Stack.Screen name="Registro" component={Register} />
     <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
     <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />

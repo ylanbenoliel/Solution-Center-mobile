@@ -19,7 +19,7 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import { GeneralStatusBar, ShowInfo } from '@components';
 
@@ -31,7 +31,8 @@ import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
-export default function Login({ navigation }) {
+export default function Login() {
+  const navigation = useNavigation();
   const { signIn } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
@@ -191,6 +192,26 @@ export default function Login({ navigation }) {
                 autoCorrect={false}
               />
             </View>
+
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'flex-end',
+                paddingHorizontal: scale(16),
+                marginBottom: verticalScale(12),
+              }}
+            >
+              <TouchableOpacity
+                style={{ justifyContent: 'center', height: 40 }}
+                onPress={() => { navigation.navigate('Password'); }}
+              >
+                <Text
+                  style={[styles.text, { fontSize: scale(14) }]}
+                >
+                  Esqueci minha senha
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <TouchableOpacity
@@ -225,7 +246,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   headerText: {
     fontSize: scale(28),
     color: colors.mainColor,
