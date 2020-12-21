@@ -7,6 +7,7 @@ import Loading from './Loading';
 import RoomButton from './RoomButton';
 import Separator from './Separator';
 import ShowInfo from './ShowInfo';
+import SnackBar from './SnackBar';
 import StatusButton from './StatusButton';
 import UserEventsModal from './UserEventsModal';
 import UserItem from './UserItem';
@@ -27,4 +28,5 @@ export {
   UserLogModal,
   HeaderDrawer,
   ListEmpty,
+  SnackBar,
 };
