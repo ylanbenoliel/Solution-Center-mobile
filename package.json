@@ -25,6 +25,7 @@
     "expo-notifications": "~0.7.2",
     "expo-permissions": "~9.3.0",
     "expo-splash-screen": "~0.6.1",
+    "formik": "^2.2.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
@@ -40,7 +41,8 @@
     "react-native-size-matters": "^0.3.0",
     "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.7",
-    "react-native-webview": "10.7.0"
+    "react-native-webview": "10.7.0",
+    "yup": "^0.32.6"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
