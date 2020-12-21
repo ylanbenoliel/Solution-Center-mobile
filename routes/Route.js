@@ -47,6 +47,7 @@ export default function Route({ admin }) {
         <LoggedStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <LoggedStack.Screen name="Registro" component={Register} />
         <LoggedStack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+        <Stack.Screen name="Password" component={Password} options={{ headerShown: false }} />
       </LoggedStack.Navigator>
     );
   }
@@ -57,6 +58,7 @@ export default function Route({ admin }) {
         <LoggedStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <LoggedStack.Screen name="Registro" component={Register} />
         <LoggedStack.Screen name="User" component={User} options={{ headerShown: false }} />
+        <Stack.Screen name="Password" component={Password} options={{ headerShown: false }} />
       </LoggedStack.Navigator>
     );
   }
