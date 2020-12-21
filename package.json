@@ -42,7 +42,7 @@
     "react-native-snackbar-component": "^1.1.11",
     "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.7",
-    "react-native-webview": "10.7.0",
+    "react-native-webview": "11.0.0",
     "yup": "^0.32.6"
   },
   "devDependencies": {
