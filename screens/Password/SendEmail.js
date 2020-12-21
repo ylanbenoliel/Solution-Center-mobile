@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   SafeAreaView,
@@ -12,7 +12,9 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
+
+import { api } from '@services/api';
 
 import Logo from '@assets/logo-solution-azul.svg';
 
@@ -21,10 +23,29 @@ import colors from '@constants/colors';
 const SendEmail = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function handleSubmitEmail() {
     Keyboard.dismiss();
-    navigation.navigate('VerifyCode', {});
+    api.get(`/forgot-password/${email}`)
+      .then(() => { navigation.navigate('VerifyCode', { email }); })
+      .catch((e) => {
+        setVisibleSnack(true);
+        if (e.response) {
+          return setSnackText(`${e.response.data.message}`);
+        }
+        if (e.request) {
+          return setSnackText('Erro na conexão.');
+        }
+        return setSnackText('Algo deu errado.');
+      });
   }
 
   return (
@@ -69,6 +90,11 @@ const SendEmail = () => {
 
         </View>
       </View>
+      <SnackBar
+        text={snackText}
+        visible={visibleSnack}
+        color={`${colors.errorColor}`}
+      />
 
     </SafeAreaView>
   );

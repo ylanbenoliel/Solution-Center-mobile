@@ -1,7 +1,7 @@
 // /* eslint-disable global-require */
 import React, { useState, useEffect } from 'react';
 import {
-  AsyncStorage, Platform,
+  AsyncStorage, Platform, LogBox,
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -55,6 +55,7 @@ export default function App() {
       await SplashScreen.hideAsync();
     }
     prepareResources();
+    LogBox.ignoreLogs(['Animated:']);
   }
 
   async function prepareResources() {

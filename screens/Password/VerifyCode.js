@@ -1,26 +1,56 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
 import {
   View,
   SafeAreaView,
   Text,
-  TextInput, StyleSheet, TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
+
+import { api } from '@services/api';
 
 import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
-const VerifyCode = () => {
+const VerifyCode = ({ route }) => {
   const navigation = useNavigation();
+  const { email } = route.params;
   const [code, setCode] = useState('');
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function handleSubmitCode() {
-    navigation.navigate('NewPassword');
+    Keyboard.dismiss();
+    api.post('/verify-reset-code', {
+      code,
+      email,
+    })
+      .then(() => { navigation.navigate('NewPassword', { email }); })
+      .catch((e) => {
+        setVisibleSnack(true);
+        if (e.response) {
+          return setSnackText(`${e.response.data.message}`);
+        }
+        if (e.request) {
+          return setSnackText('Erro na conexão.');
+        }
+        return setSnackText('Algo deu errado.');
+      });
   }
 
   return (
@@ -64,7 +94,11 @@ const VerifyCode = () => {
 
         </View>
       </View>
-
+      <SnackBar
+        text={snackText}
+        visible={visibleSnack}
+        color={`${colors.errorColor}`}
+      />
     </SafeAreaView>
   );
 };

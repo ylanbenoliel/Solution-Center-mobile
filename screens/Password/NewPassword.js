@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
 import {
   View,
   SafeAreaView,
@@ -12,24 +13,51 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { useNavigation, CommonActions } from '@react-navigation/native';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
+
+import { api } from '@services/api';
 
 import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
-const NewPassword = () => {
+const NewPassword = ({ route }) => {
   const navigation = useNavigation();
+  const { email } = route.params;
   const [password, setPassword] = useState('');
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function handleSubmitPassword() {
     Keyboard.dismiss();
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'Login' }],
-      }),
-    );
+    api.patch('/password', {
+      email,
+      password,
+    })
+      .then(() => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          }),
+        );
+      })
+      .catch((e) => {
+        setVisibleSnack(true);
+        if (e.response) {
+          return setSnackText(`${e.response.data.message}`);
+        }
+        if (e.request) {
+          return setSnackText('Erro na conexão.');
+        }
+        return setSnackText('Algo deu errado.');
+      });
   }
 
   return (
@@ -72,10 +100,14 @@ const NewPassword = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
         </View>
       </View>
 
+      <SnackBar
+        text={snackText}
+        visible={visibleSnack}
+        color={`${colors.errorColor}`}
+      />
     </SafeAreaView>
   );
 };
