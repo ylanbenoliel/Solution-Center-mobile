@@ -367,7 +367,6 @@ export default function Register({ navigation }) {
                       returnKeyType="next"
                       onSubmitEditing={() => {
                         Keyboard.dismiss();
-                        handleSubmit();
                       }}
                       blurOnSubmit={false}
                     />
