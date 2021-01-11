@@ -158,7 +158,7 @@ export default function Register({ navigation }) {
   const FormSchema = Yup.object().shape({
     name: Yup.string()
       .required('Campo Obrigatório.')
-      .min(4, 'Insira nome e sobrenome.'),
+      .min(5, 'Insira nome e sobrenome.'),
     email: Yup.string()
       .email('Precisa ser um email válido.')
       .required('Campo Obrigatório.'),
@@ -169,11 +169,13 @@ export default function Register({ navigation }) {
       .min(10, 'Forneça mais informações.')
       .required('Campo Obrigatório.'),
     cpf: Yup.string()
-      .min(11, 'Insira todo o CPF.')
+      .min(14, 'Insira todo o CPF.')
       .required('Campo Obrigatório.'),
     rg: Yup.string()
+      .min(3, 'Insira um RG.')
       .required('Campo Obrigatório.'),
     phone: Yup.string()
+      .min(15, 'Insira todo o telefone.')
       .required('Campo Obrigatório.'),
   });
 
@@ -382,7 +384,7 @@ export default function Register({ navigation }) {
                       ref={phone}
                       style={[styles.text, styles.textInput]}
                       placeholderTextColor={colors.placeholderColor}
-                      placeholder="99 99999-9999"
+                      placeholder="(99) 99999-9999"
                       type="cel-phone"
                       options={{
                         maskType: 'BRL',
