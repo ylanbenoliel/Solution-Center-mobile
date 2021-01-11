@@ -95,6 +95,36 @@ const Info = ({ route, navigation }) => {
 
   const handleUpdate = async (values) => {
     setLoading(true);
+
+    if (image) {
+      try {
+        const uriParts = image.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        // eslint-disable-next-line no-undef
+        const uploadAvatarImage = new FormData();
+        uploadAvatarImage.append('avatar', {
+          name: `avatar.${fileType}`,
+          type: `image/${fileType}`,
+          uri: image,
+        });
+
+        await api.put('/images', uploadAvatarImage, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      } catch (e) {
+        setSnackColor(colors.errorColor);
+        if (e.response) {
+          setSnackText(`${e.response.data.message}`);
+        } if (e.request) {
+          setSnackText('Erro na conexão.');
+        }
+        setSnackText('Tente uma imagem menor.');
+        setVisibleSnack(true);
+      }
+    }
     try {
       const rawCpf = sanitizeStringNumbers(values.cpf);
       const rawPhone = sanitizeStringNumbers(values.phone);
@@ -127,25 +157,6 @@ const Info = ({ route, navigation }) => {
       setSnackText('Algo deu errado.');
       setVisibleSnack(true);
     }
-
-    // if (image) {
-    //   const uriParts = image.split('.');
-    //   const fileType = uriParts[uriParts.length - 1];
-    //   // eslint-disable-next-line no-undef
-    //   const uploadAvatarImage = new FormData();
-    //   uploadAvatarImage.append('avatar', {
-    //     name: `avatar.${fileType}`,
-    //     type: `image/${fileType}`,
-    //     uri: image,
-    //   });
-
-    //   const patchImage = api.put('/images', uploadAvatarImage, {
-    //     headers: {
-    //       Accept: 'application/json',
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   });
-    // }
     setLoading(false);
   };
   return (
