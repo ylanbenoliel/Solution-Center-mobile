@@ -78,6 +78,7 @@ const Profile = ({ navigation, menu }) => {
 
   const [userInfo, setUserInfo] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [userHasPhoto, setUserHasPhoto] = useState(false);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
   const [isModalLogOpen, setIsModalLogOpen] = useState(false);
   const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
@@ -92,6 +93,7 @@ const Profile = ({ navigation, menu }) => {
         const user = { ...res.data[0] };
         if (user.avatar) {
           setAvatarUrl({ uri: `${user.avatar.url}` });
+          setUserHasPhoto(true);
         } else {
           setAvatarUrl(icon);
         }
@@ -137,7 +139,7 @@ const Profile = ({ navigation, menu }) => {
   }
 
   function handleOpenInfoStack() {
-    navigation.navigate('Info', { details: userInfo, photo: avatarUrl });
+    navigation.navigate('Info', { details: userInfo, photo: userHasPhoto ? avatarUrl : null });
   }
 
   function handleCloseModal(func) {
