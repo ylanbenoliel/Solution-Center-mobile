@@ -139,7 +139,7 @@ const Notifications = () => {
         </View>
         <Text style={[styles.text, { fontSize: scale(16) }]}>
           {' '}
-          {user.name}
+          {user.listname}
         </Text>
       </TouchableOpacity>
     );

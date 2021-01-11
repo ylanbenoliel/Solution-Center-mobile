@@ -162,7 +162,7 @@ const Profile = ({ navigation, menu }) => {
           <Text
             style={[styles.text, { fontSize: scale(32) }]}
           >
-            {userInfo.name}
+            {userInfo.listname}
           </Text>
         </>
       );

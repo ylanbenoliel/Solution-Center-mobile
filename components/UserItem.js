@@ -12,7 +12,7 @@ import { Feather } from '@expo/vector-icons';
 import colors from '@constants/colors';
 
 const UserItem = ({
-  name, avatarUrl, active, onClick,
+  listname, avatarUrl, active, onClick,
 }) => {
   const avatarImageUrl = avatarUrl
     ? { uri: `${avatarUrl}` }
@@ -23,7 +23,7 @@ const UserItem = ({
       <View style={styles.container}>
         <Image source={avatarImageUrl} style={styles.avatarImage} />
         <View style={styles.textAndIconContainer}>
-          <Text style={styles.userName}>{name}</Text>
+          <Text style={styles.userName}>{listname}</Text>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.userName}>Status</Text>
 
