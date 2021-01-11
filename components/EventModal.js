@@ -15,7 +15,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { Separator, StatusButton } from '@components';
+import { Separator, StatusButton, SnackBar } from '@components';
 
 import { api } from '@services/api';
 
@@ -26,9 +26,19 @@ const EventModal = ({
 }) => {
   const [localEventList, setLocalEventList] = useState(null);
 
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState('');
+
   useEffect(() => {
     setLocalEventList(eventList);
   }, [!!isVisible]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function reserveRoom(room, date, time) {
     api.post('/events/new', {
@@ -58,7 +68,14 @@ const EventModal = ({
 
         setLocalEventList(totalList);
       })
-      .catch(() => {
+      .catch((e) => {
+        setSnackColor(colors.errorColor);
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+        } else {
+          setSnackText('Erro de conexão.');
+        }
+        setVisibleSnack(true);
       });
   }
 
@@ -187,6 +204,7 @@ const EventModal = ({
         </View>
 
       </View>
+      <SnackBar visible={visibleSnack} text={snackText} color={snackColor} />
     </Modal>
   );
 };
