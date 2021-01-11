@@ -34,6 +34,15 @@ function sanitizeString(string) {
   return sanitizedString;
 }
 
+function sanitizeStringNumbers(string) {
+  const sanitizedString = string
+    .trim()
+    .replace(new RegExp(/[/(/)/./-]/g), '')
+    .replace(' ', '');
+
+  return sanitizedString;
+}
+
 function roomById(id) {
   const roomName = ROOM_DATA.map((data) => {
     if (data.room === Number(id)) { return data.name.split(' ')[0]; }
@@ -43,5 +52,5 @@ function roomById(id) {
 }
 
 export {
-  removeDuplicates, chunkArray, sanitizeString, roomById,
+  removeDuplicates, chunkArray, sanitizeString, sanitizeStringNumbers, roomById,
 };
