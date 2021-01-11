@@ -162,8 +162,8 @@ const Info = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
-        backgroundColor={colors.whiteColor}
-        barStyle="dark-content"
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(16) }}>
@@ -173,7 +173,7 @@ const Info = ({ route, navigation }) => {
           <View style={styles.avatarContainer}>
             <View style={styles.avatarImageContainer}>
               <Image
-                source={image ? { uri: image } : profilePic}
+                source={image || profilePic}
                 style={styles.avatarImage}
               />
             </View>
