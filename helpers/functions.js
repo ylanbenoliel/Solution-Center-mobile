@@ -43,6 +43,14 @@ function sanitizeStringNumbers(string) {
   return sanitizedString;
 }
 
+function formatPlainCPF(cpf) {
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+function formatPlainPhone(phone) {
+  return phone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+}
+
 function roomById(id) {
   const roomName = ROOM_DATA.map((data) => {
     if (data.room === Number(id)) { return data.name.split(' ')[0]; }
@@ -52,5 +60,11 @@ function roomById(id) {
 }
 
 export {
-  removeDuplicates, chunkArray, sanitizeString, sanitizeStringNumbers, roomById,
+  removeDuplicates,
+  chunkArray,
+  sanitizeString,
+  sanitizeStringNumbers,
+  formatPlainCPF,
+  formatPlainPhone,
+  roomById,
 };
