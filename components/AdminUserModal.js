@@ -22,7 +22,8 @@ import { Feather } from '@expo/vector-icons';
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
-// import { PLAN_DATA } from '@constants/fixedValues';
+
+import { formatPlainCPF, formatPlainPhone } from '../helpers/functions';
 
 const UserDetails = ({ data, dataField }) => (
   <View style={{ marginVertical: verticalScale(2) }}>
@@ -177,10 +178,10 @@ const AdminUserModal = ({
 
           <View style={styles.userContainer}>
             <UserDetails data={userDetails.name} dataField="Nome" />
-            <UserDetails data={userDetails.phone} dataField="Telefone" />
+            <UserDetails data={formatPlainPhone(userDetails.phone)} dataField="Telefone" />
             <UserDetails data={userDetails.email} dataField="Email" />
             <UserDetails data={userDetails.address} dataField="Endereço" />
-            <UserDetails data={userDetails.cpf} dataField="CPF" />
+            <UserDetails data={formatPlainCPF(userDetails.cpf)} dataField="CPF" />
             <UserDetails data={userDetails.rg} dataField="RG" />
             <ToggleUserPermission status={userDetails.is_admin} />
             <ToggleUserLoginSituation status={userDetails.active} />
