@@ -25,17 +25,23 @@ import * as Permissions from 'expo-permissions';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { GeneralStatusBar, ShowInfo } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
+
+import { sanitizeStringNumbers } from '@helpers/functions';
 
 import { api, url } from '@services/api';
+
+import profilePic from '@assets/icon.png';
 
 import colors from '@constants/colors';
 
 export default function Register({ navigation }) {
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState({});
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [image, setImage] = useState('');
+
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState('');
 
   const name = useRef(null);
   const email = useRef(null);
@@ -44,6 +50,110 @@ export default function Register({ navigation }) {
   const cpf = useRef();
   const rg = useRef(null);
   const phone = useRef();
+
+  useEffect(() => {
+    getPermissionAsync();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
+
+  const getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        Alert.alert('Precisamos do acesso à galeria para upload de foto.');
+      }
+    }
+  };
+
+  async function sendAvatarImage(userId) {
+    const apiUrl = `${url}/users/${userId}/avatar`;
+    const uriParts = image.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+    // eslint-disable-next-line no-undef
+    const uploadAvatarImage = new FormData();
+    uploadAvatarImage.append('avatar', {
+      name: `avatar.${fileType}`,
+      type: `image/${fileType}`,
+      uri:
+        image,
+    });
+
+    const options = {
+      method: 'POST',
+      body: uploadAvatarImage,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    // eslint-disable-next-line no-undef
+    const response = await fetch(apiUrl, options);
+    return response;
+  }
+
+  async function handlePickImage() {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível carregar a galeria.');
+    }
+  }
+
+  async function createUser(values) {
+    const rawCpf = sanitizeStringNumbers(values.cpf);
+    const rawPhone = sanitizeStringNumbers(values.phone);
+    const rawRg = sanitizeStringNumbers(values.rg);
+    setLoading(true);
+    try {
+      const userResponse = await api.post('/users', {
+        name: values.name.trim(),
+        email: values.email.trim(),
+        password: values.password.trim(),
+        address: values.address.trim(),
+        cpf: rawCpf,
+        rg: rawRg,
+        phone: rawPhone,
+      });
+      if (image) {
+        const pictureResponse = await sendAvatarImage(userResponse.data.id);
+        const pictureStatus = pictureResponse.ok;
+        if (!pictureStatus) {
+          setSnackColor(colors.errorColor);
+          setSnackText('Não foi possível enviar a foto.');
+        }
+      } else {
+        setSnackColor(colors.accentColor);
+        setSnackText(`${userResponse.data.message}`);
+      }
+      setVisibleSnack(true);
+      setTimeout(() => {
+        navigation.push('Login');
+      }, 3000);
+    } catch (e) {
+      setSnackColor(colors.errorColor);
+      if (e.response) {
+        setSnackText(`${e.response.data.message}`);
+      } else if (e.request) {
+        setSnackText('Erro na conexão.');
+      } else {
+        setSnackText('Algo deu errado.');
+      }
+      setVisibleSnack(true);
+    }
+    setLoading(false);
+  }
 
   const FormSchema = Yup.object().shape({
     name: Yup.string()
@@ -67,127 +177,6 @@ export default function Register({ navigation }) {
       .required('Campo Obrigatório.'),
   });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setError(null);
-    }, 2200);
-    return () => clearTimeout(timer);
-  }, [error]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSuccess(null);
-    }, 2200);
-    return () => clearTimeout(timer);
-  }, [success]);
-
-  useEffect(() => {
-    getPermissionAsync();
-  }, []);
-
-  const getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        Alert.alert('Precisamos do acesso à galeria para upload de foto.');
-      }
-    }
-  };
-
-  async function sendAvatarImage(userId) {
-    const apiUrl = `${url}/users/${userId}/avatar`;
-    const uriParts = image.uri.split('.');
-    const fileType = uriParts[uriParts.length - 1];
-    // eslint-disable-next-line no-undef
-    const uploadAvatarImage = new FormData();
-    uploadAvatarImage.append('avatar', {
-      name: `avatar.${fileType}`,
-      type: `image/${fileType}`,
-      uri:
-        image.uri,
-    });
-
-    const options = {
-      method: 'POST',
-      body: uploadAvatarImage,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-    // eslint-disable-next-line no-return-await
-    // eslint-disable-next-line no-undef
-    await fetch(apiUrl, options);
-  }
-
-  // function handleRegister() {
-  //   Keyboard.dismiss();
-  //   setLoading(true);
-  //   if (
-  //     name === ''
-  //     || email === ''
-  //     || password === ''
-  //     || address === ''
-  //     || cpf === ''
-  //     || rg === ''
-  //     || phone === ''
-  //     || image === {}
-  //   ) {
-  //     setError('Preencha todos os campos.');
-  //     setLoading(false);
-  //     return null;
-  //   }
-  //   api.post('/users', {
-  //     name: name.trim(),
-  //     email: email.trim(),
-  //     password: password.trim(),
-  //     address: address.trim(),
-  //     cpf: cpf.trim(),
-  //     rg: rg.trim(),
-  //     phone: phone.trim(),
-  //   })
-  //     .then((response) => {
-  //       sendAvatarImage(response.data.id)
-  //         .then(() => {
-  //           setSuccess(response.data.message);
-  //           setTimeout(() => {
-  //             navigation.pop();
-  //           }, 2500);
-  //         })
-  //         .catch(() => {
-  //           setError('Erro ao enviar imagem.');
-  //         });
-  //     })
-  //     .catch(() => {
-  //       setError('Erro ao salvar usuário.');
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }
-
-  // const showLoadingRegister = () => {
-  //   if (loading) {
-  //     return <ActivityIndicator size="large" color={colors.whiteColor} />;
-  //   }
-  //   return <Text style={[styles.text, styles.buttonText]}>Registrar</Text>;
-  // };
-
-  async function handlePickImage() {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [3, 4],
-        quality: 1,
-      });
-      if (!result.cancelled) {
-        setImage(result);
-      }
-    } catch (e) {
-      Alert.alert('Erro', 'Não foi possível carregar a galeria.');
-    }
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -195,15 +184,16 @@ export default function Register({ navigation }) {
         barStyle="dark-content"
       />
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(16) }}>
         <View style={styles.registerContainer}>
           {/*  */}
 
           <View style={styles.avatarContainer}>
             <View style={styles.avatarImageContainer}>
-              {image && (
-                <Image source={{ uri: image.uri }} style={styles.avatarImage} />
-              )}
+              <Image
+                source={image ? { uri: image } : profilePic}
+                style={styles.avatarImage}
+              />
             </View>
             <View style={styles.galleryButtonContainer}>
               <TouchableOpacity
@@ -220,6 +210,7 @@ export default function Register({ navigation }) {
           </View>
 
           <Formik
+            validationSchema={FormSchema}
             initialValues={{
               name: '',
               email: '',
@@ -230,12 +221,16 @@ export default function Register({ navigation }) {
               phone: '',
             }}
             onSubmit={(values) => {
-              console.log(values);
+              createUser(values);
             }}
-            validationSchema={FormSchema}
           >
             {({
-              values, handleChange, handleSubmit, errors, touched, setFieldTouched,
+              values,
+              handleChange,
+              handleSubmit,
+              errors,
+              touched,
+              setFieldTouched,
             }) => (
               <>
                 <View style={styles.inputContainer}>
@@ -408,14 +403,17 @@ export default function Register({ navigation }) {
                   style={styles.buttonContainer}
                   onPress={handleSubmit}
                 >
-                  <Text style={[styles.text, styles.buttonText]}>Registrar</Text>
+                  {loading
+                    ? <ActivityIndicator color={`${colors.whiteColor}`} size="large" />
+                    : <Text style={[styles.text, styles.buttonText]}>Registrar</Text>}
+                  {/* <Text style={[styles.text, styles.buttonText]}>Registrar</Text> */}
                 </TouchableOpacity>
               </>
             )}
           </Formik>
 
         </View>
-        {/* <ShowInfo error={error} success={success} /> */}
+        <SnackBar visible={visibleSnack} text={snackText} color={snackColor} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -498,7 +496,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.mainColor,
-    marginVertical: verticalScale(16),
     borderRadius: scale(4),
   },
   buttonText: {
