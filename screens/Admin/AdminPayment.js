@@ -1,5 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Alert, Text, TouchableOpacity, StyleSheet, FlatList, SafeAreaView,
 } from 'react-native';
@@ -17,9 +18,28 @@ import colors from '@constants/colors';
 
 // eslint-disable-next-line react/prop-types
 const AdminPayment = ({ route }) => {
-  const { events } = route.params;
-  const [eventsNotPaid, setEventsNotPaid] = useState(events);
+  const { user } = route.params;
+  const [eventsNotPaid, setEventsNotPaid] = useState(null);
 
+  useEffect(() => {
+    seeUserDebts();
+  }, []);
+
+  async function seeUserDebts() {
+    try {
+      const eventsNotPaidResponse = await api.post('/admin/events/list/debts', {
+        user,
+      });
+      setEventsNotPaid(eventsNotPaidResponse.data.data);
+    } catch (error) {
+      Alert.alert('Aviso', 'Não foi possível carregas os débitos do usuário',
+        [
+          {
+            text: 'Ok',
+          },
+        ]);
+    }
+  }
   function confirmEventPayment(eventId) {
     api.patch('/admin/events/payment', {
       id: eventId,
@@ -101,7 +121,7 @@ const AdminPayment = ({ route }) => {
         barStyle="light-content"
       />
 
-      <View style={{ marginTop: 10 }}>
+      <View>
 
         <FlatList
           data={eventsNotPaid}
@@ -114,7 +134,11 @@ const AdminPayment = ({ route }) => {
               singleEvent={item}
             />
           )}
-          ListEmptyComponent={<ListEmpty label="Usuário em dia com os pagamentos." />}
+          ListEmptyComponent={(
+            <ListEmpty
+              label={eventsNotPaid ? 'Usuário em dia com os pagamentos.' : 'Carregando...'}
+            />
+)}
         />
       </View>
 

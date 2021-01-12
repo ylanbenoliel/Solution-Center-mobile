@@ -36,19 +36,16 @@ const UserDetails = ({ data, dataField }) => (
 );
 
 const AdminUserModal = ({
-  isVisible, onClose, userInfo, userEvents, userPlans, navigation,
+  isVisible, onClose, userInfo, userPlans, navigation,
 }) => {
   const [userDetails, setUserDetails] = useState(userInfo);
-  const [eventList, setEventList] = useState(userEvents);
   const [planList, setPlanList] = useState(userPlans);
 
   useEffect(() => {
     setUserDetails(userInfo);
-    setEventList(userEvents);
     setPlanList(userPlans);
     return () => {
       setUserDetails(null);
-      setEventList(null);
       setPlanList(null);
     };
   }, [!!isVisible]);
@@ -90,15 +87,8 @@ const AdminUserModal = ({
   }
 
   function handleSeeDebts() {
-    api.post('/admin/events/list/debts', {
-      user: userInfo.id,
-    })
-      .then((res) => {
-        const events = res.data.data;
-        onClose();
-        navigation.navigate('Pagamentos', { events });
-      })
-      .catch(() => { });
+    onClose();
+    navigation.navigate('Pagamentos', { user: userDetails.id });
   }
 
   const ToggleUserPermission = ({ status }) => (
@@ -218,7 +208,9 @@ const AdminUserModal = ({
             <TouchableOpacity
               style={[styles.button, { backgroundColor: '#804d00' }]}
               onPress={() => {
-                navigation.navigate('Eventos', { events: eventList, user: userDetails });
+                navigation.navigate('Eventos', {
+                  user: userDetails,
+                });
                 onClose();
               }}
             >
