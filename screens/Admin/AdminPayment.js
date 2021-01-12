@@ -21,25 +21,45 @@ const AdminPayment = ({ route }) => {
   const { user } = route.params;
   const [eventsNotPaid, setEventsNotPaid] = useState(null);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+
   useEffect(() => {
-    seeUserDebts();
+    fetchData();
+    return () => {
+      setEventsNotPaid(null);
+      setPage(1);
+      setTotalPages(null);
+    };
   }, []);
 
-  async function seeUserDebts() {
+  async function fetchData(pageToLoad = 1) {
     try {
-      const eventsNotPaidResponse = await api.post('/admin/events/list/debts', {
-        user,
-      });
-      setEventsNotPaid(eventsNotPaidResponse.data.data);
+      if (totalPages && (pageToLoad > totalPages)) {
+        return;
+      }
+      const eventsNotPaidResponse = await api
+        .post(`/admin/events/list/debts?page=${pageToLoad}`, {
+          user,
+        });
+      const incomingEvents = (eventsNotPaidResponse.data.data);
+      if (pageToLoad === 1) {
+        if (incomingEvents.length === 0) {
+          return;
+        }
+        setEventsNotPaid(incomingEvents);
+        return;
+      }
+      const combineEvents = [...eventsNotPaid, ...incomingEvents];
+      setTotalPages(eventsNotPaidResponse.data.lastPage);
+      setEventsNotPaid(combineEvents);
+      setPage(page + 1);
     } catch (error) {
-      Alert.alert('Aviso', 'Não foi possível carregas os débitos do usuário',
-        [
-          {
-            text: 'Ok',
-          },
-        ]);
+      Alert.alert('Aviso', 'Não foi possível carregar os débitos do usuário',
+        [{ text: 'Ok' }]);
     }
   }
+
   function confirmEventPayment(eventId) {
     api.patch('/admin/events/payment', {
       id: eventId,
@@ -121,26 +141,24 @@ const AdminPayment = ({ route }) => {
         barStyle="light-content"
       />
 
-      <View>
-
-        <FlatList
-          data={eventsNotPaid}
-          contentContainerStyle={{ paddingBottom: verticalScale(80) }}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => (<Separator />)}
-          renderItem={({ item }) => (
-            <ShowNotPaidEvent
-              singleEvent={item}
-            />
-          )}
-          ListEmptyComponent={(
-            <ListEmpty
-              label={eventsNotPaid ? 'Usuário em dia com os pagamentos.' : 'Carregando...'}
-            />
-)}
-        />
-      </View>
+      <FlatList
+        data={eventsNotPaid}
+        contentContainerStyle={{ paddingBottom: verticalScale(80) }}
+        keyExtractor={(item) => item.id.toString()}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          fetchData(page + 1);
+        }}
+        ItemSeparatorComponent={() => (<Separator />)}
+        renderItem={({ item }) => (
+          <ShowNotPaidEvent singleEvent={item} />
+        )}
+        ListEmptyComponent={(
+          <ListEmpty
+            label={eventsNotPaid ? 'Usuário em dia com os pagamentos.' : 'Carregando...'}
+          />
+        )}
+      />
 
     </SafeAreaView>
   );

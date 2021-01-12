@@ -25,39 +25,46 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 
 const UserEventsDetails = ({ route, navigation }) => {
-  const { events, user } = route.params;
+  const { user } = route.params;
   const [totalEvents, setTotalEvents] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
-  const [label, setLabel] = useState('Carregando...');
 
   useEffect(() => {
-    getData();
-  }, [page]);
+    fetchData();
+    return () => {
+      setTotalEvents(null);
+      setPage(1);
+      setTotalPages(null);
+    };
+  }, []);
 
-  function getData() {
-    if (totalPages && (page > totalPages)) {
-      return null;
-    }
-    api.post(`/admin/events/list/user?page=${page}`, {
-      user: user.id,
-    })
-      .then((res) => {
-        const incomingEvents = (res.data.data);
-        if (page === 1) {
-          if (incomingEvents.length === 0) {
-            setTotalEvents(null);
-            return setLabel('Sem reservas.');
-          }
-          return setTotalEvents(incomingEvents);
+  async function fetchData(pageToLoad = 1) {
+    try {
+      if (totalPages && (pageToLoad > totalPages)) {
+        return;
+      }
+      const totalEventsResponse = await api
+        .post(`/admin/events/list/user?page=${pageToLoad}`, {
+          user: user.id,
+        });
+      const incomingEvents = (totalEventsResponse.data.data);
+      if (pageToLoad === 1) {
+        if (incomingEvents.length === 0) {
+          return;
         }
-        const combineEvents = [...events, ...incomingEvents];
-        setTotalPages(res.data.lastPage);
-        return setTotalEvents(combineEvents);
-      })
-      .catch(() => setLabel('Erro ao pesquisar reservas.'));
-    return null;
+        setTotalEvents(incomingEvents);
+        return;
+      }
+      const combineEvents = [...totalEvents, ...incomingEvents];
+      setTotalPages(totalEventsResponse.data.lastPage);
+      setTotalEvents(combineEvents);
+      setPage(page + 1);
+    } catch (error) {
+      Alert.alert('Aviso', 'Não foi possível carregar as reservas do usuário',
+        [{ text: 'Ok' }]);
+    }
   }
 
   function deleteEvent(eventId) {
@@ -72,10 +79,6 @@ const UserEventsDetails = ({ route, navigation }) => {
           ]);
       })
       .finally(() => { setLoading(false); });
-  }
-
-  function handleLoadMore() {
-    setPage(page + 1);
   }
 
   const RenderLoading = () => {
@@ -200,15 +203,17 @@ const UserEventsDetails = ({ route, navigation }) => {
       <FlatList
         data={totalEvents}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <EventList
-            singleEvent={item}
-          />
-        )}
         ItemSeparatorComponent={() => (<Separator />)}
-        onEndReachedThreshold={0.3}
-        onEndReached={() => handleLoadMore()}
-        ListEmptyComponent={<ListEmpty label={label} />}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => fetchData(page + 1)}
+        renderItem={({ item }) => (
+          <EventList singleEvent={item} />
+        )}
+        ListEmptyComponent={(
+          <ListEmpty
+            label={totalEvents ? 'Usuário não tem reservas' : 'Carregando...'}
+          />
+)}
       />
 
       <RenderLoading />
