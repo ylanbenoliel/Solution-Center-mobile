@@ -157,25 +157,12 @@ const AdminUserList = ({ navigation }) => {
     return setFilteredUsers(searchUsers);
   }
 
-  // #TODO move events to modal
   function handleOpenModal(user) {
     setLoading(true);
     setUserInfo(user);
     setPlanList(null);
-
     if (debtEnabled) {
-      api.post('/admin/events/list/debts', {
-        user: user.id,
-      })
-        .then((res) => {
-          const events = res.data.data;
-          setLoading(false);
-          return navigation.push('Pagamentos', { events });
-        })
-        .catch((err) => {
-          setLoading(false);
-          setError(err.data.message);
-        });
+      navigation.navigate('Pagamentos', { user: user.id });
     } else {
       const requestPlans = api.get(`/plans/${user.id}`);
 
@@ -191,6 +178,7 @@ const AdminUserList = ({ navigation }) => {
           setError('Erro ao buscar informações.');
         });
     }
+    setLoading(false);
   }
 
   function handleCloseModal() {
