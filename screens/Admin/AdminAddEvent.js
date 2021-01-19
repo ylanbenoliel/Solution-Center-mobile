@@ -21,6 +21,7 @@ const AdminAddEvent = ({ route }) => {
   const [daySelected, setDaySelected] = useState('');
   const [room, setRoom] = useState(1);
   const [hour, setHour] = useState('08');
+  const [loadingRequest, setLoadingRequest] = useState(false);
 
   useEffect(() => {
     const currentDate = format(new Date(), 'yyyy-MM-dd');
@@ -31,31 +32,49 @@ const AdminAddEvent = ({ route }) => {
     setDaySelected(day);
   }
 
-  function reserveRoom() {
-    api.post('/admin/events/new', {
-      user: user.id,
-      date: daySelected,
-      time: `${hour}:00:00`,
-      room,
-    }).then(() => {
-      Alert.alert('', 'Reserva salva.', [{
+  async function reserveRoom() {
+    setLoadingRequest(true);
+    try {
+      const eventResponse = await api.post('/admin/events/new', {
+        user: user.id,
+        date: daySelected,
+        time: `${hour}:00:00`,
+        room,
+      });
+
+      Alert.alert('', `${eventResponse.data.message}`, [{
         text: 'Ok',
       }]);
-    })
-      .catch((e) => {
-        if (e.response.data) {
-          return Alert.alert('', `${e.response.data.message}`, [{
-            text: 'Ok',
-          }]);
-        } if (e.request) {
-          return Alert.alert('', 'Erro de conexão.', [{
-            text: 'Ok',
-          }]);
-        }
-        return Alert.alert('', 'Erro ao salvar.', [{
+      setLoadingRequest(false);
+    } catch (e) {
+      setLoadingRequest(false);
+      if (e.response.data) {
+        Alert.alert('', `${e.response.data.message}`, [{
           text: 'Ok',
         }]);
-      });
+        return;
+      } if (e.request) {
+        Alert.alert('', 'Erro de conexão.', [{
+          text: 'Ok',
+        }]);
+        return;
+      }
+      Alert.alert('', 'Erro ao salvar.', [{
+        text: 'Ok',
+      }]);
+    }
+  }
+
+  function handleConfirmAddEventToUserDialog() {
+    Alert.alert('', `Salvar horário para ${user.name}?`,
+      [{
+        text:
+  'Cancelar',
+        style: 'cancel',
+      }, {
+        text: 'Ok',
+        onPress: () => { reserveRoom(); },
+      }]);
   }
 
   return (
@@ -125,15 +144,15 @@ const AdminAddEvent = ({ route }) => {
               height: 50, width: 150, color: colors.mainColor,
             }}
           >
-            <Picker.Item label={`${ROOM_DATA[0].name}`} value={`${ROOM_DATA[0].room}`} />
-            <Picker.Item label={`${ROOM_DATA[1].name}`} value={`${ROOM_DATA[1].room}`} />
-            <Picker.Item label={`${ROOM_DATA[2].name}`} value={`${ROOM_DATA[2].room}`} />
-            <Picker.Item label={`${ROOM_DATA[3].name}`} value={`${ROOM_DATA[3].room}`} />
-            <Picker.Item label={`${ROOM_DATA[4].name}`} value={`${ROOM_DATA[4].room}`} />
-            <Picker.Item label={`${ROOM_DATA[5].name}`} value={`${ROOM_DATA[5].room}`} />
-            <Picker.Item label={`${ROOM_DATA[6].name}`} value={`${ROOM_DATA[6].room}`} />
-            <Picker.Item label={`${ROOM_DATA[7].name}`} value={`${ROOM_DATA[7].room}`} />
-            <Picker.Item label={`${ROOM_DATA[8].name}`} value={`${ROOM_DATA[8].room}`} />
+            <Picker.Item label={`${ROOM_DATA[0].name}`} value={ROOM_DATA[0].room} />
+            <Picker.Item label={`${ROOM_DATA[1].name}`} value={ROOM_DATA[1].room} />
+            <Picker.Item label={`${ROOM_DATA[2].name}`} value={ROOM_DATA[2].room} />
+            <Picker.Item label={`${ROOM_DATA[3].name}`} value={ROOM_DATA[3].room} />
+            <Picker.Item label={`${ROOM_DATA[4].name}`} value={ROOM_DATA[4].room} />
+            <Picker.Item label={`${ROOM_DATA[5].name}`} value={ROOM_DATA[5].room} />
+            <Picker.Item label={`${ROOM_DATA[6].name}`} value={ROOM_DATA[6].room} />
+            <Picker.Item label={`${ROOM_DATA[7].name}`} value={ROOM_DATA[7].room} />
+            <Picker.Item label={`${ROOM_DATA[8].name}`} value={ROOM_DATA[8].room} />
           </Picker>
         </View>
 
@@ -168,16 +187,9 @@ const AdminAddEvent = ({ route }) => {
 
         <TouchableOpacity
           onPress={() => {
-            Alert.alert('', `Salvar horário para ${user.name}?`,
-              [{
-                text:
-            'Cancelar',
-                style: 'cancel',
-              }, {
-                text: 'Ok',
-                onPress: () => { reserveRoom(); },
-              }]);
+            handleConfirmAddEventToUserDialog();
           }}
+          disabled={loadingRequest}
           style={[styles.button, styles.confirmButton]}
         >
           <Text style={[styles.text, styles.buttonText]}>Adicionar</Text>
