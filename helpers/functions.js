@@ -59,6 +59,18 @@ function roomById(id) {
   return roomName;
 }
 
+function convertDateTimeToDate(dateTimeString) {
+  const onlyDate = dateTimeString
+    .split(' ')[0];
+
+  const formattedDate = onlyDate
+    .split('-')
+    .reverse()
+    .join('/');
+
+  return formattedDate;
+}
+
 export {
   removeDuplicates,
   chunkArray,
@@ -67,4 +79,5 @@ export {
   formatPlainCPF,
   formatPlainPhone,
   roomById,
+  convertDateTimeToDate,
 };

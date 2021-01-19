@@ -15,6 +15,7 @@ import {
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 import {
@@ -27,15 +28,22 @@ import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
-const AdminUserList = ({ navigation }) => {
+const AdminUserList = () => {
+  const navigation = useNavigation();
+
   const [totalUsers, setTotalUsers] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(null);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
   const [nameInput, setNameInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [planList, setPlanList] = useState(null);
+
+  const [planNumber, setPlanNumber] = useState(1);
+  const [planUpdated, setPlanUpdated] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [debtEnabled, setDebtEnabled] = useState(false);
@@ -157,26 +165,28 @@ const AdminUserList = ({ navigation }) => {
     return setFilteredUsers(searchUsers);
   }
 
+  async function fetchPlanData(id) {
+    setPlanNumber(1);
+    setPlanUpdated(null);
+    try {
+      const planResponse = await api.get(`/plans/${id}`);
+      setPlanNumber(Number(planResponse.data.plan));
+      if (planResponse.data.updated) {
+        setPlanUpdated(planResponse.data.updated);
+      }
+    } catch (e) {
+      //
+    }
+    setIsModalOpen(true);
+  }
+
   function handleOpenModal(user) {
     setLoading(true);
     setUserInfo(user);
-    setPlanList(null);
     if (debtEnabled) {
       navigation.navigate('Pagamentos', { user: user.id });
     } else {
-      const requestPlans = api.get(`/plans/${user.id}`);
-
-      axios.all([requestPlans])
-        .then(axios.spread((...responses) => {
-          const responsePlans = responses[0];
-          setPlanList(Number(responsePlans.data.plan));
-          setLoading(false);
-          setIsModalOpen(true);
-        }))
-        .catch(() => {
-          setLoading(false);
-          setError('Erro ao buscar informações.');
-        });
+      fetchPlanData(user.id);
     }
     setLoading(false);
   }
@@ -286,11 +296,12 @@ const AdminUserList = ({ navigation }) => {
 
         {!!userInfo && (
         <AdminUserModal
-          userInfo={userInfo}
-          userPlans={planList}
           isVisible={isModalOpen}
           onClose={() => handleCloseModal()}
-          navigation={navigation}
+
+          userInfo={userInfo}
+          userPlanNumber={planNumber}
+          userPlanDate={planUpdated}
         />
         )}
 

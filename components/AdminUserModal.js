@@ -18,12 +18,13 @@ import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
 
-import { formatPlainCPF, formatPlainPhone } from '../helpers/functions';
+import { formatPlainCPF, formatPlainPhone, convertDateTimeToDate } from '../helpers/functions';
 
 const UserDetails = ({ data, dataField }) => (
   <View style={{ marginVertical: verticalScale(2) }}>
@@ -36,17 +37,21 @@ const UserDetails = ({ data, dataField }) => (
 );
 
 const AdminUserModal = ({
-  isVisible, onClose, userInfo, userPlans, navigation,
+  isVisible, onClose, userInfo, userPlanNumber, userPlanDate,
 }) => {
+  const navigation = useNavigation();
   const [userDetails, setUserDetails] = useState(userInfo);
-  const [planList, setPlanList] = useState(userPlans);
+  const [planNumber, setPlanNumber] = useState(1);
+  const [planUpdated, setPlanUpdated] = useState(userPlanDate);
 
   useEffect(() => {
     setUserDetails(userInfo);
-    setPlanList(userPlans);
+    setPlanNumber(userPlanNumber);
+    setPlanUpdated(userPlanDate);
     return () => {
       setUserDetails(null);
-      setPlanList(null);
+      setPlanNumber(null);
+      setPlanUpdated(null);
     };
   }, [!!isVisible]);
 
@@ -81,14 +86,18 @@ const AdminUserModal = ({
     })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao atualizar permissões do cliente.',
-          [{ text: 'Ok' },
-          ]);
+          [{ text: 'Ok' }]);
       });
   }
 
   function handleSeeDebts() {
     onClose();
     navigation.navigate('Pagamentos', { user: userDetails.id });
+  }
+
+  function showFormattedDate(dateTimeString) {
+    const time = convertDateTimeToDate(dateTimeString);
+    return time;
   }
 
   const ToggleUserPermission = ({ status }) => (
@@ -255,12 +264,20 @@ const AdminUserModal = ({
             <Text style={styles.text}>Plano</Text>
           </View>
 
+          {planUpdated && (
+          <Text style={[styles.text, { fontSize: 12 }]}>
+            Atualizado em:
+            {'\t'}
+            {planUpdated ? showFormattedDate(planUpdated) : ''}
+          </Text>
+          )}
+
           <Picker
-            selectedValue={planList}
+            selectedValue={planNumber}
             onValueChange={(value) => {
               api.post(`/plans/${userDetails.id}`, {
                 plan: value,
-              }).then(() => { setPlanList(value); });
+              }).then(() => { setPlanNumber(value); });
             }}
             style={{
               height: 50,
@@ -272,7 +289,6 @@ const AdminUserModal = ({
             <Picker.Item label="Mensal" value={2} />
             <Picker.Item label="Fidelidade" value={3} />
           </Picker>
-
           <View style={{ marginBottom: verticalScale(20) }} />
 
         </ScrollView>
