@@ -53,7 +53,6 @@ function UserInfo() {
 function User() {
   return (
     <Tab.Navigator
-      lazy={false}
       screenOptions={({ route }) => ({
       // eslint-disable-next-line react/prop-types
         tabBarIcon: ({ color, size }) => {
