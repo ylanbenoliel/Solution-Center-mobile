@@ -31,8 +31,6 @@ import { sanitizeStringNumbers } from '@helpers/functions';
 
 import { api } from '@services/api';
 
-import profilePic from '@assets/icon.png';
-
 import colors from '@constants/colors';
 
 const Info = ({ route, navigation }) => {
@@ -45,7 +43,7 @@ const Info = ({ route, navigation }) => {
   const cpf = useRef();
   const rg = useRef(null);
   const phone = useRef();
-  const [image, setImage] = useState(photo);
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackText, setSnackText] = useState('');
@@ -71,6 +69,12 @@ const Info = ({ route, navigation }) => {
     phone: Yup.string()
       .required('Campo Obrigatório.'),
   });
+
+  useEffect(() => {
+    if (photo) {
+      setImage(photo.uri);
+    }
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -172,10 +176,7 @@ const Info = ({ route, navigation }) => {
 
           <View style={styles.avatarContainer}>
             <View style={styles.avatarImageContainer}>
-              <Image
-                source={image || profilePic}
-                style={styles.avatarImage}
-              />
+              {image && <Image source={{ uri: image }} style={styles.avatarImage} />}
             </View>
             <View style={styles.galleryButtonContainer}>
               <TouchableOpacity
