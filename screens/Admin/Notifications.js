@@ -16,7 +16,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar, ShowInfo } from '@components';
+import { GeneralStatusBar, ShowInfo, ListEmpty } from '@components';
 
 import { api } from '@services/api';
 
@@ -25,7 +25,7 @@ import colors from '@constants/colors';
 const Notifications = () => {
   const [textToSend, setTextToSend] = useState('');
   const [inputHeight, setInputHeight] = useState(42);
-  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalUsers, setTotalUsers] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -237,6 +237,11 @@ const Notifications = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <SelectedUser user={item} />
+          )}
+          ListEmptyComponent={(
+            <ListEmpty
+              label={totalUsers ? 'Carregando...' : 'Sem usuários'}
+            />
           )}
         />
       </View>

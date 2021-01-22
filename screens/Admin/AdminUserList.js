@@ -19,7 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 import {
-  UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar,
+  UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar, ListEmpty,
 } from '@components';
 
 import { sanitizeString } from '@helpers/functions';
@@ -31,7 +31,7 @@ import colors from '@constants/colors';
 const AdminUserList = () => {
   const navigation = useNavigation();
 
-  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalUsers, setTotalUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState(null);
 
   const [error, setError] = useState('');
@@ -216,6 +216,11 @@ const AdminUserList = () => {
           <UserItem
             {...user}
             onClick={() => handleOpenModal(user)}
+          />
+        )}
+        ListEmptyComponent={(
+          <ListEmpty
+            label={totalUsers ? 'Carregando...' : 'Sem usuários'}
           />
         )}
       />
