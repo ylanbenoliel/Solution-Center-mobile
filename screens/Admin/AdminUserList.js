@@ -122,7 +122,8 @@ const AdminUserList = () => {
     }
     const searchUsers = totalUsers
       .filter((user) => {
-        if (sanitizeString(user.name).includes(sanitizeString(nameInput))) {
+        if (sanitizeString(user.listname)
+          .includes(sanitizeString(nameInput))) {
           return user;
         }
         return false;
