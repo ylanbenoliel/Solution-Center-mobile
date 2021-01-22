@@ -18,7 +18,7 @@ import {
   GeneralStatusBar, Separator, Loading, ListEmpty,
 } from '@components';
 
-import { roomById } from '@helpers/functions';
+import { roomById, removeDuplicates } from '@helpers/functions';
 
 import { api } from '@services/api';
 
@@ -51,15 +51,18 @@ const UserEventsDetails = ({ route, navigation }) => {
         });
       const incomingEvents = (totalEventsResponse.data.data);
       if (pageToLoad === 1) {
+        setPage(1);
         if (incomingEvents.length === 0) {
+          setTotalEvents(null);
           return;
         }
         setTotalEvents(incomingEvents);
         return;
       }
       const combineEvents = [...totalEvents, ...incomingEvents];
+      const uniqueEvents = removeDuplicates(combineEvents, 'id');
+      setTotalEvents(uniqueEvents);
       setTotalPages(totalEventsResponse.data.lastPage);
-      setTotalEvents(combineEvents);
       setPage(page + 1);
     } catch (error) {
       Alert.alert('Aviso', 'Não foi possível carregar as reservas do usuário',
@@ -75,8 +78,7 @@ const UserEventsDetails = ({ route, navigation }) => {
       })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao excluir reserva',
-          [{ text: 'Ok' },
-          ]);
+          [{ text: 'Ok' }]);
       })
       .finally(() => { setLoading(false); });
   }
@@ -204,14 +206,14 @@ const UserEventsDetails = ({ route, navigation }) => {
         data={totalEvents}
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={() => (<Separator />)}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.6}
         onEndReached={() => fetchData(page + 1)}
         renderItem={({ item }) => (
           <EventList singleEvent={item} />
         )}
         ListEmptyComponent={(
           <ListEmpty
-            label={totalEvents ? 'Usuário não tem reservas' : 'Carregando...'}
+            label={!totalEvents ? 'Carregando...' : 'Usuário não tem reservas.'}
           />
 )}
       />
