@@ -213,7 +213,7 @@ const AgendaTable = ({ route, navigation }) => {
   );
 
   function Cell({
-    name, time, status_payment, room, index, date: cellDate,
+    name, listname, time, status_payment, room, index, date: cellDate,
   }) {
     const backgroundColor = Number(time.split(':')[0]) % 2 === 0 ? { backgroundColor: '#ccc' } : { backgroundColor: '#aaa' };
     if (name.length === 0) {
@@ -241,7 +241,7 @@ const AgendaTable = ({ route, navigation }) => {
           }}
           onPress={() => (
             Alert.alert('Deseja excluir',
-              `Reserva de ${name}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
+              `Reserva de ${listname}, hora: ${time.split(':')[0]}h, sala: ${roomById(room)}?`,
               [{
                 text: 'Cancelar',
                 style: 'cancel',
@@ -263,7 +263,7 @@ const AgendaTable = ({ route, navigation }) => {
           }}
           onPress={() => {
             Alert.alert('Deseja alterar',
-              `Pagamento do usuário: ${name}, hora: ${time.split(':')[0]}h, `
+              `Pagamento do usuário: ${listname}, hora: ${time.split(':')[0]}h, `
               + `sala: ${roomById(room)}?`,
               [{
                 text: 'Cancelar',
