@@ -17,7 +17,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import {
   GeneralStatusBar,
@@ -73,7 +73,8 @@ const UserOptions = ({
   </TouchableOpacity>
 );
 
-const Profile = ({ navigation, menu }) => {
+const Profile = ({ menu }) => {
+  const navigation = useNavigation();
   const { signOut } = useContext(AuthContext);
 
   const [userInfo, setUserInfo] = useState(null);
@@ -139,7 +140,7 @@ const Profile = ({ navigation, menu }) => {
   }
 
   function handleOpenInfoStack() {
-    navigation.navigate('Info', { details: userInfo, photo: userHasPhoto ? avatarUrl : null });
+    navigation.push('Info', { details: userInfo, photo: userHasPhoto ? avatarUrl : null });
   }
 
   function handleCloseModal(func) {
