@@ -75,6 +75,7 @@ const AgendaTable = ({ route, navigation }) => {
 
   const [date, setDate] = useState('');
   const [eventTable, setEventTable] = useState([]);
+  const [totalEvents, setTotalEvents] = useState(0);
 
   useEffect(() => {
     const formattedDate = showDate;
@@ -87,6 +88,11 @@ const AgendaTable = ({ route, navigation }) => {
   useEffect(() => {
     setEventTable(events);
   }, []);
+
+  useEffect(() => {
+    const eventsWithUser = eventTable.filter((evt) => evt.id);
+    setTotalEvents(eventsWithUser.length);
+  }, [eventTable]);
 
   function handleRefreshTable() {
     api.post('/admin/events/agenda', {
@@ -158,7 +164,11 @@ const AgendaTable = ({ route, navigation }) => {
       />
 
       <View style={styles.header}>
-        <View style={{ width: 32 }} />
+        <Text style={[styles.text, { color: colors.mainColor }]}>
+          Salas Ocupadas:
+          {' '}
+          {totalEvents}
+        </Text>
         <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
           {date.split('-').reverse().join('.')}
         </Text>
@@ -297,6 +307,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     paddingVertical: 10,
   },
   tableBorder: {
