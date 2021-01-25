@@ -1,9 +1,10 @@
 // /* eslint-disable global-require */
 import React, { useState, useEffect } from 'react';
 import {
-  AsyncStorage, Platform, LogBox,
+  Platform, LogBox, AsyncStorage,
 } from 'react-native';
 
+// import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 import * as Notifications from 'expo-notifications';
@@ -82,14 +83,14 @@ export default function App() {
 
   async function getPrivilegies() {
     try {
-      const isAdmin = await AsyncStorage.getItem('@SC:admin');
+      const isAdmin = await AsyncStorage.getItem('@SC:admin') || ' ';
       setUserRole(isAdmin);
     } catch {
       setUserRole(' ');
     }
   }
 
-  if (!loaded || !appReady || !userRole) {
+  if (!loaded || !appReady || userRole === null) {
     return null;
   }
 
