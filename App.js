@@ -1,10 +1,10 @@
 // /* eslint-disable global-require */
 import React, { useState, useEffect } from 'react';
 import {
-  Platform, LogBox, AsyncStorage,
+  Platform, LogBox,
 } from 'react-native';
 
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 import * as Notifications from 'expo-notifications';

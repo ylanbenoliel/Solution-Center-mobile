@@ -11,13 +11,13 @@ import {
   StyleSheet,
   Image,
   Alert,
-  Picker,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import Picker from '@react-native-community/picker';
 import { useNavigation } from '@react-navigation/native';
 
 import { api } from '@services/api';
