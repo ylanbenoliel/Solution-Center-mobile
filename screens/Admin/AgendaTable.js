@@ -101,7 +101,9 @@ const AgendaTable = ({ route, navigation }) => {
       const { events: rawEvents } = response.data;
       setEventTable(rawEvents);
       setRefreshFlatList(!refreshFlatList);
-    }).catch(() => { });
+    }).catch(() => {
+      Alert.alert('Aviso!', 'Não foi possível recarregar a agenda.');
+    });
   }
 
   function alterEventPayment(eventIndex) {
@@ -128,7 +130,9 @@ const AgendaTable = ({ route, navigation }) => {
       const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
       setEventTable(orderEvents);
       setRefreshFlatList(!refreshFlatList);
-    }).catch(() => {});
+    }).catch(() => {
+      Alert.alert('Aviso!', 'Não foi possível alterar o pagamento.');
+    });
   }
 
   function deleteEvent(eventIndex) {
@@ -153,7 +157,9 @@ const AgendaTable = ({ route, navigation }) => {
         const orderEvents = rawEvents.sort((evt1, evt2) => evt1.index - evt2.index);
         setEventTable(orderEvents);
         setRefreshFlatList(!refreshFlatList);
-      }).catch(() => {});
+      }).catch(() => {
+        Alert.alert('Aviso!', 'Não foi possível apagar reserva.');
+      });
   }
 
   return (
