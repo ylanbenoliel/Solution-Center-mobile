@@ -27,6 +27,8 @@ import {
   isSunday,
   formatISO,
   add,
+  endOfWeek,
+  subDays,
 } from 'date-fns';
 
 import {
@@ -50,7 +52,7 @@ const INITIALDATE = isSunday(new Date()) === true
 const INITIALDATERANGE = [
   {
     start: formatISO(INITIALDATE),
-    end: formatISO(add(new Date(), { days: 6 })),
+    end: subDays(endOfWeek(INITIALDATE), 1),
   },
 ];
 
@@ -58,7 +60,7 @@ export default function Schedule({ navigation }) {
   const calendarRef = useRef();
 
   const [datesBlacklist, setDatesBlacklist] = useState([
-    formatISO(add(new Date(), { days: 8 })),
+    formatISO(add(INITIALDATE, { days: 8 })),
   ]);
 
   const [datesWhitelist, setDatesWhitelist] = useState([]);
@@ -85,25 +87,26 @@ export default function Schedule({ navigation }) {
   }, [error]);
 
   useEffect(() => {
-    api.get('/dates')
-      .then((response) => {
-        const { maxDate, minDate } = response.data;
-        const rangeData = [
-          {
-            start: parseISO(minDate),
-            end: parseISO(maxDate),
-          },
-        ];
-        setDatesWhitelist(rangeData);
-        setDatesBlacklist(
-          disableWeekends(minDate, maxDate),
-        );
-      })
-      .catch(() => {
-        setDatesWhitelist(INITIALDATERANGE);
-        setError('Erro ao buscar dias disponíveis.');
-      });
+    fetchDates();
   }, []);
+
+  async function fetchDates() {
+    try {
+      const response = await api.get('/dates');
+      const { maxDate, minDate } = response.data;
+      const rangeData = [{
+        start: parseISO(minDate),
+        end: parseISO(maxDate),
+      }];
+      setDatesWhitelist(rangeData);
+      setDatesBlacklist(
+        disableWeekends(minDate, maxDate),
+      );
+    } catch {
+      setDatesWhitelist(INITIALDATERANGE);
+      setError('Erro ao buscar dias disponíveis.');
+    }
+  }
 
   function disableWeekends(startDate, endDate) {
     const weekends = eachWeekendOfInterval({
