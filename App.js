@@ -18,7 +18,7 @@ import colors from '@constants/colors';
 import Route from './routes/Route';
 
 export default function App() {
-  const [admin, setAdmin] = useState('');
+  const [userRole, setUserRole] = useState(null);
   const [appReady, setAppReady] = useState(false);
   const [loaded] = useFonts({
     // eslint-disable-next-line global-require
@@ -51,7 +51,7 @@ export default function App() {
   async function handleInitApp() {
     try {
       await SplashScreen.preventAutoHideAsync();
-    } catch (error) {
+    } catch {
       await SplashScreen.hideAsync();
     }
     prepareResources();
@@ -83,20 +83,20 @@ export default function App() {
   async function getPrivilegies() {
     try {
       const isAdmin = await AsyncStorage.getItem('@SC:admin');
-      setAdmin(isAdmin);
-    } catch (error) {
-      setAdmin(null);
+      setUserRole(isAdmin);
+    } catch {
+      setUserRole(' ');
     }
   }
 
-  if (!loaded || !appReady) {
+  if (!loaded || !appReady || !userRole) {
     return null;
   }
 
   return (
     <NavigationContainer>
       <AuthProvider>
-        <Route admin={admin} />
+        <Route admin={userRole} />
       </AuthProvider>
     </NavigationContainer>
   );
