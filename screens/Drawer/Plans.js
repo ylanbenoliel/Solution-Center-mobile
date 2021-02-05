@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,8 @@ import { Feather } from '@expo/vector-icons';
 
 import { GeneralStatusBar, HeaderDrawer } from '@components';
 
+import { api } from '@services/api';
+
 import backgroundLogo from '@assets/LogoHorizontal.png';
 
 import colors from '@constants/colors';
@@ -25,6 +27,23 @@ import colors from '@constants/colors';
 export default function Plans({ navigation }) {
   const [plan, setPlan] = useState(0);
 
+  const [price, setPrice] = useState({});
+
+  useEffect(() => {
+    fetchPrice();
+    return () => {
+      setPrice({});
+    };
+  }, []);
+
+  async function fetchPrice() {
+    try {
+      const responsePrice = await api.get('/price');
+      setPrice(responsePrice.data);
+    } catch (error) {
+      setPrice({});
+    }
+  }
   const Plan = ({ state, touchText, description }) => {
     if (plan !== state) {
       return (
@@ -132,7 +151,7 @@ export default function Plans({ navigation }) {
               touchText="Hora avulsa"
               description={[
                 '– Períodos mínimos de 60 minutos.',
-                '– Valor: R$ 35,00.',
+                `– Valor: R$ ${price.avulso},00.`,
               ]}
             />
             <View style={{ marginVertical: verticalScale(12) }} />
@@ -141,8 +160,8 @@ export default function Plans({ navigation }) {
               touchText="Turno"
               description={[
                 '– 6 horas consecutivas.',
-                '– Valor: R$ 180,00.',
-                '– Hora adicional: R$ 30,00.',
+                `– Valor: R$ ${price.turno?.valor || 210},00.`,
+                `– Hora adicional: R$ ${price.turno?.adicional || 30},00.`,
               ]}
             />
             <View style={{ marginVertical: verticalScale(12) }} />
@@ -151,8 +170,8 @@ export default function Plans({ navigation }) {
               touchText="Diária"
               description={[
                 '– De 08h às 18h.',
-                '– Valor: R$ 250,00.',
-                '– Hora adicional: R$ 30,00.',
+                `– Valor: R$ ${price.diaria?.valor || 300},00.`,
+                `– Hora adicional: R$ ${price.diaria?.adicional || 30},00.`,
               ]}
             />
             <View style={{ marginVertical: verticalScale(12) }} />
@@ -160,8 +179,8 @@ export default function Plans({ navigation }) {
               state={5}
               touchText="Fidelidade"
               description={[
-                '– Mensalidade de R$ 120,00.',
-                '– Valor da hora: R$ 30,00.',
+                `– Mensalidade: R$ ${price.fidelidade?.valor || 120},00.`,
+                `– Valor da hora: R$ ${price.fidelidade?.hora || 30},00.`,
                 '– Renovação não obrigatória.',
                 '– Marketing nos canais\n de comunicação.',
                 '– Prioridade para agendamento\n de horários e escolha de salas.',
@@ -173,11 +192,11 @@ export default function Plans({ navigation }) {
               touchText="Mensal"
               description={[
                 '– Sala exclusiva.',
-                '– Mensalidade de R$ 2000,00.',
+                `– Mensalidade: R$ ${price.mensal?.valor || 2000},00.`,
                 '– Renovação não obrigatória.',
                 '– Todas as despesas inclusas.',
                 '– Período matutino, de 08h às 13h.',
-                '– Hora fora do turno: R$ 30,00.',
+                `– Hora fora do turno: R$ ${price.mensal?.hora || 30},00.`,
               ]}
             />
           </ScrollView>
