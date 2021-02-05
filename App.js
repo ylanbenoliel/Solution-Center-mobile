@@ -83,10 +83,15 @@ export default function App() {
 
   async function getPrivilegies() {
     try {
-      const isAdmin = await AsyncStorage.getItem('@SC:admin') || ' ';
-      setUserRole(isAdmin);
+      const response = await api.get('/validate-session');
+      const { token, admin } = response.data;
+      if (token.length !== 0) {
+        setUserRole(String(admin));
+        return;
+      }
+      setUserRole('s');
     } catch {
-      setUserRole(' ');
+      setUserRole('s');
     }
   }
 
