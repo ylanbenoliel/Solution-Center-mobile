@@ -4,6 +4,7 @@
 import React, {
   useState,
   useEffect,
+  useContext,
 } from 'react';
 import {
   View,
@@ -20,6 +21,8 @@ import { format } from 'date-fns';
 
 import { GeneralStatusBar, ShowInfo } from '@components';
 
+import AuthContext from '@contexts/auth';
+
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
@@ -27,6 +30,8 @@ import colors from '@constants/colors';
 import LocaleConfig from '@constants/localeWixCalendar';
 
 export default function Agenda({ navigation }) {
+  const { savePushNotification } = useContext(AuthContext);
+
   const [daySelected, setDaySelected] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -34,6 +39,10 @@ export default function Agenda({ navigation }) {
   useEffect(() => {
     const currentDate = format(new Date(), 'yyyy-MM-dd');
     setDaySelected(currentDate);
+  }, []);
+
+  useEffect(() => {
+    savePushNotification();
   }, []);
 
   useEffect(() => {
