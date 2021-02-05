@@ -233,9 +233,7 @@ export default function Schedule({ navigation }) {
           </Text>
 
           <View style={styles.scrollViewContainer}>
-
             <ScrollView>
-
               <RoomButton
                 photo={require('@assets/rooms/clarice-min.jpeg')}
                 name={ROOM_DATA[0].name}
@@ -281,7 +279,6 @@ export default function Schedule({ navigation }) {
                 name={ROOM_DATA[8].name}
                 onClick={() => getEventsByDate(ROOM_DATA[8].room)}
               />
-
             </ScrollView>
           </View>
 
@@ -322,7 +319,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   roomsContainer: {
-    flex: 7,
+    flex: 8,
     alignItems: 'center',
     marginBottom: scale(14),
   },
@@ -364,7 +361,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     justifyContent: 'center',
-    marginTop: verticalScale(10),
-    paddingBottom: verticalScale(45),
+    paddingBottom: verticalScale(50),
   },
 });
