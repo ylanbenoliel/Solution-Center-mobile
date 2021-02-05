@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
+import { scale } from 'react-native-size-matters';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Info from '@components/Info';
@@ -18,11 +20,19 @@ import Agenda from '@screens/Admin/Agenda';
 import AgendaTable from '@screens/Admin/AgendaTable';
 import Notifications from '@screens/Admin/Notifications';
 import UserEventsDetails from '@screens/Admin/UserEventsDetails';
+import {
+  WhoWeAre,
+  Ambients,
+  Plans,
+  Contact,
+  About,
+} from '@screens/Drawer/index';
 
 import colors from '@constants/colors';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const screenOptions = {
   headerStyle: {
@@ -75,7 +85,7 @@ function UserStack() {
   );
 }
 
-export default function Admin() {
+function AdminTab() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -112,3 +122,23 @@ export default function Admin() {
     </Tab.Navigator>
   );
 }
+
+function AdminDrawer() {
+  return (
+    <Drawer.Navigator
+      drawerStyle={{
+        backgroundColor: colors.whiteColor,
+        width: scale(180),
+      }}
+    >
+      <Drawer.Screen name="Home" component={AdminTab} options={{ title: 'Início' }} />
+      <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
+      <Drawer.Screen name="Ambientes" component={Ambients} />
+      <Drawer.Screen name="Planos" component={Plans} />
+      <Drawer.Screen name="Contato" component={Contact} />
+      <Drawer.Screen name="About" component={About} options={{ title: 'Sobre o app' }} />
+    </Drawer.Navigator>
+  );
+}
+
+export default AdminDrawer;
