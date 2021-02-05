@@ -73,7 +73,7 @@ const UserOptions = ({
   </TouchableOpacity>
 );
 
-const Profile = ({ menu }) => {
+const Profile = ({ admin }) => {
   const navigation = useNavigation();
   const { signOut } = useContext(AuthContext);
 
@@ -203,15 +203,13 @@ const Profile = ({ menu }) => {
             marginHorizontal: scale(20),
           }}
           >
-            {menu ? (
-              <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Feather
-                  name="menu"
-                  size={scale(32)}
-                  color={colors.navigationColor}
-                />
-              </TouchableOpacity>
-            ) : (<View style={{ width: scale(32) }} />)}
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Feather
+                name="menu"
+                size={scale(32)}
+                color={colors.navigationColor}
+              />
+            </TouchableOpacity>
 
             <View style={styles.logoContainer}>
               <Logo width={200} height={45} />
@@ -241,19 +239,18 @@ const Profile = ({ menu }) => {
                 />
                 <UserOptions
                   leftIcon="bell"
-                  last={menu}
+                  last={!admin}
                   description="Minhas notificações"
                   onClick={() => { handleShowMessages(); }}
                 />
-                {!menu
-              && (
-              <UserOptions
-                last
-                leftIcon="settings"
-                description="Registros do sistema"
-                onClick={() => { handleShowLogs(); }}
-              />
-              )}
+                {admin && (
+                <UserOptions
+                  last
+                  leftIcon="settings"
+                  description="Registros do sistema"
+                  onClick={() => { handleShowLogs(); }}
+                />
+                )}
 
                 <TouchableOpacity
                   style={styles.signOutButton}
