@@ -21,11 +21,9 @@ import UserProfile from '@screens/User/UserProfile';
 
 import colors from '@constants/colors';
 
-const Drawer = createDrawerNavigator();
-
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-const StackShell = createStackNavigator();
+const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const screenOptions = {
   headerStyle: {
@@ -38,7 +36,7 @@ const screenOptions = {
   },
 };
 
-function UserInfo() {
+function UserInfoStack() {
   return (
     <Stack.Navigator
       headerMode="float"
@@ -50,7 +48,7 @@ function UserInfo() {
   );
 }
 
-function User() {
+function UserTab() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -75,7 +73,7 @@ function User() {
       }}
     >
       <Tab.Screen name="Salas" component={Schedule} />
-      <Tab.Screen name="Perfil" component={UserInfo} />
+      <Tab.Screen name="Perfil" component={UserInfoStack} />
     </Tab.Navigator>
   );
 }
@@ -88,7 +86,7 @@ function UserDrawer() {
         width: scale(180),
       }}
     >
-      <Drawer.Screen name="Home" component={User} options={{ title: 'Início' }} />
+      <Drawer.Screen name="Home" component={UserTab} options={{ title: 'Início' }} />
       <Drawer.Screen name="Sobre nós" component={WhoWeAre} />
       <Drawer.Screen name="Ambientes" component={Ambients} />
       <Drawer.Screen name="Planos" component={Plans} />
@@ -98,10 +96,4 @@ function UserDrawer() {
   );
 }
 
-export default function Shell() {
-  return (
-    <StackShell.Navigator headerMode="none">
-      <StackShell.Screen name="Shell" component={UserDrawer} />
-    </StackShell.Navigator>
-  );
-}
+export default UserDrawer;
