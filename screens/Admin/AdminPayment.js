@@ -45,6 +45,7 @@ const AdminPayment = ({ route }) => {
       const incomingEvents = (eventsNotPaidResponse.data.data);
       if (pageToLoad === 1) {
         if (incomingEvents.length === 0) {
+          setEventsNotPaid([]);
           return;
         }
         setEventsNotPaid(incomingEvents);
@@ -74,11 +75,7 @@ const AdminPayment = ({ route }) => {
       })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao salvar informação de pagamento.',
-          [
-            {
-              text: 'Ok',
-            },
-          ]);
+          [{ text: 'Ok' }]);
       });
   }
 

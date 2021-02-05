@@ -53,7 +53,7 @@ const UserEventsDetails = ({ route, navigation }) => {
       if (pageToLoad === 1) {
         setPage(1);
         if (incomingEvents.length === 0) {
-          setTotalEvents(null);
+          setTotalEvents([]);
           return;
         }
         setTotalEvents(incomingEvents);
@@ -213,7 +213,7 @@ const UserEventsDetails = ({ route, navigation }) => {
         )}
         ListEmptyComponent={(
           <ListEmpty
-            label={!totalEvents ? 'Carregando...' : 'Usuário não tem reservas.'}
+            label={totalEvents ? 'Usuário não tem reservas.' : 'Carregando...'}
           />
 )}
       />
