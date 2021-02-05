@@ -116,6 +116,10 @@ export default function Schedule({ navigation }) {
     return weekends;
   }
 
+  function reloadDates() {
+    fetchDates();
+  }
+
   function getEventsByDate(room) {
     setLoading(true);
 
@@ -166,12 +170,19 @@ export default function Schedule({ navigation }) {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <View style={{ flex: 1, justifyContent: 'center', marginLeft: scale(20) }}>
+      <View style={styles.header}>
 
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Feather
             name="menu"
             size={scale(32)}
+            color={colors.navigationColor}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => reloadDates()}>
+          <Feather
+            name="refresh-cw"
+            size={scale(28)}
             color={colors.navigationColor}
           />
         </TouchableOpacity>
@@ -296,6 +307,14 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  header: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: scale(20),
+  },
+
   calendarContainer: {
     flex: 9,
   },
