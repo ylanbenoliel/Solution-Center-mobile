@@ -86,6 +86,7 @@ export default function App() {
       const response = await api.get('/validate-session');
       const { token, admin } = response.data;
       if (token.length !== 0) {
+        await AsyncStorage.setItem('@SC:token', token);
         setUserRole(String(admin));
         return;
       }
