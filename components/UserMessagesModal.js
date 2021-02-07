@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList,
 } from 'react-native';
@@ -12,6 +12,8 @@ import { format, parseISO } from 'date-fns';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
+
+import { removeDuplicates } from '@helpers/functions';
 
 import { api } from '@services/api';
 
@@ -36,50 +38,44 @@ const MessageInfo = ({ message, date }) => {
   );
 };
 
-const UserEventsModal = ({ isVisible, onClose }) => {
+const MessageInfoMemo = memo(MessageInfo);
+
+const UserMessagesModal = ({ isVisible, onClose }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
-  const [label, setLabel] = useState('Carregando...');
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(null);
 
-  function getData() {
-    if (totalPages && (page > totalPages)) {
-      return null;
+  async function fetchData(pageToLoad = 1) {
+    try {
+      if (totalPages && (pageToLoad > totalPages)) {
+        return;
+      }
+      const messagesResponse = await api.get(`/messages?page=${pageToLoad}`);
+      const incomingMessages = (messagesResponse.data.data);
+      if (pageToLoad === 1) {
+        if (incomingMessages.length === 0) {
+          setMessages([]);
+          return;
+        }
+        setMessages(incomingMessages);
+        return;
+      }
+      const combineMessages = [...messages, ...incomingMessages];
+      const messagesWithoutDuplicates = removeDuplicates(combineMessages, 'id');
+      setTotalPages(messagesResponse.data.lastPage);
+      setMessages(messagesWithoutDuplicates);
+      setPage(page + 1);
+    } catch (error) {
+      setMessages([]);
     }
-    api.get(`/messages?page=${page}`)
-      .then((res) => {
-        const incomingMessages = (res.data.data);
-        if (page === 1) {
-          if (incomingMessages.length === 0) {
-            return setLabel('Sem mensagens.');
-          }
-          return setMessages(incomingMessages);
-        }
-
-        const combineMessages = [...messages, ...incomingMessages];
-        setTotalPages(res.data.lastPage);
-        return setMessages(combineMessages);
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          return setLabel('Sem mensagens.');
-        }
-        return setLabel('Erro ao pesquisar mensagens.');
-      });
-    return null;
-  }
-
-  function handleLoadMore() {
-    setPage(page + 1);
-    getData();
   }
 
   function handleOpenModal() {
-    getData();
+    fetchData();
   }
 
   function handleCloseModal() {
-    setMessages([]);
+    setMessages(null);
     setPage(1);
   }
 
@@ -115,12 +111,17 @@ const UserEventsModal = ({ isVisible, onClose }) => {
           data={messages}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <MessageInfo key={item.id} message={item.message} date={item.created_at} />
+            <MessageInfoMemo key={item.id} message={item.message} date={item.created_at} />
           )}
           ItemSeparatorComponent={() => (<Separator />)}
           onEndReachedThreshold={0.5}
-          onEndReached={() => handleLoadMore()}
-          ListEmptyComponent={<ListEmpty modal label={label} />}
+          onEndReached={() => fetchData(page + 1)}
+          ListEmptyComponent={(
+            <ListEmpty
+              modal
+              label={messages ? 'Sem mensagens.' : 'Carregando...'}
+            />
+          )}
         />
 
       </View>
@@ -160,4 +161,4 @@ const styles = StyleSheet.create({
   dateCreation: { fontSize: scale(14) },
 });
 
-export default UserEventsModal;
+export default UserMessagesModal;

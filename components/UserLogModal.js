@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList,
 } from 'react-native';
@@ -12,6 +12,8 @@ import { format, parseISO } from 'date-fns';
 
 import ListEmpty from '@components/ListEmpty';
 import Separator from '@components/Separator';
+
+import { removeDuplicates } from '@helpers/functions';
 
 import { api } from '@services/api';
 
@@ -28,55 +30,49 @@ const LogInfo = ({ log, date }) => {
         Gerado em:
         {' '}
         {formattedDate}
-
       </Text>
     </View>
   );
 };
 
+const LogInfoMemo = memo(LogInfo);
+
 const UserLogModal = ({ isVisible, onClose }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
-  const [label, setLabel] = useState('Carregando...');
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState(null);
 
-  function getData() {
-    if (totalPages && (page > totalPages)) {
-      return null;
+  async function fetchData(pageToLoad = 1) {
+    try {
+      if (totalPages && (pageToLoad > totalPages)) {
+        return;
+      }
+      const logsResponse = await api.get(`/logs?page=${pageToLoad}`);
+      const incomingLogs = (logsResponse.data.data);
+      if (pageToLoad === 1) {
+        if (incomingLogs.length === 0) {
+          setLogs([]);
+          return;
+        }
+        setLogs(incomingLogs);
+        return;
+      }
+      const combineLogs = [...logs, ...incomingLogs];
+      const logsWithoutDuplicates = removeDuplicates(combineLogs, 'id');
+      setTotalPages(logsResponse.data.lastPage);
+      setLogs(logsWithoutDuplicates);
+      setPage(page + 1);
+    } catch (error) {
+      setLogs([]);
     }
-    api.get(`/logs?page=${page}`)
-      .then((res) => {
-        const incomingLogs = (res.data.data);
-        if (page === 1) {
-          if (incomingLogs.length === 0) {
-            return setLabel('Sem registros.');
-          }
-          return setLogs(incomingLogs);
-        }
-        const combineLogs = [...logs, ...incomingLogs];
-        setTotalPages(res.data.lastPage);
-        return setLogs(combineLogs);
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          return setLabel('Sem registros.');
-        }
-        return setLabel('Erro ao pesquisar registros.');
-      });
-    return null;
-  }
-
-  function handleLoadMore() {
-    setPage(page + 1);
-    getData();
   }
 
   function handleOpenModal() {
-    getData();
+    fetchData();
   }
 
   function handleCloseModal() {
-    setLogs([]);
+    setLogs(null);
     setPage(1);
   }
 
@@ -107,20 +103,22 @@ const UserLogModal = ({ isVisible, onClose }) => {
       </View>
 
       <View style={{ flex: 9, width: '90%' }}>
-
         <FlatList
           data={logs}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <LogInfo key={item.id} log={item.log} date={item.created_at} />
+            <LogInfoMemo key={item.id} log={item.log} date={item.created_at} />
           )}
           ItemSeparatorComponent={() => (<Separator />)}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => handleLoadMore()}
-          ListEmptyComponent={<ListEmpty modal label={label} />}
-
+          onEndReachedThreshold={0.6}
+          onEndReached={() => fetchData(page + 1)}
+          ListEmptyComponent={(
+            <ListEmpty
+              modal
+              label={logs ? 'Sem logs.' : 'Carregando...'}
+            />
+          )}
         />
-
       </View>
 
     </Modal>
