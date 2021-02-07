@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     } catch {
       return;
     }
+    // eslint-disable-next-line consistent-return
     return token;
   }
 
