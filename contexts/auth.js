@@ -12,8 +12,7 @@ const AuthContext = createContext({});
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   async function signIn(res) {
-    AsyncStorage.setItem('@SC:token', res.data.token);
-    AsyncStorage.setItem('@SC:email', res.data.user.email);
+    await AsyncStorage.setItem('@SC:token', res.data.token);
   }
 
   function signOut() {
