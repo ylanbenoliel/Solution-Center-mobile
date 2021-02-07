@@ -15,8 +15,9 @@ export const AuthProvider = ({ children }) => {
     await AsyncStorage.setItem('@SC:token', res.data.token);
   }
 
-  function signOut() {
-    AsyncStorage.multiRemove(['@SC:token', '@SC:name', '@SC:email', '@SC:admin']);
+  async function signOut() {
+    const keys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.multiRemove(keys);
   }
 
   async function savePushNotification() {
