@@ -183,12 +183,20 @@ const AdminUserList = () => {
     setIsModalOpen(true);
   }
 
-  function handleOpenModal(user) {
+  async function handleOpenModal(user) {
     if (debtEnabled) {
       navigation.navigate('Pagamentos', { user: user.id });
+      return;
     }
     setLoading(true);
-    setUserInfo(user);
+    const userResponse = await api.get(`/users/details?user=${user?.id}`);
+    const userData = userResponse.data[0];
+    let avatarUrl = null;
+    if (userData.avatar?.url) {
+      avatarUrl = user.avatar.url;
+    }
+    const userToShow = { avatarUrl, ...user };
+    setUserInfo(userToShow);
     fetchPlanData(user.id);
     setLoading(false);
   }
