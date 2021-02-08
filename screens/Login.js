@@ -224,12 +224,17 @@ export default function Login() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.buttonContainer, { backgroundColor: colors.whiteColor }]}
+            style={[styles.buttonContainer,
+              {
+                backgroundColor: colors.whiteColor,
+                borderWidth: 2,
+                borderColor: colors.secondaryColor,
+              }]}
             onPress={() => {
               handleRegister();
             }}
           >
-            <Text style={styles.text}>
+            <Text style={[styles.text, { color: colors.secondaryColor }]}>
               Registre-se
             </Text>
           </TouchableOpacity>
