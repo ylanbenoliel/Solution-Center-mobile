@@ -104,7 +104,7 @@ const Notifications = () => {
             avatarUrl = user.avatar.url;
           }
           return { avatarUrl, selected, ...user };
-        }).sort((a, b) => a.name.localeCompare(b.name));
+        });
         setTotalUsers(users);
         if (refresh) {
           setRefreshing(false);
