@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   View,
   FlatList,
@@ -27,6 +27,8 @@ import { sanitizeString } from '@helpers/functions';
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
+
+const UserItemMemo = memo(UserItem);
 
 const AdminUserList = () => {
   const navigation = useNavigation();
@@ -182,13 +184,12 @@ const AdminUserList = () => {
   }
 
   function handleOpenModal(user) {
-    setLoading(true);
-    setUserInfo(user);
     if (debtEnabled) {
       navigation.navigate('Pagamentos', { user: user.id });
-    } else {
-      fetchPlanData(user.id);
     }
+    setLoading(true);
+    setUserInfo(user);
+    fetchPlanData(user.id);
     setLoading(false);
   }
 
@@ -214,7 +215,7 @@ const AdminUserList = () => {
         )}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: user }) => (
-          <UserItem
+          <UserItemMemo
             {...user}
             onClick={() => handleOpenModal(user)}
           />
