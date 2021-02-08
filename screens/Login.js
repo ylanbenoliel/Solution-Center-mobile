@@ -21,7 +21,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { Feather } from '@expo/vector-icons';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
-import { GeneralStatusBar, ShowInfo } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
 
 import AuthContext from '@contexts/auth';
 
@@ -38,16 +38,17 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState('');
 
   const field2 = createRef();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setError('');
-    }, 2200);
-    return () => clearTimeout(timer);
-  }, [error]);
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function showLoadingLogin() {
     if (loading) {
@@ -60,15 +61,17 @@ export default function Login() {
     setLoading(true);
     Keyboard.dismiss();
     if (email === '' || password === '') {
-      setError('Preencha todos os campos.');
-      return setLoading(false);
+      setSnackColor(colors.errorColor);
+      setSnackText('Preencha todos os campos.');
+      setVisibleSnack(true);
+      setLoading(false);
+      return;
     }
 
-    api
-      .post('/authenticate', {
-        email,
-        password,
-      })
+    api.post('/authenticate', {
+      email,
+      password,
+    })
       .then((response) => {
         setLoading(false);
         signIn(response);
@@ -87,19 +90,23 @@ export default function Login() {
             }),
           );
         }
-        return null;
       })
       .catch((e) => {
+        setSnackColor(colors.errorColor);
         setLoading(false);
         if (e.response) {
-          return setError(`${e.response.data.message}`);
+          setSnackText(`${e.response?.data?.message}`);
+          setVisibleSnack(true);
+          return;
         }
         if (e.request) {
-          return setError('Erro na conexão.');
+          setSnackText('Erro na conexão.');
+          setVisibleSnack(true);
+          return;
         }
-        return setError('Algo deu errado.');
+        setSnackText('Algo deu errado.');
+        setVisibleSnack(true);
       });
-    return null;
   }
 
   function handleRegister() {
@@ -208,7 +215,7 @@ export default function Login() {
                 <Text
                   style={[styles.text, { fontSize: scale(14) }]}
                 >
-                  Esqueci minha senha
+                  Esqueci minha senha.
                 </Text>
               </TouchableOpacity>
             </View>
@@ -238,9 +245,9 @@ export default function Login() {
               Registre-se
             </Text>
           </TouchableOpacity>
-          <ShowInfo error={error} />
         </View>
       </KeyboardAvoidingView>
+      <SnackBar visible={visibleSnack} text={snackText} color={snackColor} />
     </SafeAreaView>
   );
 }
