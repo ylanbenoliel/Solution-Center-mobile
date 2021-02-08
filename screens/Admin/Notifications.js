@@ -240,7 +240,8 @@ const Notifications = () => {
           )}
           ListEmptyComponent={(
             <ListEmpty
-              label={totalUsers ? 'Carregando...' : 'Sem usuários'}
+              modal
+              label={totalUsers ? 'Carregando...' : 'Sem usuários.'}
             />
           )}
         />
