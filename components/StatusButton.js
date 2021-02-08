@@ -26,19 +26,19 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
         onPress={() => onDismiss()}
         style={[styles.defaultButton, styles.reservedButton]}
       >
-        <Text style={styles.text}>Sua reserva</Text>
+        <Text style={[styles.text, styles.reservedText]}>Sua reserva</Text>
       </TouchableOpacity>
     );
   }
   if (code === '3') {
     return (
       <TouchableOpacity
-        onPress={() => Alert.alert('Erro', 'Não é possível cancelar esse horário', [
+        onPress={() => Alert.alert('Erro!', 'Não é possível cancelar esse horário.', [
           { text: 'Ok' },
         ])}
         style={[styles.defaultButton, styles.disabledButton]}
       >
-        <Text style={styles.text}>Sua reserva</Text>
+        <Text style={[styles.text, styles.disabledText]}>Sua reserva</Text>
       </TouchableOpacity>
     );
   }
@@ -48,7 +48,7 @@ const StatusButton = ({ code, onCheckIn, onDismiss }) => {
         style={[styles.defaultButton, styles.unavailableButton]}
         disabled
       >
-        <Text style={styles.text}>Horário indisponível</Text>
+        <Text style={[styles.text, styles.unavailableText]}>Horário indisponível</Text>
       </TouchableOpacity>
     );
   }
@@ -62,23 +62,34 @@ const styles = StyleSheet.create({
     borderRadius: verticalScale(8),
     justifyContent: 'center',
   },
-  availableButton: {
-    backgroundColor: colors.accentColor,
-  },
-  reservedButton: {
-    backgroundColor: colors.mainColor,
-  },
-  disabledButton: {
-    backgroundColor: colors.disableColor,
-  },
-  unavailableButton: {
-    backgroundColor: colors.errorColor,
-  },
   text: {
     fontFamily: 'Amaranth-Regular',
     fontSize: scale(16),
     textAlign: 'center',
     color: colors.whiteColor,
+  },
+  availableButton: {
+    backgroundColor: colors.accentColor,
+  },
+  reservedButton: {
+    borderWidth: 2,
+    backgroundColor: colors.whiteColor,
+    borderColor: colors.mainColor,
+  },
+  reservedText: {
+    color: colors.mainColor,
+  },
+  disabledButton: {
+    backgroundColor: colors.whiteColor,
+  },
+  disabledText: {
+    color: colors.disableColor,
+  },
+  unavailableButton: {
+    backgroundColor: colors.whiteColor,
+  },
+  unavailableText: {
+    color: colors.errorColor,
   },
 });
 
