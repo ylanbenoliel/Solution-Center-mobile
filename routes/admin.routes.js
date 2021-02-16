@@ -19,6 +19,7 @@ import AdminUserList from '@screens/Admin/AdminUserList';
 import Agenda from '@screens/Admin/Agenda';
 import AgendaTable from '@screens/Admin/AgendaTable';
 import Notifications from '@screens/Admin/Notifications';
+import Reports from '@screens/Admin/Reports';
 import UserEventsDetails from '@screens/Admin/UserEventsDetails';
 import {
   WhoWeAre,
@@ -99,6 +100,9 @@ function AdminTab() {
           if (route.name === 'Usuários') {
             iconName = 'users';
           }
+          if (route.name === 'Reports') {
+            iconName = 'archive';
+          }
           if (route.name === 'Notificações') {
             iconName = 'bell';
           }
@@ -117,6 +121,7 @@ function AdminTab() {
     >
       <Tab.Screen name="Calendar" component={AgendaStack} options={{ title: 'Calendário' }} />
       <Tab.Screen name="Usuários" component={UserStack} />
+      <Tab.Screen name="Reports" component={Reports} options={{ title: 'Relatórios' }} />
       <Tab.Screen name="Notificações" component={Notifications} />
       <Tab.Screen name="Perfil" component={AdminInfoStack} />
     </Tab.Navigator>
