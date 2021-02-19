@@ -102,7 +102,7 @@ const SelectedButton = ({
 };
 
 const Reports = () => {
-  const [filter, setFilter] = useState(1);
+  const [filter, setFilter] = useState(HOUR_FILTER);
 
   const [modalStartVisible, setModalStartVisible] = useState(false);
   const [changeStartDateRange, setChangeStartDateRange] = useState(true);
@@ -157,8 +157,8 @@ const Reports = () => {
         </View>
 
         <View style={styles.filterContainer}>
-          <SelectedButton label="Sala:" option={ROOM_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
           <SelectedButton label="Hora:" option={HOUR_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
+          <SelectedButton label="Sala:" option={ROOM_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
           <SelectedButton label="Profissão:" option={JOB_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
         </View>
         <View>
