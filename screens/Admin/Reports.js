@@ -83,6 +83,24 @@ const DateRangeModal = ({ onClose, visible }) => {
   );
 };
 
+const SelectedButton = ({
+  label, option, current, onClick,
+}) => {
+  const buttonStyle = option === current
+    ? [styles.button, styles.selectedButton]
+    : [styles.button];
+  const buttonText = option === current
+    ? [styles.text, styles.selectedText]
+    : [styles.text];
+  return (
+    <TouchableOpacity onPress={() => { onClick(option); }}>
+      <View style={buttonStyle}>
+        <Text style={buttonText}>{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const Reports = () => {
   const [filter, setFilter] = useState(1);
 
@@ -91,21 +109,9 @@ const Reports = () => {
 
   const [dateRange, setDateRange] = useState({ start: CURRENT_DATE, end: CURRENT_DATE });
 
-  const SelectedButton = ({ label, option }) => {
-    const buttonStyle = option === filter
-      ? [styles.button, styles.selectedButton]
-      : [styles.button];
-    const buttonText = option === filter
-      ? [styles.text, styles.selectedText]
-      : [styles.text];
-    return (
-      <TouchableOpacity onPress={() => { setFilter(option); }}>
-        <View style={buttonStyle}>
-          <Text style={buttonText}>{label}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  function handleChangeFilter(selectedFilter) {
+    setFilter(selectedFilter);
+  }
 
   function handleOpenModal(func) {
     return func(true);
@@ -151,9 +157,9 @@ const Reports = () => {
         </View>
 
         <View style={styles.filterContainer}>
-          <SelectedButton label="Hora:" option={HOUR_FILTER} />
-          <SelectedButton label="Sala:" option={ROOM_FILTER} />
-          <SelectedButton label="Profissão:" option={JOB_FILTER} />
+          <SelectedButton label="Sala:" option={ROOM_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
+          <SelectedButton label="Hora:" option={HOUR_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
+          <SelectedButton label="Profissão:" option={JOB_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
         </View>
         <View>
           <TouchableOpacity onPress={() => {}}>
