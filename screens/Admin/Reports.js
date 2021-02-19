@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
@@ -21,8 +22,8 @@ const JOB_FILTER = 3;
 
 const CURRENT_DATE = format(new Date(), 'yyyy-MM-dd');
 
-const DateRangeModal = ({ onClose, visible, dateString }) => {
-  const [daySelected, setDaySelected] = useState(dateString || CURRENT_DATE);
+const DateRangeModal = ({ onClose, visible }) => {
+  const [daySelected, setDaySelected] = useState(CURRENT_DATE);
 
   function handleDayPress(dateStr) {
     setDaySelected(dateStr);
@@ -34,7 +35,7 @@ const DateRangeModal = ({ onClose, visible, dateString }) => {
     >
       <View style={styles.modalHeader}>
         <View style={{ height: 32, width: 38 }} />
-        <Text style={[styles.text, { fontSize: 24 }]}>Período</Text>
+        <Text style={[styles.text, { fontSize: 24 }]}>Dia</Text>
         <TouchableOpacity
           style={{ marginRight: 4 }}
           onPress={() => { onClose(); }}
@@ -85,7 +86,9 @@ const DateRangeModal = ({ onClose, visible, dateString }) => {
 const Reports = () => {
   const [filter, setFilter] = useState(1);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalStartVisible, setModalStartVisible] = useState(false);
+  const [changeStartDateRange, setChangeStartDateRange] = useState(true);
+
   const [dateRange, setDateRange] = useState({ start: CURRENT_DATE, end: CURRENT_DATE });
 
   const SelectedButton = ({ label, option }) => {
@@ -104,6 +107,13 @@ const Reports = () => {
     );
   };
 
+  function handleOpenModal(func) {
+    return func(true);
+  }
+  function handleCloseModal(func) {
+    return func(false);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -112,13 +122,35 @@ const Reports = () => {
       />
       <View style={styles.resultContainer} />
 
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Text style={styles.text}>{dateRange.start.split('-').reverse().join('/')}</Text>
+        <Text style={styles.text}>{dateRange.end.split('-').reverse().join('/')}</Text>
+      </View>
+
       <View style={styles.optionController}>
-        <View style={styles.filterContainer}>
-          <TouchableOpacity onPress={() => { setModalVisible(true); }}>
+        <View style={styles.dateContainer}>
+          <TouchableOpacity onPress={() => {
+            setChangeStartDateRange(true);
+            handleOpenModal(setModalStartVisible);
+          }}
+          >
             <View style={styles.dateButton}>
-              <Text style={[styles.text, styles.selectedText]}>Período</Text>
+              <Text style={[styles.text, styles.selectedText]}>Data inicial</Text>
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {
+            setChangeStartDateRange(false);
+            handleOpenModal(setModalStartVisible);
+          }}
+          >
+            <View style={styles.dateButton}>
+              <Text style={[styles.text, styles.selectedText]}>Data final</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.filterContainer}>
           <SelectedButton label="Hora:" option={HOUR_FILTER} />
           <SelectedButton label="Sala:" option={ROOM_FILTER} />
           <SelectedButton label="Profissão:" option={JOB_FILTER} />
@@ -134,11 +166,24 @@ const Reports = () => {
 
       <DateRangeModal
         onClose={(dayModal) => {
-          setModalVisible(false);
-          console.log(!!dayModal);
+          handleCloseModal(setModalStartVisible);
+          if (dayModal) {
+            if (changeStartDateRange) {
+              setDateRange((prevState) => ({
+                ...prevState,
+                start: dayModal,
+              }));
+              return;
+            }
+            setDateRange((prevState) => ({
+              ...prevState,
+              end: dayModal,
+            }));
+          }
         }}
-        visible={modalVisible}
+        visible={modalStartVisible}
       />
+
     </SafeAreaView>
   );
 };
@@ -186,13 +231,17 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
   },
+  dateContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
+  },
   dateButton: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.navigationColor,
     padding: 10,
     maxHeight: 50,
-    maxWidth: 100,
     borderRadius: 4,
     borderWidth: 2,
     borderColor: colors.navigationColor,
