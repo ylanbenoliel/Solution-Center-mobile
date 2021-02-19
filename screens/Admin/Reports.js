@@ -100,7 +100,7 @@ const SelectedButton = ({
     </TouchableOpacity>
   );
 };
-
+// directly
 const Reports = () => {
   const [filter, setFilter] = useState(HOUR_FILTER);
 
@@ -111,13 +111,6 @@ const Reports = () => {
 
   function handleChangeFilter(selectedFilter) {
     setFilter(selectedFilter);
-  }
-
-  function handleOpenModal(func) {
-    return func(true);
-  }
-  function handleCloseModal(func) {
-    return func(false);
   }
 
   return (
@@ -137,7 +130,7 @@ const Reports = () => {
         <View style={styles.dateContainer}>
           <TouchableOpacity onPress={() => {
             setChangeStartDateRange(true);
-            handleOpenModal(setModalStartVisible);
+            setModalStartVisible(true);
           }}
           >
             <View style={styles.dateButton}>
@@ -147,7 +140,7 @@ const Reports = () => {
 
           <TouchableOpacity onPress={() => {
             setChangeStartDateRange(false);
-            handleOpenModal(setModalStartVisible);
+            setModalStartVisible(true);
           }}
           >
             <View style={styles.dateButton}>
@@ -172,7 +165,7 @@ const Reports = () => {
 
       <DateRangeModal
         onClose={(dayModal) => {
-          handleCloseModal(setModalStartVisible);
+          setModalStartVisible(false);
           if (dayModal) {
             if (changeStartDateRange) {
               setDateRange((prevState) => ({
