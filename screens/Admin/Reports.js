@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
+  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert,
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
@@ -100,7 +100,7 @@ const SelectedButton = ({
     </TouchableOpacity>
   );
 };
-// directly
+
 const Reports = () => {
   const [filter, setFilter] = useState(HOUR_FILTER);
 
@@ -111,6 +111,33 @@ const Reports = () => {
 
   function handleChangeFilter(selectedFilter) {
     setFilter(selectedFilter);
+  }
+
+  function checkIfDateRangeIsValid() {
+    const start = new Date(dateRange.start);
+    const end = new Date(dateRange.end);
+    const isValid = start < end;
+    return isValid;
+  }
+
+  function handleSearchReports(filterOption) {
+    const validDateRange = checkIfDateRangeIsValid();
+    if (!validDateRange) {
+      Alert.alert('Intervalo de tempo inválido.');
+      return;
+    }
+    if (filterOption === HOUR_FILTER) {
+
+      // console.log(`filter = ${filterOption}`);
+    } else
+    if (filterOption === ROOM_FILTER) {
+
+      // console.log(`filter = ${filterOption}`);
+    } else
+    if (filterOption === JOB_FILTER) {
+
+      // console.log(`filter = ${filterOption}`);
+    }
   }
 
   return (
@@ -155,7 +182,7 @@ const Reports = () => {
           <SelectedButton label="Profissão:" option={JOB_FILTER} current={filter} onClick={(opt) => handleChangeFilter(opt)} />
         </View>
         <View>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { handleSearchReports(filter); }}>
             <View style={styles.actionButton}>
               <Text style={[styles.text, styles.selectedText]}>Buscar</Text>
             </View>
