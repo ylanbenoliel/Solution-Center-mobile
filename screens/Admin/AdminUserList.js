@@ -160,7 +160,13 @@ const AdminUserList = () => {
         setTotalUsers(users);
         setDebt(ids);
       }))
-      .catch(() => setError('Erro ao buscar usuários.'))
+      .catch((e) => {
+        if (e.response?.data?.message) {
+          setError(`${e.response?.data?.message}`);
+          return;
+        }
+        setError('Erro de conexão.');
+      })
       .finally(() => {
         if (refresh) {
           setIsRefreshing(false);
@@ -248,8 +254,8 @@ const AdminUserList = () => {
       setTotalUsers(listWithoutDeletedUser);
       setSuccess(`${data.message}`);
     } catch (e) {
-      if (e.data?.message) {
-        setError(`${e.data.message}`);
+      if (e.response?.data?.message) {
+        setError(`${e.response?.data?.message}`);
         return;
       }
       setError('Erro de conexão.');
