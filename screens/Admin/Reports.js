@@ -12,9 +12,10 @@ import { format } from 'date-fns';
 
 import { GeneralStatusBar } from '@components';
 
-// import { api } from '@services/api';
+import { api } from '@services/api';
 
 import colors from '@constants/colors';
+import { ROOM_DATA } from '@constants/fixedValues';
 
 const HOUR_FILTER = 1;
 const ROOM_FILTER = 2;
@@ -108,6 +109,8 @@ const Reports = () => {
   const [changeStartDateRange, setChangeStartDateRange] = useState(true);
 
   const [dateRange, setDateRange] = useState({ start: CURRENT_DATE, end: CURRENT_DATE });
+  const [roomCount, setRoomCount] = useState([]);
+  const [roomTotal, setRoomTotal] = useState(0);
 
   function handleChangeFilter(selectedFilter) {
     setFilter(selectedFilter);
@@ -116,27 +119,42 @@ const Reports = () => {
   function checkIfDateRangeIsValid() {
     const start = new Date(dateRange.start);
     const end = new Date(dateRange.end);
+    // FIXME Verify if end date is equal or after
     const isValid = start < end;
     return isValid;
   }
 
-  function handleSearchReports(filterOption) {
+  async function handleSearchReports(filterOption) {
     const validDateRange = checkIfDateRangeIsValid();
     if (!validDateRange) {
       Alert.alert('Intervalo de tempo inválido.');
       return;
     }
     if (filterOption === HOUR_FILTER) {
-
-      // console.log(`filter = ${filterOption}`);
-    } else
+      return;
+    }
     if (filterOption === ROOM_FILTER) {
-
-      // console.log(`filter = ${filterOption}`);
-    } else
+      try {
+        const { data } = await api.post('/business/rooms',
+          { start: dateRange.start, end: dateRange.end });
+        const result = Object.entries(data.salas);
+        const roomWithName = ROOM_DATA.map((info) => {
+          const matchResponse = result.find((room) => Number(room[0]) === info.room);
+          return {
+            room: info.room,
+            name: info.name,
+            count: matchResponse[1],
+          };
+        });
+        setRoomCount(roomWithName);
+        setRoomTotal(data.total);
+      } catch {
+        Alert.alert('Erro ao pegar informações sobre as salas.');
+      }
+      return;
+    }
     if (filterOption === JOB_FILTER) {
-
-      // console.log(`filter = ${filterOption}`);
+      //
     }
   }
 
@@ -146,7 +164,24 @@ const Reports = () => {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
-      <View style={styles.resultContainer} />
+      <View style={styles.resultContainer}>
+        {/* Hour filter */}
+        {filter === ROOM_FILTER && (
+          <View>
+            {roomCount.map((data) => (
+              <View key={data.room}>
+                <Text style={[styles.text, { fontSize: 22 }]}>
+                  {`${data.name}: ${data.count}`}
+                </Text>
+              </View>
+            ))}
+            <Text style={[styles.text, { fontSize: 22 }]}>
+              {`Total: ${roomTotal}`}
+            </Text>
+          </View>
+        )}
+        {/* job filter */}
+      </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Text style={styles.text}>{dateRange.start.split('-').reverse().join('/')}</Text>
@@ -222,7 +257,7 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     flex: 3,
-    backgroundColor: 'green',
+    // backgroundColor: 'green',
   },
   optionController: {
     flex: 2,
