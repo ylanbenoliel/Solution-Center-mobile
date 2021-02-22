@@ -119,8 +119,7 @@ const Reports = () => {
   function checkIfDateRangeIsValid() {
     const start = new Date(dateRange.start);
     const end = new Date(dateRange.end);
-    // FIXME Verify if end date is equal or after
-    const isValid = start < end;
+    const isValid = start <= end;
     return isValid;
   }
 
