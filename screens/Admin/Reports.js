@@ -110,6 +110,7 @@ const Reports = () => {
 
   const [dateRange, setDateRange] = useState({ start: CURRENT_DATE, end: CURRENT_DATE });
   const [roomCount, setRoomCount] = useState([]);
+  const [hourCount, setHourCount] = useState([]);
   const [roomTotal, setRoomTotal] = useState(0);
 
   function handleChangeFilter(selectedFilter) {
@@ -130,6 +131,24 @@ const Reports = () => {
       return;
     }
     if (filterOption === HOUR_FILTER) {
+      try {
+        const { data } = await api.post('/business/hours',
+          { start: dateRange.start, end: dateRange.end });
+        const result = Object.entries(data.hours);
+        const hourWithCount = result.map((info) => {
+          const dataSplit = info[0].split(':');
+          const hourFormatted = `${dataSplit[0]}`;
+          const countString = String(info[1]).padStart(2, 0);
+          return {
+            hour: hourFormatted,
+            count: countString,
+          };
+        });
+        setHourCount(hourWithCount);
+        setRoomTotal(data.total);
+      } catch {
+        Alert.alert('Erro ao pegar informações sobre os horários.');
+      }
       return;
     }
     if (filterOption === ROOM_FILTER) {
@@ -164,9 +183,28 @@ const Reports = () => {
         barStyle="dark-content"
       />
       <View style={styles.resultContainer}>
-        {/* Hour filter */}
+        {filter === HOUR_FILTER && (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+            {hourCount.map((data) => (
+              <View
+                key={data.hour}
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text style={[styles.text, { fontSize: 22 }]}>
+                  {`${data.hour}h: ${data.count}`}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
         {filter === ROOM_FILTER && (
-          <View>
+          <>
             {roomCount.map((data) => (
               <View key={data.room}>
                 <Text style={[styles.text, { fontSize: 22 }]}>
@@ -174,12 +212,12 @@ const Reports = () => {
                 </Text>
               </View>
             ))}
-            <Text style={[styles.text, { fontSize: 22 }]}>
-              {`Total: ${roomTotal}`}
-            </Text>
-          </View>
+          </>
         )}
         {/* job filter */}
+        <Text style={[styles.text, { fontSize: 22 }]}>
+          {`Total: ${roomTotal}`}
+        </Text>
       </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
