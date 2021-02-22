@@ -1,8 +1,10 @@
+/* eslint-disable global-require */
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, memo } from 'react';
 import {
   View,
+  Image,
   FlatList,
   SafeAreaView,
   TextInput,
@@ -19,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 import {
-  UserItem, ShowInfo, AdminUserModal, Loading, GeneralStatusBar, ListEmpty,
+  ShowInfo, AdminUserModal, Loading, GeneralStatusBar, ListEmpty,
 } from '@components';
 
 import { sanitizeString } from '@helpers/functions';
@@ -27,6 +29,61 @@ import { sanitizeString } from '@helpers/functions';
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
+
+const UserItem = ({
+  listname: listName, avatarUrl, active, onClick,
+}) => {
+  const avatarImageUrl = avatarUrl
+    ? { uri: `${avatarUrl}` }
+    : require('@assets/icon.png');
+
+  const style = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: scale(5),
+      marginVertical: verticalScale(5),
+      borderWidth: scale(2),
+      borderRadius: scale(16),
+      borderColor: colors.mainColor,
+    },
+    textAndIconContainer: {
+      flexDirection: 'row',
+      width: '80%',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    userName: {
+      marginLeft: scale(15),
+      fontFamily: 'Amaranth-Regular',
+      fontSize: scale(16),
+      color: colors.mainColor,
+    },
+    avatarImage: {
+      width: scale(40),
+      height: scale(40),
+      borderRadius: scale(20),
+    },
+  });
+
+  return (
+    <TouchableOpacity onPress={() => onClick()}>
+      <View style={style.container}>
+        <Image source={avatarImageUrl} style={style.avatarImage} />
+        <View style={style.textAndIconContainer}>
+          <Text style={style.userName}>{listName}</Text>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text style={style.userName}>Status</Text>
+
+            {active
+              ? (<Feather name="check" size={scale(20)} color={colors.accentColor} />)
+              : (<Feather name="x" size={scale(20)} color={colors.errorColor} />)}
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const UserItemMemo = memo(UserItem);
 

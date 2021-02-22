@@ -10,7 +10,6 @@ import ShowInfo from './ShowInfo';
 import SnackBar from './SnackBar';
 import StatusButton from './StatusButton';
 import UserEventsModal from './UserEventsModal';
-import UserItem from './UserItem';
 import UserLogModal from './UserLogModal';
 import UserMessagesModal from './UserMessagesModal';
 
@@ -21,7 +20,6 @@ export {
   GeneralStatusBar,
   ShowInfo,
   Loading,
-  UserItem,
   RoomButton,
   UserEventsModal,
   UserMessagesModal,
