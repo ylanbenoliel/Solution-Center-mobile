@@ -13,6 +13,7 @@ import {
   Text,
   Keyboard,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -31,7 +32,7 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 
 const UserItem = ({
-  listname: listName, avatarUrl, active, onClick,
+  listname: listName, avatarUrl, active, onClick, onLongClick,
 }) => {
   const avatarImageUrl = avatarUrl
     ? { uri: `${avatarUrl}` }
@@ -67,7 +68,7 @@ const UserItem = ({
   });
 
   return (
-    <TouchableOpacity onPress={() => onClick()}>
+    <TouchableOpacity onPress={() => onClick()} onLongPress={() => onLongClick()}>
       <View style={style.container}>
         <Image source={avatarImageUrl} style={style.avatarImage} />
         <View style={style.textAndIconContainer}>
@@ -263,6 +264,25 @@ const AdminUserList = () => {
     fetchUsers();
   }
 
+  function handleOpenDialog(user) {
+    return (
+      Alert.alert('Selecione a opção para:', `${user.listname}`, [{
+        text:
+        'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Profissão',
+        onPress: () => { },
+      },
+      {
+        text: 'Excluir',
+        onPress: () => { },
+      },
+      ])
+    );
+  }
+
   const RenderSearchedUsers = () => {
     const hasFilteredUsers = filteredUsers !== null
       ? filteredUsers
@@ -283,6 +303,7 @@ const AdminUserList = () => {
           <UserItemMemo
             {...user}
             onClick={() => handleOpenModal(user)}
+            onLongClick={() => handleOpenDialog(user)}
           />
         )}
         ListEmptyComponent={(
@@ -295,16 +316,13 @@ const AdminUserList = () => {
     );
   };
 
-  const RenderLoading = () => {
-    if (loading) {
-      return (
-        <View style={styles.conditionalLoading}>
-          <Loading loading={loading} />
-        </View>
-      );
-    }
-    return null;
-  };
+  const RenderLoading = () => (
+    loading && (
+    <View style={styles.conditionalLoading}>
+      <Loading loading={loading} />
+    </View>
+    )
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
