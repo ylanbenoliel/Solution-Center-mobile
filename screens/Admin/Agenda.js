@@ -12,14 +12,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 import { format } from 'date-fns';
 
-import { GeneralStatusBar, ShowInfo } from '@components';
+import { GeneralStatusBar, ShowInfo, Loading } from '@components';
 
 import AuthContext from '@contexts/auth';
 
@@ -71,12 +71,55 @@ export default function Agenda({ navigation }) {
     });
   }
 
-  const RenderFetchLoading = () => {
-    if (loading) {
-      return <ActivityIndicator size="large" color={colors.whiteColor} />;
+  async function closeDay(dayToClose) {
+    try {
+      setLoading(true);
+      const { data } = await api.post('/admin/events/close-day', {
+        date: dayToClose,
+      });
+      Alert.alert('Sucesso.', `${data.message}`, [{
+        text: 'Ok',
+        onPress: () => { },
+      }]);
+    } catch (e) {
+      if (e.response) {
+        Alert.alert('Aviso!', `${e.response?.data?.message}`, [{
+          text: 'Ok',
+          onPress: () => { },
+        }]);
+        return;
+      }
+      Alert.alert('Erro de conexão.', '', [{
+        text: 'Ok',
+        onPress: () => { },
+      }]);
+    } finally {
+      setLoading(false);
     }
-    return <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>;
-  };
+  }
+
+  function handleOpenModal(dateFormatted) {
+    const date = dateFormatted.split('-').reverse().join('/');
+    return (
+      Alert.alert('Aviso!', `Deseja fechar o dia ${date}?`, [{
+        text:
+        'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Confirmar',
+        onPress: () => { closeDay(dateFormatted); },
+      }])
+    );
+  }
+
+  const RenderLoading = () => (
+    loading && (
+    <View style={styles.conditionalLoading}>
+      <Loading loading={loading} />
+    </View>
+    )
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,6 +127,15 @@ export default function Agenda({ navigation }) {
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
       />
+
+      <View style={{ flex: 1, alignItems: 'flex-end', marginRight: scale(16) }}>
+
+        <TouchableOpacity onPress={() => { handleOpenModal(daySelected); }}>
+          <View style={styles.closeDayButton}>
+            <Text style={styles.text}>Fechar dia</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.calendarContainer}>
         <Calendar
@@ -141,10 +193,11 @@ export default function Agenda({ navigation }) {
           style={styles.modalButton}
           onPress={() => handleAgendaRequest()}
         >
-          <RenderFetchLoading />
+          <Text style={[styles.text, styles.modalButtonText]}>Agenda</Text>
         </TouchableOpacity>
       </View>
 
+      <RenderLoading />
     </SafeAreaView>
   );
 }
@@ -154,8 +207,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.whiteColor,
   },
+  closeDayButton: {
+    alignItems: 'center',
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(5),
+    backgroundColor: colors.accentColor,
+    borderRadius: 4,
+  },
   calendarContainer: {
-    flex: 5,
+    flex: 4,
     justifyContent: 'center',
     marginTop: verticalScale(40),
   },
@@ -165,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: scale(18),
   },
   modalButtonContainer: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -177,5 +237,17 @@ const styles = StyleSheet.create({
     borderRadius: scale(4),
     backgroundColor: colors.navigationColor,
   },
-  modalButtonText: { fontSize: scale(32), color: colors.whiteColor },
+  modalButtonText: {
+    fontSize: scale(32),
+    color: colors.whiteColor,
+  },
+  conditionalLoading: {
+    zIndex: 10,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
 });
