@@ -25,6 +25,9 @@ import { api } from '@services/api';
 import colors from '@constants/colors';
 import { ROOM_NAME, ROOM_IDS } from '@constants/fixedValues';
 
+const REFRESH_TIMER = 1 * 60 * 1000;
+const INITIAL_MINUTE_COUNTDOWN = 15;
+
 const roomsName = ROOM_NAME;
 
 const tableHead = [
@@ -72,6 +75,7 @@ const AgendaTable = ({ route, navigation }) => {
   const { showDate, hours, events } = route.params;
 
   const [refreshFlatList, setRefreshFlatList] = useState(false);
+  const [countdownToRefresh, setCountdownToRefresh] = useState(INITIAL_MINUTE_COUNTDOWN);
 
   const [date, setDate] = useState('');
   const [eventTable, setEventTable] = useState([]);
@@ -94,6 +98,20 @@ const AgendaTable = ({ route, navigation }) => {
     setTotalEvents(eventsWithUser.length);
   }, [eventTable]);
 
+  useEffect(() => {
+    const refreshTimer = setTimeout(() => {
+      const currentTimer = countdownToRefresh - 1;
+      if (currentTimer > 0) {
+        setCountdownToRefresh(currentTimer);
+        return;
+      }
+      handleRefreshTable();
+    }, REFRESH_TIMER);
+    return () => {
+      clearTimeout(refreshTimer);
+    };
+  }, [countdownToRefresh]);
+
   function handleRefreshTable() {
     api.post('/admin/events/agenda', {
       date,
@@ -103,7 +121,7 @@ const AgendaTable = ({ route, navigation }) => {
       setRefreshFlatList(!refreshFlatList);
     }).catch(() => {
       Alert.alert('Aviso!', 'Não foi possível recarregar a agenda.');
-    });
+    }).finally(() => { setCountdownToRefresh(INITIAL_MINUTE_COUNTDOWN); });
   }
 
   function alterEventPayment(eventIndex) {
@@ -168,6 +186,13 @@ const AgendaTable = ({ route, navigation }) => {
         backgroundColor={colors.mainColor}
         barStyle="light-content"
       />
+      <View style={{ marginLeft: 16 }}>
+        <Text
+          style={[styles.text, { color: colors.mainColor }]}
+        >
+          {`Atualiza em: ${countdownToRefresh} minutos`}
+        </Text>
+      </View>
 
       <View style={styles.header}>
         <Text style={[styles.text, { color: colors.mainColor }]}>
