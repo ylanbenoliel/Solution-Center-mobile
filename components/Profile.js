@@ -24,6 +24,7 @@ import {
   UserEventsModal,
   UserMessagesModal,
   UserLogModal,
+  SnackBar,
 } from '@components';
 
 import AuthContext from '@contexts/auth';
@@ -77,16 +78,26 @@ const Profile = ({ admin }) => {
   const navigation = useNavigation();
   const { signOut } = useContext(AuthContext);
 
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [userHasPhoto, setUserHasPhoto] = useState(false);
   const [isModalEventOpen, setIsModalEventOpen] = useState(false);
   const [isModalLogOpen, setIsModalLogOpen] = useState(false);
   const [isModalMessageOpen, setIsModalMessageOpen] = useState(false);
 
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState('');
+
   useEffect(() => {
     fetchInfo();
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   function fetchInfo() {
     api.get('/user/details')
@@ -100,7 +111,27 @@ const Profile = ({ admin }) => {
         }
         setUserInfo(user);
       })
-      .catch(() => {});
+      .catch((e) => {
+        setUserInfo(null);
+        setSnackColor(colors.errorColor);
+        if (String(e.response.status).includes('5')) {
+          setSnackText('Erro, tente novamente em alguns minutos.');
+          setVisibleSnack(true);
+          return;
+        }
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+          setVisibleSnack(true);
+          return;
+        }
+        if (e.request) {
+          setSnackText('Erro na conexão.');
+          setVisibleSnack(true);
+          return;
+        }
+        setSnackText('Algo deu errado.');
+        setVisibleSnack(true);
+      });
     return () => {
       setAvatarUrl(null);
       setUserInfo(null);
@@ -129,17 +160,29 @@ const Profile = ({ admin }) => {
   }
 
   function handleShowEvents() {
+    if (!userInfo) {
+      return;
+    }
     setIsModalEventOpen(true);
   }
 
   function handleShowMessages() {
+    if (!userInfo) {
+      return;
+    }
     setIsModalMessageOpen(true);
   }
   function handleShowLogs() {
+    if (!userInfo) {
+      return;
+    }
     setIsModalLogOpen(true);
   }
 
   function handleOpenInfoStack() {
+    if (!userInfo) {
+      return;
+    }
     navigation.push('Info', { details: userInfo, photo: userHasPhoto ? avatarUrl : null });
   }
 
@@ -149,7 +192,7 @@ const Profile = ({ admin }) => {
 
   const RenderInfo = () => {
     const imageSize = 130;
-    if (userInfo) {
+    if (userInfo?.id) {
       return (
         <>
           <Image
@@ -163,11 +206,27 @@ const Profile = ({ admin }) => {
           <Text
             style={[styles.text, { fontSize: scale(32) }]}
           >
-            {userInfo.listname}
+            {userInfo?.listname}
           </Text>
         </>
       );
     }
+    if (!userInfo) {
+      return (
+        <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: scale(imageSize),
+          height: scale(imageSize),
+        }}
+        >
+          <Text style={[styles.text, { fontSize: 24 }]}>
+            Erro.
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={{
         alignItems: 'center',
@@ -282,7 +341,7 @@ const Profile = ({ admin }) => {
           isVisible={isModalLogOpen}
           onClose={() => handleCloseModal(setIsModalLogOpen)}
         />
-
+        <SnackBar visible={visibleSnack} text={snackText} color={snackColor} />
       </SafeAreaView>
     </>
   );
