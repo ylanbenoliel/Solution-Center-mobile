@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -27,6 +28,8 @@ const NewPassword = ({ route }) => {
   const [password, setPassword] = useState('');
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState(colors.errorColor);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,28 +39,64 @@ const NewPassword = ({ route }) => {
 
   function handleSubmitPassword() {
     Keyboard.dismiss();
+
+    if (!password) {
+      setSnackText('Insira uma senha.');
+      setSnackColor(colors.errorColor);
+      setVisibleSnack(true);
+      return;
+    }
+
+    setLoading(true);
+
     api.patch('/password', {
       email,
-      password,
+      password: password.trim(),
     })
-      .then(() => {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-          }),
-        );
+      .then((res) => {
+        setSnackText(res.data.message);
+        setSnackColor(colors.accentColor);
+        setVisibleSnack(true);
+
+        setTimeout(() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            }),
+          );
+        }, 2000);
       })
       .catch((e) => {
-        setVisibleSnack(true);
-        if (e.response) {
-          return setSnackText(`${e.response.data.message}`);
+        setSnackColor(`${colors.errorColor}`);
+        if (String(e.response.status).includes('5')) {
+          setSnackText('Erro, tente novamente em alguns minutos.');
+          setVisibleSnack(true);
+          return;
+        }
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+          setVisibleSnack(true);
+          return;
         }
         if (e.request) {
-          return setSnackText('Erro na conexão.');
+          setSnackText('Erro na conexão.');
+          setVisibleSnack(true);
+          return;
         }
-        return setSnackText('Algo deu errado.');
+        setSnackText('Algo deu errado.');
+        setVisibleSnack(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  }
+
+  function showLoadingSubmitCode() {
+    if (loading) {
+      return <ActivityIndicator size="large" color={colors.whiteColor} />;
+    }
+    return <Text style={[styles.text, { color: colors.whiteColor }]}>Enviar</Text>;
   }
 
   return (
@@ -85,6 +124,7 @@ const NewPassword = ({ route }) => {
               placeholderTextColor={colors.placeholderColor}
               autoCapitalize="none"
               autoCorrect={false}
+              onSubmitEditing={() => handleSubmitPassword()}
             />
           </View>
 
@@ -95,9 +135,7 @@ const NewPassword = ({ route }) => {
                 handleSubmitPassword();
               }}
             >
-              <Text style={[styles.text, { color: colors.whiteColor }]}>
-                Enviar
-              </Text>
+              {showLoadingSubmitCode()}
             </TouchableOpacity>
           </View>
         </View>
@@ -106,7 +144,7 @@ const NewPassword = ({ route }) => {
       <SnackBar
         text={snackText}
         visible={visibleSnack}
-        color={`${colors.errorColor}`}
+        color={snackColor}
       />
     </SafeAreaView>
   );

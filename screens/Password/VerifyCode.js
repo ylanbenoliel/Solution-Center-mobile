@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -27,6 +28,7 @@ const VerifyCode = ({ route }) => {
   const [code, setCode] = useState('');
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackText, setSnackText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,21 +38,49 @@ const VerifyCode = ({ route }) => {
 
   function handleSubmitCode() {
     Keyboard.dismiss();
+
+    if (!code) {
+      setSnackText('Digite um código.');
+      setVisibleSnack(true);
+      return;
+    }
+
+    setLoading(true);
+
     api.post('/verify-reset-code', {
-      code,
+      code: code.trim(),
       email,
     })
       .then(() => { navigation.navigate('NewPassword', { email }); })
       .catch((e) => {
-        setVisibleSnack(true);
-        if (e.response) {
-          return setSnackText(`${e.response.data.message}`);
+        if (String(e.response.status).includes('5')) {
+          setSnackText('Erro, tente novamente em alguns minutos.');
+          setVisibleSnack(true);
+          return;
+        }
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+          setVisibleSnack(true);
+          return;
         }
         if (e.request) {
-          return setSnackText('Erro na conexão.');
+          setSnackText('Erro na conexão.');
+          setVisibleSnack(true);
+          return;
         }
-        return setSnackText('Algo deu errado.');
+        setSnackText('Algo deu errado.');
+        setVisibleSnack(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  }
+
+  function showLoadingSubmitCode() {
+    if (loading) {
+      return <ActivityIndicator size="large" color={colors.whiteColor} />;
+    }
+    return <Text style={[styles.text, { color: colors.whiteColor }]}>Enviar</Text>;
   }
 
   return (
@@ -64,8 +94,9 @@ const VerifyCode = ({ route }) => {
         <Logo width={scale(220)} height={(80)} />
         <View style={styles.inputContainer}>
           <Text style={[styles.text, { textAlign: 'center' }]}>
-            Digite o código recebido no email.
+            Digite o código recebido no email. (Caixa principal ou spam.)
           </Text>
+          <View style={{ height: 10 }} />
           <View style={styles.textInputContainer}>
             <TextInput
               style={[styles.text, styles.textInput]}
@@ -76,6 +107,7 @@ const VerifyCode = ({ route }) => {
               autoCapitalize="none"
               keyboardType="number-pad"
               autoCorrect={false}
+              onSubmitEditing={() => handleSubmitCode()}
             />
           </View>
 
@@ -86,9 +118,7 @@ const VerifyCode = ({ route }) => {
                 handleSubmitCode();
               }}
             >
-              <Text style={[styles.text, { color: colors.whiteColor }]}>
-                Enviar
-              </Text>
+              {showLoadingSubmitCode()}
             </TouchableOpacity>
           </View>
 
