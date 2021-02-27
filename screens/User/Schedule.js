@@ -24,11 +24,11 @@ import {
   format,
   parseISO,
   eachWeekendOfInterval,
-  isSunday,
   formatISO,
   add,
   endOfWeek,
   subDays,
+  isWeekend,
 } from 'date-fns';
 
 import {
@@ -45,14 +45,14 @@ import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 import LOCALE from '@constants/localeCalendarStrip';
 
-const INITIALDATE = isSunday(new Date()) === true
-  ? add(new Date(), { days: 1 })
+const INITIALDATE = isWeekend(new Date()) === true
+  ? add(new Date(), { days: 2 })
   : new Date();
 
 const INITIALDATERANGE = [
   {
     start: formatISO(INITIALDATE),
-    end: subDays(endOfWeek(INITIALDATE), 1),
+    end: formatISO(subDays(endOfWeek(INITIALDATE), 1)),
   },
 ];
 
@@ -63,7 +63,7 @@ export default function Schedule({ navigation }) {
     formatISO(add(INITIALDATE, { days: 8 })),
   ]);
 
-  const [datesWhitelist, setDatesWhitelist] = useState([]);
+  const [datesWhitelist, setDatesWhitelist] = useState(INITIALDATERANGE);
   const [scheduleList, setScheduleList] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -102,9 +102,21 @@ export default function Schedule({ navigation }) {
       setDatesBlacklist(
         disableWeekends(minDate, maxDate),
       );
-    } catch {
-      setDatesWhitelist(INITIALDATERANGE);
-      setError('Erro ao buscar dias disponíveis.');
+    } catch (e) {
+      if (String(e.response.status).includes('5')) {
+        const errMessage = 'Erro, tente novamente em alguns minutos.';
+        setError(errMessage);
+        return;
+      }
+      if (e.response.data) {
+        setError(`${e.response?.data?.message}`);
+        return;
+      }
+      if (e.request) {
+        setError('Erro de conexão de internet.');
+        return;
+      }
+      setError('Algo deu errado.');
     }
   }
 
@@ -148,7 +160,12 @@ export default function Schedule({ navigation }) {
         setIsEventModalOpen(true);
       })
       .catch((e) => {
-        if (e.response) {
+        if (String(e.response.status).includes('5')) {
+          const errMessage = 'Erro, tente novamente em alguns minutos.';
+          setError(errMessage);
+          return;
+        }
+        if (e.response.data) {
           setError(`${e.response?.data?.message}`);
           return;
         }
