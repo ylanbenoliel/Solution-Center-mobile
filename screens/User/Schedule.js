@@ -154,7 +154,17 @@ export default function Schedule({ navigation }) {
         setDate(calendarDateFormatted);
         setIsEventModalOpen(true);
       })
-      .catch(() => { setError('Erro ao buscar reservas.'); })
+      .catch((e) => {
+        if (e.response) {
+          setError(`${e.response?.data?.message}`);
+          return;
+        }
+        if (e.request) {
+          setError('Erro na conexão.');
+          return;
+        }
+        setError('Algo deu errado.');
+      })
       .finally(() => {
         setLoading(false);
       });
