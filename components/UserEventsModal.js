@@ -152,7 +152,7 @@ const UserEventsModal = ({ isVisible, onClose }) => {
           ListEmptyComponent={(
             <ListEmpty
               modal
-              label={events ? 'Sem mensagens.' : 'Carregando...'}
+              label={events ? 'Sem reservas.' : 'Carregando...'}
             />
           )}
         />
