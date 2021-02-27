@@ -1,12 +1,11 @@
 // /* eslint-disable global-require */
 import React, { useState, useEffect } from 'react';
-import {
-  Platform, LogBox,
-} from 'react-native';
+import { LogBox, Platform } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
+import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -18,6 +17,14 @@ import colors from '@constants/colors';
 
 import Route from './routes/Route';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 export default function App() {
   const [userRole, setUserRole] = useState(null);
   const [appReady, setAppReady] = useState(false);
@@ -28,25 +35,6 @@ export default function App() {
 
   useEffect(() => {
     handleInitApp();
-  }, []);
-
-  useEffect(() => {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-      }),
-    });
-
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('notification', {
-        name: 'notification',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: `${colors.mainColor}`,
-      });
-    }
   }, []);
 
   async function handleInitApp() {
@@ -62,6 +50,7 @@ export default function App() {
   async function prepareResources() {
     getToken();
     getPrivilegies();
+    savePushNotification();
     setAppReady(true);
     await SplashScreen.hideAsync();
   }
@@ -91,9 +80,48 @@ export default function App() {
         return;
       }
       setUserRole('s');
-    } catch {
-      setUserRole('s');
+    } catch (e) {
+      if (e.response.status === 401) { setUserRole('s'); }
     }
+  }
+
+  async function savePushNotification() {
+    try {
+      const pushToken = await registerForPushNotificationsAsync();
+      if (pushToken) await api.post('/notification/register', { token: pushToken });
+    } catch (e) {
+      //
+    }
+  }
+
+  async function registerForPushNotificationsAsync() {
+    let token = null;
+
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return token;
+      }
+
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+    } else {
+      return token;
+    }
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: `${colors.mainColor}`,
+      });
+    }
+    return token;
   }
 
   if (!loaded || !appReady || userRole === null) {

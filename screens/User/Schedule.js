@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 import React, {
-  useState, useEffect, useRef, useContext,
+  useState, useEffect, useRef,
 } from 'react';
 import {
   View,
@@ -39,8 +39,6 @@ import {
 } from '@components';
 import EventModal from '@components/EventModal';
 
-import AuthContext from '@contexts/auth';
-
 import { api } from '@services/api';
 
 import colors from '@constants/colors';
@@ -60,7 +58,6 @@ const INITIALDATERANGE = [
 
 export default function Schedule({ navigation }) {
   const calendarRef = useRef();
-  const { savePushNotification } = useContext(AuthContext);
 
   const [datesBlacklist, setDatesBlacklist] = useState([
     formatISO(add(INITIALDATE, { days: 8 })),
@@ -91,10 +88,6 @@ export default function Schedule({ navigation }) {
 
   useEffect(() => {
     fetchDates();
-  }, []);
-
-  useEffect(() => {
-    savePushNotification();
   }, []);
 
   async function fetchDates() {
