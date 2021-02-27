@@ -94,6 +94,11 @@ export default function Login() {
       .catch((e) => {
         setSnackColor(colors.errorColor);
         setLoading(false);
+        if (String(e.response.status).includes('5')) {
+          setSnackText('Erro, tente novamente em alguns minutos.');
+          setVisibleSnack(true);
+          return;
+        }
         if (e.response) {
           setSnackText(`${e.response?.data?.message}`);
           setVisibleSnack(true);
