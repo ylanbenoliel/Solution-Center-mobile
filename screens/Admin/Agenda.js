@@ -56,10 +56,25 @@ export default function Agenda({ navigation }) {
       setLoading(false);
       navigation.navigate('AgendaTable',
         { events: rawEvents, hours: hoursInterval, showDate: daySelected });
-    }).catch(() => {
-      setLoading(false);
-      setError('Erro ao buscar registros.');
-    });
+    }).catch((e) => {
+      if (String(e.response.status).includes('5')) {
+        const errMessage = 'Erro, tente novamente em alguns minutos.';
+        setError(errMessage);
+        return;
+      }
+      if (e.response.data) {
+        setError(`${e.response?.data?.message}`);
+        return;
+      }
+      if (e.request) {
+        setError('Erro na conexão.');
+        return;
+      }
+      setError('Algo deu errado.');
+    })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   async function closeDay(dayToClose) {
@@ -73,6 +88,13 @@ export default function Agenda({ navigation }) {
         onPress: () => { },
       }]);
     } catch (e) {
+      if (String(e.response.status).includes('5')) {
+        Alert.alert('Erro.', 'Tente novamente em alguns minutos.', [{
+          text: 'Ok',
+          onPress: () => { },
+        }]);
+        return;
+      }
       if (e.response) {
         Alert.alert('Aviso!', `${e.response?.data?.message}`, [{
           text: 'Ok',
