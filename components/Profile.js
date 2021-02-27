@@ -274,7 +274,13 @@ const Profile = ({ admin }) => {
               <Logo width={200} height={45} />
             </View>
 
-            <View style={{ width: scale(32) }} />
+            <TouchableOpacity onPress={() => fetchInfo()}>
+              <Feather
+                name="refresh-cw"
+                size={scale(32)}
+                color={colors.navigationColor}
+              />
+            </TouchableOpacity>
           </View>
 
           {/*  */}
