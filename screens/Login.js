@@ -99,8 +99,8 @@ export default function Login() {
           setVisibleSnack(true);
           return;
         }
-        if (e.response) {
-          setSnackText(`${e.response?.data?.message}`);
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
           setVisibleSnack(true);
           return;
         }

@@ -81,7 +81,12 @@ export default function App() {
       }
       setUserRole('s');
     } catch (e) {
-      if (e.response.status === 401) { setUserRole('s'); }
+      if (String(e.response.status).includes('4')) {
+        setUserRole('s');
+        return;
+      }
+      const userStorage = await AsyncStorage.getItem('@SC:admin');
+      setUserRole(userStorage);
     }
   }
 

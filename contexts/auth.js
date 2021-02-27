@@ -8,7 +8,7 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   async function signIn(res) {
     await AsyncStorage.setItem('@SC:token', res.data?.token);
-    await AsyncStorage.setItem('@:email', res.data?.user?.email);
+    await AsyncStorage.setItem('@SC:admin', String(res.data.is_admin));
   }
 
   async function signOut() {
