@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 
@@ -25,6 +26,7 @@ const SendEmail = () => {
   const [email, setEmail] = useState('');
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackText, setSnackText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,18 +36,46 @@ const SendEmail = () => {
 
   function handleSubmitEmail() {
     Keyboard.dismiss();
+
+    if (!email) {
+      setSnackText('Insira um email.');
+      setVisibleSnack(true);
+      return;
+    }
+
+    setLoading(true);
     api.get(`/forgot-password/${email}`)
       .then(() => { navigation.navigate('VerifyCode', { email }); })
       .catch((e) => {
         setVisibleSnack(true);
-        if (e.response) {
-          return setSnackText(`${e.response.data.message}`);
+        if (String(e.response.status).includes('5')) {
+          setSnackText('Erro, tente novamente em alguns minutos.');
+          setVisibleSnack(true);
+          return;
+        }
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+          setVisibleSnack(true);
+          return;
         }
         if (e.request) {
-          return setSnackText('Erro na conexão.');
+          setSnackText('Erro na conexão.');
+          setVisibleSnack(true);
+          return;
         }
-        return setSnackText('Algo deu errado.');
+        setSnackText('Algo deu errado.');
+        setVisibleSnack(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  }
+
+  function showLoadingSubmitEmail() {
+    if (loading) {
+      return <ActivityIndicator size="large" color={colors.whiteColor} />;
+    }
+    return <Text style={[styles.text, { color: colors.whiteColor }]}>Enviar</Text>;
   }
 
   return (
@@ -72,6 +102,7 @@ const SendEmail = () => {
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
+              onSubmitEditing={() => handleSubmitEmail()}
             />
           </View>
 
@@ -82,9 +113,7 @@ const SendEmail = () => {
                 handleSubmitEmail();
               }}
             >
-              <Text style={[styles.text, { color: colors.whiteColor }]}>
-                Enviar
-              </Text>
+              {showLoadingSubmitEmail()}
             </TouchableOpacity>
           </View>
 
