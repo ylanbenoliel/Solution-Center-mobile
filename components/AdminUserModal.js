@@ -43,17 +43,23 @@ const AdminUserModal = ({
   const [userDetails, setUserDetails] = useState(userInfo);
   const [planNumber, setPlanNumber] = useState(1);
   const [planUpdated, setPlanUpdated] = useState(userPlanDate);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     setUserDetails(userInfo);
     setPlanNumber(userPlanNumber);
     setPlanUpdated(userPlanDate);
+    setReload(false);
     return () => {
       setUserDetails(null);
       setPlanNumber(null);
       setPlanUpdated(null);
     };
   }, [!!isVisible]);
+
+  useEffect(() => {
+    setReload(true);
+  }, [userDetails, planNumber]);
 
   const avatarUrl = !!userInfo && userInfo.avatarUrl !== null
     ? { uri: `${userInfo.avatarUrl}` }
@@ -70,8 +76,7 @@ const AdminUserModal = ({
     })
       .catch(() => {
         Alert.alert('Aviso', 'Erro ao atualizar login do cliente.',
-          [{ text: 'Ok' },
-          ]);
+          [{ text: 'Ok' }]);
       });
   }
 
@@ -113,8 +118,8 @@ const AdminUserModal = ({
 
   async function deleteUser(id) {
     try {
-      await api.delete(`/users/${id}`);
-      onClose();
+      const { data } = await api.delete(`/users/${id}`);
+      onClose({ message: `${data.message}`, reload });
     } catch (e) {
       if (e.response?.data?.message) {
         Alert.alert(`${e.response?.data?.message}`);
@@ -176,26 +181,19 @@ const AdminUserModal = ({
 
   return (
     <Modal isVisible={isVisible}>
-      <View
-        style={styles.container}
-      >
+      <View style={styles.container}>
 
         <View style={styles.closeModal}>
 
-          <TouchableOpacity
-            onPress={() => { handleDeleteUser(); }}
-          >
+          <TouchableOpacity onPress={() => { handleDeleteUser(); }}>
             <Feather
               name="trash"
               size={scale(32)}
               color={colors.accentColor}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              onClose();
-            }}
-          >
+
+          <TouchableOpacity onPress={() => { onClose({ reload }); }}>
             <Feather
               name="x"
               size={scale(32)}

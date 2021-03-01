@@ -267,7 +267,6 @@ const AdminUserList = () => {
 
   function handleCloseModal() {
     setIsModalOpen(false);
-    fetchUsers();
   }
 
   function handleOpenDialog(user) {
@@ -391,7 +390,16 @@ const AdminUserList = () => {
         {!!userInfo && (
         <AdminUserModal
           isVisible={isModalOpen}
-          onClose={() => handleCloseModal()}
+          onClose={({ message, reload }) => {
+            console.log(reload);
+            handleCloseModal();
+            if (message) {
+              setSuccess(message);
+            }
+            if (reload) {
+              fetchUsers();
+            }
+          }}
 
           userInfo={userInfo}
           userPlanNumber={planNumber}
