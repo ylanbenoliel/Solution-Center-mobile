@@ -100,6 +100,30 @@ const AdminUserModal = ({
     return time;
   }
 
+  async function handleDeleteUser() {
+    Alert.alert('Aviso!', 'Deseja apagar o usuário?', [{
+      text:
+      'Cancelar',
+      style: 'cancel',
+    }, {
+      text: 'Apagar',
+      onPress: () => { deleteUser(userDetails.id); },
+    }]);
+  }
+
+  async function deleteUser(id) {
+    try {
+      await api.delete(`/users/${id}`);
+      onClose();
+    } catch (e) {
+      if (e.response?.data?.message) {
+        Alert.alert(`${e.response?.data?.message}`);
+        return;
+      }
+      Alert.alert('Erro de conexão.');
+    }
+  }
+
   const ToggleUserPermission = ({ status }) => (
     <View style={{ flexDirection: 'row' }}>
       <Text style={styles.text}>
@@ -155,18 +179,31 @@ const AdminUserModal = ({
       <View
         style={styles.container}
       >
-        <TouchableOpacity
-          style={styles.closeModal}
-          onPress={() => {
-            onClose();
-          }}
-        >
-          <Feather
-            name="x"
-            size={scale(32)}
-            color={colors.navigationColor}
-          />
-        </TouchableOpacity>
+
+        <View style={styles.closeModal}>
+
+          <TouchableOpacity
+            onPress={() => { handleDeleteUser(); }}
+          >
+            <Feather
+              name="trash"
+              size={scale(32)}
+              color={colors.accentColor}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              onClose();
+            }}
+          >
+            <Feather
+              name="x"
+              size={scale(32)}
+              color={colors.navigationColor}
+            />
+          </TouchableOpacity>
+
+        </View>
 
         <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 30 }}>
           <Image
@@ -307,8 +344,9 @@ const styles = StyleSheet.create({
   },
   closeModal: {
     width: '100%',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: scale(8),
   },
   avatarImage: {

@@ -247,21 +247,6 @@ const AdminUserList = () => {
     setIsModalOpen(true);
   }
 
-  async function deleteUser(id) {
-    try {
-      const { data } = await api.delete(`/users/${id}`);
-      const listWithoutDeletedUser = totalUsers.filter((info) => info.id !== id);
-      setTotalUsers(listWithoutDeletedUser);
-      setSuccess(`${data.message}`);
-    } catch (e) {
-      if (e.response?.data?.message) {
-        setError(`${e.response?.data?.message}`);
-        return;
-      }
-      setError('Erro de conexão.');
-    }
-  }
-
   async function handleOpenModal(user) {
     if (debtEnabled) {
       navigation.navigate('Pagamentos', { user: user.id });
@@ -296,10 +281,7 @@ const AdminUserList = () => {
         text: 'Profissão',
         onPress: () => { },
       },
-      {
-        text: 'Excluir',
-        onPress: () => { deleteUser(user.id); },
-      },
+
       ])
     );
   }
