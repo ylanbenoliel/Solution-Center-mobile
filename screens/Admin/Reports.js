@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert,
+  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert, ScrollView,
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
@@ -112,6 +112,7 @@ const Reports = () => {
 
   const [roomCount, setRoomCount] = useState([]);
   const [hourCount, setHourCount] = useState([]);
+  const [jobCount, setJobCount] = useState([]);
 
   const [roomTotal, setRoomTotal] = useState(0);
 
@@ -174,7 +175,14 @@ const Reports = () => {
       return;
     }
     if (filterOption === JOB_FILTER) {
-      //
+      try {
+        const { data } = await api.post('/business/jobs',
+          { start: dateRange.start, end: dateRange.end });
+        setJobCount(data.jobs);
+        setRoomTotal(data.total);
+      } catch {
+        Alert.alert('Erro ao pegar informações sobre as profissões.');
+      }
     }
   }
 
@@ -216,7 +224,19 @@ const Reports = () => {
             ))}
           </>
         )}
-        {/* job filter */}
+
+        {filter === JOB_FILTER && (
+          <ScrollView>
+            {jobCount.map((data) => (
+              <View key={data.title}>
+                <Text style={[styles.text, { fontSize: 22 }]}>
+                  {`${data.title}: ${data.count}`}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        )}
+
         <Text style={[styles.text, { fontSize: 22 }]}>
           {`Total: ${roomTotal}`}
         </Text>
