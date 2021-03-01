@@ -95,6 +95,17 @@ const AdminUserModal = ({
       });
   }
 
+  async function handlePlanChange(value) {
+    try {
+      await api.post(`/plans/${userDetails.id}`, {
+        plan: value,
+      });
+      setPlanNumber(value);
+    } catch (e) {
+      Alert.alert('', e.response?.data?.message || 'Erro de conexão.');
+    }
+  }
+
   function handleSeeDebts() {
     onClose();
     navigation.navigate('Pagamentos', { user: userDetails.id });
@@ -310,9 +321,7 @@ const AdminUserModal = ({
           <Picker
             selectedValue={planNumber}
             onValueChange={(value) => {
-              api.post(`/plans/${userDetails.id}`, {
-                plan: value,
-              }).then(() => { setPlanNumber(value); });
+              handlePlanChange(value);
             }}
             style={{
               height: 50,

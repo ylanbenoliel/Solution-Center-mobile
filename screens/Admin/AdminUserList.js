@@ -233,7 +233,6 @@ const AdminUserList = () => {
   }
 
   async function fetchPlanData(id) {
-    setPlanNumber(1);
     setPlanUpdated(null);
     try {
       const planResponse = await api.get(`/plans/${id}`);
@@ -242,7 +241,7 @@ const AdminUserList = () => {
         setPlanUpdated(planResponse.data.updated);
       }
     } catch (e) {
-      //
+      setPlanNumber(1);
     }
     setIsModalOpen(true);
   }
@@ -327,7 +326,7 @@ const AdminUserList = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.whiteColor }}>
       <GeneralStatusBar
         backgroundColor={colors.whiteColor}
         barStyle="dark-content"
@@ -391,7 +390,6 @@ const AdminUserList = () => {
         <AdminUserModal
           isVisible={isModalOpen}
           onClose={({ message, reload }) => {
-            console.log(reload);
             handleCloseModal();
             if (message) {
               setSuccess(message);
