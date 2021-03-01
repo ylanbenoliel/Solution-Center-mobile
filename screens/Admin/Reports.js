@@ -109,8 +109,10 @@ const Reports = () => {
   const [changeStartDateRange, setChangeStartDateRange] = useState(true);
 
   const [dateRange, setDateRange] = useState({ start: CURRENT_DATE, end: CURRENT_DATE });
+
   const [roomCount, setRoomCount] = useState([]);
   const [hourCount, setHourCount] = useState([]);
+
   const [roomTotal, setRoomTotal] = useState(0);
 
   function handleChangeFilter(selectedFilter) {
@@ -155,7 +157,7 @@ const Reports = () => {
       try {
         const { data } = await api.post('/business/rooms',
           { start: dateRange.start, end: dateRange.end });
-        const result = Object.entries(data.salas);
+        const result = Object.entries(data.rooms);
         const roomWithName = ROOM_DATA.map((info) => {
           const matchResponse = result.find((room) => Number(room[0]) === info.room);
           return {
