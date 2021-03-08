@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -39,6 +40,45 @@ export default function Jobs() {
     }
   }
 
+  async function storeJob() {
+    try {
+      await api.post('/jobs', { title: jobInput });
+      const newJob = jobs.concat({ job: Math.random(), title: jobInput });
+      setJobs(newJob);
+      setJobInput('');
+    } catch {
+      Alert.alert('Erro!', 'Não foi possível salvar profissão.',
+        [{
+          text: 'Ok',
+          onPress: () => { },
+        }]);
+    }
+  }
+
+  async function handleSaveJob() {
+    if (!jobInput) {
+      Alert.alert('Erro!', 'Insira uma profissão.',
+        [{
+          text: 'Ok',
+          onPress: () => { },
+        }]);
+      return;
+    }
+
+    Alert.alert('', `Deseja salvar a profissão: ${jobInput}?`,
+      [{
+        text:
+    'Cancelar',
+        style: 'cancel',
+      }, {
+        text: 'Sim',
+        onPress: () => {
+          Keyboard.dismiss();
+          storeJob();
+        },
+      }]);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -53,8 +93,7 @@ export default function Jobs() {
           onChangeText={(text) => {
             setJobInput(text);
           }}
-          onSubmitEditing={() => {}}
-          placeholder="Inserir profissão"
+          placeholder="Profissão"
           autoCapitalize="words"
           autoCorrect={false}
           placeholderTextColor={colors.placeholderColor}
@@ -69,10 +108,19 @@ export default function Jobs() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        {jobs.map((i) => (
-          <View key={i.job}>
-            <Text style={styles.text}>{i.title}</Text>
+      <View style={{ alignItems: 'flex-start' }}>
+        <TouchableOpacity onPress={() => { handleSaveJob(); }}>
+          <View style={styles.saveButton}>
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Salvar</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={{ marginVertical: 20 }}>
+        {jobs.map((data, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <View key={index}>
+            <Text style={styles.text}>{data.title}</Text>
           </View>
         ))}
       </ScrollView>
@@ -106,5 +154,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 18,
     height: 42,
+  },
+  saveButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: colors.mainColor,
   },
 });
