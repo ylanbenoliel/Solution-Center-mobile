@@ -252,7 +252,7 @@ const AdminUserList = () => {
       return;
     }
     setLoading(true);
-    const userResponse = await api.get(`/users/details?user=${user?.id}`);
+    const userResponse = await api.get(`/user/details?user=${user?.id}`);
     const userData = userResponse.data[0];
     let avatarUrl = null;
     if (userData.avatar?.url) {
