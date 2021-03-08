@@ -18,6 +18,7 @@ import AdminProfile from '@screens/Admin/AdminProfile';
 import AdminUserList from '@screens/Admin/AdminUserList';
 import Agenda from '@screens/Admin/Agenda';
 import AgendaTable from '@screens/Admin/AgendaTable';
+import Jobs from '@screens/Admin/Jobs';
 import Notifications from '@screens/Admin/Notifications';
 import Reports from '@screens/Admin/Reports';
 import UserEventsDetails from '@screens/Admin/UserEventsDetails';
@@ -82,6 +83,7 @@ function UserStack() {
       <Stack.Screen name="Editar" component={AdminEditEvent} options={{ title: 'Editar reserva' }} />
       <Stack.Screen name="Pagamentos" component={AdminPayment} options={{ title: 'Horários não pagos' }} />
       <Stack.Screen name="Mensagens" component={AdminMessages} options={{ title: 'Mensagens' }} />
+      <Stack.Screen name="Jobs" component={Jobs} options={{ title: 'Profissões' }} />
     </Stack.Navigator>
   );
 }

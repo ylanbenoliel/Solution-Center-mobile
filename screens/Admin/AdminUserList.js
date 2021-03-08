@@ -333,6 +333,15 @@ const AdminUserList = () => {
       />
       <View style={styles.container}>
 
+        <View style={{ alignItems: 'flex-end' }}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.navigationColor }]}
+            onPress={() => { navigation.navigate('Jobs'); }}
+          >
+            <Text style={[styles.text, { color: colors.whiteColor }]}>Profissões</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.inputContainer}>
           <TextInput
             value={nameInput}
@@ -359,21 +368,21 @@ const AdminUserList = () => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
           <TouchableOpacity
-            style={styles.searchButton}
+            style={styles.button}
             onPress={() => handleSearch()}
           >
             <Text style={[styles.text, { color: colors.whiteColor }]}>Buscar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.searchButton, { backgroundColor: 'green' }]}
+            style={[styles.button, { backgroundColor: 'green' }]}
             onPress={() => handleSeeDebts()}
           >
             <Text style={[styles.text, { color: colors.whiteColor }]}>Pendentes</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.searchButton, { backgroundColor: 'red' }]}
+            style={[styles.button, { backgroundColor: 'red' }]}
             onPress={() => handleSeeInactiveUsers()}
           >
             <Text style={[styles.text, { color: colors.whiteColor }]}>Inativos</Text>
@@ -438,7 +447,7 @@ const styles = StyleSheet.create({
     fontSize: scale(18),
     height: verticalScale(42),
   },
-  searchButton: {
+  button: {
     backgroundColor: colors.mainColor,
     padding: scale(4),
     borderRadius: scale(4),
