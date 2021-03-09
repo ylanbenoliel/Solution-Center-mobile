@@ -7,14 +7,14 @@ import {
   SafeAreaView,
   Alert,
   StyleSheet,
-  ScrollView,
+  FlatList,
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { GeneralStatusBar } from '@components';
+import { GeneralStatusBar, SnackBar } from '@components';
 
 import { api } from '@services/api';
 
@@ -24,12 +24,22 @@ export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [jobInput, setJobInput] = useState('');
 
+  const [visibleSnack, setVisibleSnack] = useState(false);
+  const [snackText, setSnackText] = useState('');
+  const [snackColor, setSnackColor] = useState('');
+
   useEffect(() => {
     fetchJobs();
     return () => {
       setJobs([]);
     };
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisibleSnack(false);
+    }, 2000);
+  }, [visibleSnack === true]);
 
   async function fetchJobs() {
     try {
@@ -46,26 +56,49 @@ export default function Jobs() {
       const newJob = jobs.concat({ job: Math.random(), title: jobInput });
       setJobs(newJob);
       setJobInput('');
+      setSnackColor(colors.accentColor);
+      setSnackText('Profissão criada.');
+      setVisibleSnack(true);
     } catch {
-      Alert.alert('Erro!', 'Não foi possível salvar profissão.',
-        [{
-          text: 'Ok',
-          onPress: () => { },
-        }]);
+      setSnackColor(colors.errorColor);
+      setSnackText('Erro! Não foi possível salvar profissão.');
+      setVisibleSnack(true);
     }
   }
 
-  async function handleSaveJob() {
+  async function updateJob(jobObject) {
+    try {
+      await api.put(`/jobs/${jobObject.job}`, { title: jobInput });
+      const currentJobList = jobs.map((info) => {
+        if (info.job === jobObject.job) {
+          return {
+            ...info,
+            title: jobInput,
+          };
+        }
+        return info;
+      });
+      setJobs(currentJobList);
+      setJobInput('');
+      setSnackColor(colors.accentColor);
+      setSnackText('Profissão Atualizada.');
+      setVisibleSnack(true);
+    } catch {
+      setSnackColor(colors.errorColor);
+      setSnackText('Erro! Não foi possível atualizar profissão.');
+      setVisibleSnack(true);
+    }
+  }
+
+  function handleSaveJob() {
     if (!jobInput) {
-      Alert.alert('Erro!', 'Insira uma profissão.',
-        [{
-          text: 'Ok',
-          onPress: () => { },
-        }]);
+      setSnackColor(colors.errorColor);
+      setSnackText('Erro! Insira uma profissão.');
+      setVisibleSnack(true);
       return;
     }
 
-    Alert.alert('', `Deseja salvar a profissão: ${jobInput}?`,
+    Alert.alert('', `Deseja inserir a nova profissão: ${jobInput}?`,
       [{
         text:
     'Cancelar',
@@ -79,6 +112,29 @@ export default function Jobs() {
       }]);
   }
 
+  function handleUpdateJob(jobSelected) {
+    if (!jobInput) {
+      setSnackColor(colors.errorColor);
+      setSnackText('Erro! Insira uma profissão.');
+      setVisibleSnack(true);
+      return;
+    }
+
+    Alert.alert('Aviso', `Deseja alterar a atual profissão: ${jobSelected.title}, 
+para: ${jobInput}?`,
+    [{
+      text:
+  'Cancelar',
+      style: 'cancel',
+    }, {
+      text: 'Sim',
+      onPress: () => {
+        Keyboard.dismiss();
+        updateJob(jobSelected);
+      },
+    }]);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <GeneralStatusBar
@@ -86,45 +142,61 @@ export default function Jobs() {
         barStyle="white-content"
       />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={jobInput}
-          style={[styles.text, styles.textInput]}
-          onChangeText={(text) => {
-            setJobInput(text);
-          }}
-          placeholder="Profissão"
-          autoCapitalize="words"
-          autoCorrect={false}
-          placeholderTextColor={colors.placeholderColor}
-        />
+      <View style={{ marginHorizontal: 16 }}>
 
-        <TouchableOpacity onPress={() => setJobInput('')}>
-          <Feather
-            name="x"
-            size={32}
-            color={colors.placeholderColor}
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={jobInput}
+            style={[styles.text, styles.textInput]}
+            onChangeText={(text) => {
+              setJobInput(text);
+            }}
+            placeholder="Profissão"
+            autoCapitalize="words"
+            autoCorrect={false}
+            placeholderTextColor={colors.placeholderColor}
           />
-        </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setJobInput('')}>
+            <Feather
+              name="x"
+              size={32}
+              color={colors.placeholderColor}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ alignItems: 'flex-start' }}>
+          <TouchableOpacity onPress={() => { handleSaveJob(); }}>
+            <View style={styles.saveButton}>
+              <Text style={[styles.text, { color: colors.whiteColor }]}>Salvar</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <FlatList
+          contentContainerStyle={{ paddingBottom: 180 }}
+          data={jobs}
+          keyExtractor={(item) => item.job.toString()}
+          renderItem={({ item }) => (
+            <View
+              key={item.job}
+              style={styles.jobItem}
+            >
+              <Text style={styles.text}>{item.title}</Text>
+              <TouchableOpacity onPress={() => { handleUpdateJob(item); }}>
+                <Feather
+                  name="edit-2"
+                  size={28}
+                  color={colors.accentColor}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
 
-      <View style={{ alignItems: 'flex-start' }}>
-        <TouchableOpacity onPress={() => { handleSaveJob(); }}>
-          <View style={styles.saveButton}>
-            <Text style={[styles.text, { color: colors.whiteColor }]}>Salvar</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView contentContainerStyle={{ marginVertical: 20 }}>
-        {jobs.map((data, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <View key={index}>
-            <Text style={styles.text}>{data.title}</Text>
-          </View>
-        ))}
-      </ScrollView>
-
+      <SnackBar visible={visibleSnack} text={snackText} color={snackColor} />
     </SafeAreaView>
   );
 }
@@ -132,12 +204,11 @@ export default function Jobs() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 16,
     backgroundColor: colors.whiteColor,
   },
   text: {
     fontFamily: 'Amaranth-Regular',
-    fontSize: 16,
+    fontSize: 18,
     color: colors.mainColor,
   },
   inputContainer: {
@@ -160,5 +231,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     backgroundColor: colors.mainColor,
+  },
+  jobItem: {
+    padding: 10,
+    margin: 10,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
