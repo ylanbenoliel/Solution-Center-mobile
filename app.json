@@ -41,8 +41,7 @@
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ],
-      "useNextNotificationsApi": true
+      ]
     },
     "packagerOpts": {
       "config": "metro.config.js",
