@@ -277,7 +277,7 @@ const AdminUserList = () => {
       },
       {
         text: 'Profissão',
-        onPress: () => { },
+        onPress: () => { navigation.navigate('UserJob', { id: user.id }); },
       },
 
       ])
@@ -291,7 +291,7 @@ const AdminUserList = () => {
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: verticalScale(130) }}
+        contentContainerStyle={{ paddingBottom: verticalScale(180) }}
         data={hasFilteredUsers}
         refreshControl={(
           <RefreshControl
@@ -333,7 +333,7 @@ const AdminUserList = () => {
       />
       <View style={styles.container}>
 
-        <View style={{ alignItems: 'flex-end' }}>
+        <View style={{ alignItems: 'flex-end', marginBottom: 4 }}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.navigationColor }]}
             onPress={() => { navigation.navigate('Jobs'); }}
@@ -424,7 +424,6 @@ const AdminUserList = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: scale(16),
-    marginTop: verticalScale(20),
   },
   inputContainer: {
     flexDirection: 'row',

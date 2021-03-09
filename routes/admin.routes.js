@@ -22,6 +22,7 @@ import Jobs from '@screens/Admin/Jobs';
 import Notifications from '@screens/Admin/Notifications';
 import Reports from '@screens/Admin/Reports';
 import UserEventsDetails from '@screens/Admin/UserEventsDetails';
+import UserJob from '@screens/Admin/UserJob';
 import {
   WhoWeAre,
   Ambients,
@@ -84,6 +85,7 @@ function UserStack() {
       <Stack.Screen name="Pagamentos" component={AdminPayment} options={{ title: 'Horários não pagos' }} />
       <Stack.Screen name="Mensagens" component={AdminMessages} options={{ title: 'Mensagens' }} />
       <Stack.Screen name="Jobs" component={Jobs} options={{ title: 'Profissões' }} />
+      <Stack.Screen name="UserJob" component={UserJob} options={{ title: 'Profissão do usuário' }} />
     </Stack.Navigator>
   );
 }
