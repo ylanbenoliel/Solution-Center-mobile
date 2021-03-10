@@ -47,7 +47,7 @@ const UserEventsDetails = ({ route, navigation }) => {
       }
       const totalEventsResponse = await api
         .post(`/admin/events/list/user?page=${pageToLoad}`, {
-          user: user.id,
+          user,
         });
       const incomingEvents = (totalEventsResponse.data.data);
       if (pageToLoad === 1) {

@@ -107,7 +107,7 @@ const AdminUserModal = ({
   }
 
   function handleSeeDebts() {
-    onClose();
+    onClose({ message: '', reload: false });
     navigation.navigate('Pagamentos', { user: userDetails.id });
   }
 
@@ -250,7 +250,7 @@ const AdminUserModal = ({
               style={[styles.button, { backgroundColor: colors.accentColor }]}
               onPress={() => {
                 navigation.navigate('Adicionar', { user: userDetails });
-                onClose();
+                onClose({ message: '', reload: false });
               }}
             >
               <Feather
@@ -264,9 +264,9 @@ const AdminUserModal = ({
               style={[styles.button, { backgroundColor: '#804d00' }]}
               onPress={() => {
                 navigation.navigate('Eventos', {
-                  user: userDetails,
+                  user: userDetails.id,
                 });
-                onClose();
+                onClose({ message: '', reload: false });
               }}
             >
               <Feather
@@ -295,7 +295,7 @@ const AdminUserModal = ({
               style={[styles.button, { backgroundColor: colors.secondaryColor }]}
               onPress={() => {
                 navigation.push('Mensagens', { user: userDetails.id });
-                onClose();
+                onClose({ message: '', reload: false });
               }}
             >
               <Feather
