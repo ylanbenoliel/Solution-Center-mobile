@@ -180,82 +180,9 @@ const AgendaTable = ({ route, navigation }) => {
       });
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <GeneralStatusBar
-        backgroundColor={colors.mainColor}
-        barStyle="light-content"
-      />
-      <View style={{ marginLeft: 16 }}>
-        <Text
-          style={[styles.text, { color: colors.mainColor }]}
-        >
-          {`Atualiza em: ${countdownToRefresh} minutos`}
-        </Text>
-      </View>
-
-      <View style={styles.header}>
-        <Text style={[styles.text, { color: colors.mainColor }]}>
-          Salas Ocupadas:
-          {' '}
-          {totalEvents}
-        </Text>
-        <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
-          {date.split('-').reverse().join('.')}
-        </Text>
-        <TouchableOpacity
-          onPress={() => { handleRefreshTable(); }}
-        >
-          <Feather
-            name="refresh-cw"
-            color={colors.navigationColor}
-            size={28}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        horizontal
-        style={{ marginHorizontal: '3%', paddingBottom: '2%' }}
-        showsHorizontalScrollIndicator={false}
-
-      >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={[0]}
-        >
-          <TableHeader rooms={tableHead} />
-
-          <View style={styles.cols}>
-            <HoursColumn hours={hours} />
-
-            <View style={styles.gridContainer}>
-              <ScrollView horizontal>
-                <FlatList
-                  data={eventTable}
-                  extraData={refreshFlatList}
-                  numColumns={ROOM_IDS.length}
-                  keyExtractor={(item) => item.index.toString()}
-                  renderItem={({ item }) => (
-                    <Cell
-                      {...item}
-                      key={item.index.toString()}
-                    />
-                  )}
-                />
-              </ScrollView>
-
-            </View>
-          </View>
-        </ScrollView>
-      </ScrollView>
-
-    </SafeAreaView>
-  );
-
-  function Cell({
+  const Cell = ({
     name, listname, time, status_payment, room, index, date: cellDate,
-  }) {
+  }) => {
     const backgroundColor = Number(time.split(':')[0]) % 2 === 0 ? { backgroundColor: '#ccc' } : { backgroundColor: '#aaa' };
     if (name.length === 0) {
       return (
@@ -326,7 +253,77 @@ const AgendaTable = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
     );
-  }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <GeneralStatusBar
+        backgroundColor={colors.mainColor}
+        barStyle="light-content"
+      />
+      <View style={{ marginLeft: 16 }}>
+        <Text
+          style={[styles.text, { color: colors.mainColor }]}
+        >
+          {`Atualiza em: ${countdownToRefresh} minutos`}
+        </Text>
+      </View>
+
+      <View style={styles.header}>
+        <Text style={[styles.text, { color: colors.mainColor }]}>
+          Salas Ocupadas:
+          {' '}
+          {totalEvents}
+        </Text>
+        <Text style={[styles.text, { color: colors.disableColor, fontSize: 26 }]}>
+          {date.split('-').reverse().join('.')}
+        </Text>
+        <TouchableOpacity
+          onPress={() => { handleRefreshTable(); }}
+        >
+          <Feather
+            name="refresh-cw"
+            color={colors.navigationColor}
+            size={28}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ marginHorizontal: '3%', marginBottom: 90 }}>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            stickyHeaderIndices={[0]}
+          >
+            <TableHeader rooms={tableHead} />
+
+            <View style={{ flexDirection: 'row' }}>
+              <HoursColumn hours={hours} />
+
+              <View style={styles.gridContainer}>
+                <FlatList
+                  data={eventTable}
+                  extraData={refreshFlatList}
+                  numColumns={ROOM_IDS.length}
+                  keyExtractor={(item) => item.index.toString()}
+                  renderItem={({ item }) => (
+                    <Cell
+                      {...item}
+                      key={item.index.toString()}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+          </ScrollView>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -368,9 +365,6 @@ const styles = StyleSheet.create({
     width: 55,
     justifyContent: 'center',
     backgroundColor: colors.mainColor,
-  },
-  cols: {
-    flexDirection: 'row',
   },
   colDateStyle: {
     width: 35,
