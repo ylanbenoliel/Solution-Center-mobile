@@ -38,13 +38,13 @@ export default function App() {
   }, []);
 
   async function handleInitApp() {
+    LogBox.ignoreLogs(['Animated:']);
     try {
       await SplashScreen.preventAutoHideAsync();
+      prepareResources();
     } catch {
-      await SplashScreen.hideAsync();
+      prepareResources();
     }
-    prepareResources();
-    LogBox.ignoreLogs(['Animated:']);
   }
 
   async function prepareResources() {
@@ -79,14 +79,17 @@ export default function App() {
         setUserRole(String(admin));
         return;
       }
-      setUserRole('s');
     } catch (e) {
-      if (String(e.response.status).includes('4')) {
+      if (e.response.status === 401) {
         setUserRole('s');
         return;
       }
       const userStorage = await AsyncStorage.getItem('@SC:admin');
-      setUserRole(userStorage);
+      if (userStorage === '1' || userStorage === '0') {
+        setUserRole(userStorage);
+        return;
+      }
+      setUserRole('s');
     }
   }
 
@@ -129,7 +132,7 @@ export default function App() {
     return token;
   }
 
-  if (!loaded || !appReady || userRole === null) {
+  if (!appReady || !loaded || !userRole) {
     return null;
   }
 
