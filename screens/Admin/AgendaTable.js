@@ -44,7 +44,7 @@ const tableHead = [
 ];
 
 const TableHeader = ({ rooms }) => (
-  <View style={styles.header}>
+  <View style={styles.tableHeader}>
     {rooms.map((room, i) => {
       if (i === 0) {
         return <View key={room} style={[styles.cellStyle, styles.headerCell, { width: 35 }]} />;
@@ -296,28 +296,26 @@ const AgendaTable = ({ route, navigation }) => {
           showsHorizontalScrollIndicator={false}
         >
           <ScrollView
-            showsVerticalScrollIndicator={false}
             stickyHeaderIndices={[0]}
+            showsVerticalScrollIndicator={false}
           >
             <TableHeader rooms={tableHead} />
 
             <View style={{ flexDirection: 'row' }}>
               <HoursColumn hours={hours} />
 
-              <View style={styles.gridContainer}>
-                <FlatList
-                  data={eventTable}
-                  extraData={refreshFlatList}
-                  numColumns={ROOM_IDS.length}
-                  keyExtractor={(item) => item.index.toString()}
-                  renderItem={({ item }) => (
-                    <Cell
-                      {...item}
-                      key={item.index.toString()}
-                    />
-                  )}
-                />
-              </View>
+              <FlatList
+                data={eventTable}
+                extraData={refreshFlatList}
+                numColumns={ROOM_IDS.length}
+                keyExtractor={(item) => item.index.toString()}
+                renderItem={({ item }) => (
+                  <Cell
+                    {...item}
+                    key={item.index.toString()}
+                  />
+                )}
+              />
             </View>
           </ScrollView>
         </ScrollView>
@@ -338,6 +336,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
+  tableHeader: { flex: 1, flexDirection: 'row' },
   tableBorder: {
     borderWidth: 2,
     borderColor: colors.disableColor,
@@ -357,9 +356,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.whiteColor,
   },
-  gridContainer: {
-    flex: 1,
-  },
+
   headerCell: {
     height: 40,
     width: 55,
