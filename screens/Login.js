@@ -35,7 +35,7 @@ export default function Login() {
   const navigation = useNavigation();
   const { signIn } = useContext(AuthContext);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('.');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [visibleSnack, setVisibleSnack] = useState(false);
@@ -49,6 +49,12 @@ export default function Login() {
       setVisibleSnack(false);
     }, 2000);
   }, [visibleSnack === true]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setEmail('');
+    }, 1);
+  }, []);
 
   function showLoadingLogin() {
     if (loading) {
@@ -151,6 +157,7 @@ export default function Login() {
         style={{
           flex: 1,
         }}
+        removeClippedSubviews={false}
       >
 
         <View style={styles.loginContainer}>
