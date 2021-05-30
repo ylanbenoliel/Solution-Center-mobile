@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   roomText: {
     margin: scale(10),
     fontSize: scale(20),
-    color: colors.whiteColor,
+    color: colors.accentColor,
   },
 });
 export default RoomButton;
