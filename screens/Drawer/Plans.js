@@ -176,26 +176,14 @@ export default function Plans({ navigation }) {
             />
             <View style={{ marginVertical: verticalScale(12) }} />
             <Plan
-              state={5}
-              touchText="Fidelidade"
-              description={[
-                `– Mensalidade: R$ ${price.fidelidade?.valor || 120},00.`,
-                `– Valor da hora: R$ ${price.fidelidade?.hora || 30},00.`,
-                '– Renovação não obrigatória.',
-                '– Marketing nos canais\n de comunicação.',
-                '– Prioridade para agendamento\n de horários e escolha de salas.',
-              ]}
-            />
-            <View style={{ marginVertical: verticalScale(12) }} />
-            <Plan
-              state={6}
+              state={4}
               touchText="Mensal"
               description={[
                 '– Sala exclusiva.',
-                `– Mensalidade: R$ ${price.mensal?.valor || 2000},00.`,
+                `– Mensalidade: R$ ${price.mensal?.valor || 2500},00.`,
                 '– Renovação não obrigatória.',
                 '– Todas as despesas inclusas.',
-                '– Período matutino, de 08h às 13h.',
+                '– De 08h às 13h ou de 13h às 18h.',
                 `– Hora fora do turno: R$ ${price.mensal?.hora || 30},00.`,
               ]}
             />
