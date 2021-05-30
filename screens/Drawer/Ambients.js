@@ -39,6 +39,7 @@ export default function Ambients({ navigation }) {
   ];
   const carlos = [
     require('@assets/rooms/carlos-min.jpeg'),
+    require('@assets/rooms/carlos-2-min.jpeg'),
   ];
   const cecilia = [
     require('@assets/rooms/cecilia-min.jpeg'),
