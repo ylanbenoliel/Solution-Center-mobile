@@ -226,6 +226,7 @@ export default function Ambients({ navigation }) {
                   'armchair',
                   'chair',
                   'chair',
+                  'tv',
                 ]}
               />
             </View>
