@@ -110,7 +110,7 @@ const Notifications = () => {
           setRefreshing(false);
         }
       })
-      .catch(() => {});
+      .catch(() => { setError('Erro ao carregar usuários!'); });
   }
 
   function handleRefresh() {
