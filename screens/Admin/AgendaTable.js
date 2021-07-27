@@ -15,6 +15,7 @@ import {
 import { scale } from 'react-native-size-matters';
 
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import { GeneralStatusBar } from '@components';
 
@@ -71,7 +72,8 @@ const HoursColumn = ({ hours }) => (
   </View>
 );
 
-const AgendaTable = ({ route, navigation }) => {
+const AgendaTable = ({ route }) => {
+  const navigation = useNavigation();
   const { showDate, hours, events } = route.params;
 
   const [refreshFlatList, setRefreshFlatList] = useState(false);

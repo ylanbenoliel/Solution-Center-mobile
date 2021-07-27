@@ -16,6 +16,7 @@ import {
 import { Calendar } from 'react-native-calendars';
 import { scale, verticalScale } from 'react-native-size-matters';
 
+import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 
 import { GeneralStatusBar, ShowInfo, Loading } from '@components';
@@ -26,7 +27,8 @@ import colors from '@constants/colors';
 // eslint-disable-next-line no-unused-vars
 import LocaleConfig from '@constants/localeWixCalendar';
 
-export default function Agenda({ navigation }) {
+export default function Agenda() {
+  const navigation = useNavigation();
   const [daySelected, setDaySelected] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,16 +49,16 @@ export default function Agenda({ navigation }) {
     setDaySelected(day);
   }
 
-  function handleAgendaRequest() {
+  async function handleAgendaRequest() {
     setLoading(true);
-    api.post('/admin/events/agenda', {
-      date: daySelected,
-    }).then((response) => {
+    try {
+      const response = await api.post('/admin/events/agenda', {
+        date: daySelected,
+      });
       const { hoursInterval, events: rawEvents } = response.data;
-      setLoading(false);
       navigation.navigate('AgendaTable',
         { events: rawEvents, hours: hoursInterval, showDate: daySelected });
-    }).catch((e) => {
+    } catch (e) {
       if (String(e.response.status).includes('5')) {
         const errMessage = 'Erro, tente novamente em alguns minutos.';
         setError(errMessage);
@@ -71,11 +73,40 @@ export default function Agenda({ navigation }) {
         return;
       }
       setError('Algo deu errado.');
-    })
-      .finally(() => {
-        setLoading(false);
-      });
+    } finally {
+      setLoading(false);
+    }
   }
+
+  // function handleAgendaRequest() {
+  //   setLoading(true);
+  //   api.post('/admin/events/agenda', {
+  //     date: daySelected,
+  //   }).then((response) => {
+  //     const { hoursInterval, events: rawEvents } = response.data;
+  //     // setLoading(false);
+  //     navigation.navigate('AgendaTable',
+  //       { events: rawEvents, hours: hoursInterval, showDate: daySelected });
+  //   }).catch((e) => {
+  //     if (String(e.response.status).includes('5')) {
+  //       const errMessage = 'Erro, tente novamente em alguns minutos.';
+  //       setError(errMessage);
+  //       return;
+  //     }
+  //     if (e.response.data) {
+  //       setError(`${e.response?.data?.message}`);
+  //       return;
+  //     }
+  //     if (e.request) {
+  //       setError('Erro na conexão.');
+  //       return;
+  //     }
+  //     setError('Algo deu errado.');
+  //   })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }
 
   async function closeDay(dayToClose) {
     try {
