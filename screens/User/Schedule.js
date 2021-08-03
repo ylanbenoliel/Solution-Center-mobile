@@ -29,6 +29,7 @@ import {
   endOfWeek,
   subDays,
   isWeekend,
+  isSunday,
 } from 'date-fns';
 
 import {
@@ -45,14 +46,14 @@ import colors from '@constants/colors';
 import { ROOM_DATA } from '@constants/fixedValues';
 import LOCALE from '@constants/localeCalendarStrip';
 
-const INITIALDATE = isWeekend(new Date()) === true
-  ? add(new Date(), { days: 2 })
+const INITIALDATE = isSunday(new Date()) === true
+  ? add(new Date(), { days: 1 })
   : new Date();
 
 const INITIALDATERANGE = [
   {
     start: formatISO(INITIALDATE),
-    end: formatISO(subDays(endOfWeek(INITIALDATE), 1)),
+    end: formatISO(endOfWeek(INITIALDATE), 1),
   },
 ];
 
@@ -100,7 +101,7 @@ export default function Schedule({ navigation }) {
       }];
       setDatesWhitelist(rangeData);
       setDatesBlacklist(
-        disableWeekends(minDate, maxDate),
+        disableSundays(minDate, maxDate),
       );
     } catch (e) {
       if (String(e.response.status).includes('5')) {
@@ -120,12 +121,14 @@ export default function Schedule({ navigation }) {
     }
   }
 
-  function disableWeekends(startDate, endDate) {
+  function disableSundays(startDate, endDate) {
     const weekends = eachWeekendOfInterval({
       start: parseISO(startDate),
       end: parseISO(endDate),
     });
-    return weekends;
+
+    const allSundays = weekends.filter(dt =>isSunday(dt));
+    return allSundays;
   }
 
   function reloadDates() {
