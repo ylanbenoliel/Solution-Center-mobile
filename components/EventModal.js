@@ -24,7 +24,7 @@ import colors from '@constants/colors';
 const EventModal = ({
   isVisible, onClose, roomName, eventList, dateHeader,
 }) => {
-  const [localEventList, setLocalEventList] = useState(null);
+  const [localEventList, setLocalEventList] = useState([]);
 
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackText, setSnackText] = useState('');
@@ -100,7 +100,14 @@ const EventModal = ({
           .sort((prev, next) => prev.time.localeCompare(next.time));
         setLocalEventList(totalList);
       })
-      .catch(() => {
+      .catch((e) => {
+        setSnackColor(colors.errorColor);
+        if (e.response.data) {
+          setSnackText(`${e.response.data.message}`);
+        } else {
+          setSnackText('Erro de conexão.');
+        }
+        setVisibleSnack(true);
       });
   }
 
