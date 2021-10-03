@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  KeyboardAvoidingView,
   Keyboard,
   ActivityIndicator,
 } from 'react-native';
@@ -87,7 +88,7 @@ const SendEmail = () => {
 
       <View style={styles.container}>
         <Logo width={scale(220)} height={(80)} />
-        <View style={styles.inputContainer}>
+        <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
           <Text style={[styles.text, { textAlign: 'center' }]}>
             Digite seu email para receber
             o código de verificação.
@@ -109,15 +110,12 @@ const SendEmail = () => {
           <View style={{ width: '100%', alignItems: 'center' }}>
             <TouchableOpacity
               style={styles.buttonContainer}
-              onPress={() => {
-                handleSubmitEmail();
-              }}
+              onPress={() => { handleSubmitEmail(); }}
             >
               {showLoadingSubmitEmail()}
             </TouchableOpacity>
           </View>
-
-        </View>
+        </KeyboardAvoidingView>
       </View>
       <SnackBar
         text={snackText}

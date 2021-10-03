@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
+  KeyboardAvoidingView,
   ActivityIndicator,
 } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -108,12 +109,9 @@ const NewPassword = ({ route }) => {
 
       <View style={styles.container}>
         <Logo width={scale(220)} height={(80)} />
-        <View style={styles.inputContainer}>
+        <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
           <Text style={[styles.text, { textAlign: 'center' }]}>
-            Digite uma nova senha
-            {' '}
-            {'\n'}
-            para seu usuário.
+            Digite uma nova senha para seu usuário.
           </Text>
           <View style={styles.textInputContainer}>
             <TextInput
@@ -124,6 +122,7 @@ const NewPassword = ({ route }) => {
               placeholderTextColor={colors.placeholderColor}
               autoCapitalize="none"
               autoCorrect={false}
+              keyboardType="default"
               onSubmitEditing={() => handleSubmitPassword()}
             />
           </View>
@@ -131,14 +130,13 @@ const NewPassword = ({ route }) => {
           <View style={{ width: '100%', alignItems: 'center' }}>
             <TouchableOpacity
               style={styles.buttonContainer}
-              onPress={() => {
-                handleSubmitPassword();
-              }}
+              onPress={() => { handleSubmitPassword(); }}
             >
               {showLoadingSubmitCode()}
             </TouchableOpacity>
           </View>
-        </View>
+
+        </KeyboardAvoidingView>
       </View>
 
       <SnackBar
