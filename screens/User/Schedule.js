@@ -27,8 +27,6 @@ import {
   formatISO,
   add,
   endOfWeek,
-  subDays,
-  isWeekend,
   isSunday,
 } from 'date-fns';
 
@@ -127,7 +125,7 @@ export default function Schedule({ navigation }) {
       end: parseISO(endDate),
     });
 
-    const allSundays = weekends.filter(dt =>isSunday(dt));
+    const allSundays = weekends.filter((dt) => isSunday(dt));
     return allSundays;
   }
 
