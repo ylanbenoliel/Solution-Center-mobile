@@ -126,7 +126,7 @@ function AdminTab() {
       <Tab.Screen name="Calendar" component={AgendaStack} options={{ title: 'Calendário' }} />
       <Tab.Screen name="Usuários" component={UserStack} />
       <Tab.Screen name="Reports" component={Reports} options={{ title: 'Relatórios' }} />
-      <Tab.Screen name="Notificações" component={Notifications} />
+      {/* <Tab.Screen name="Notificações" component={Notifications} /> */}
       <Tab.Screen name="Perfil" component={AdminInfoStack} />
     </Tab.Navigator>
   );
