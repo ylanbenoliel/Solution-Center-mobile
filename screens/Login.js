@@ -45,15 +45,17 @@ export default function Login() {
   const field2 = createRef();
 
   useEffect(() => {
-    setTimeout(() => {
+    const timerSnack = setTimeout(() => {
       setVisibleSnack(false);
     }, 2000);
+    return () => clearTimeout(timerSnack);
   }, [visibleSnack === true]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timerEmail = setTimeout(() => {
       setEmail('');
     }, 1);
+    return () => clearTimeout(timerEmail);
   }, []);
 
   function showLoadingLogin() {

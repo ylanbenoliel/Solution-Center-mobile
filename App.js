@@ -50,7 +50,7 @@ export default function App() {
   async function prepareResources() {
     getToken();
     getPrivilegies();
-    savePushNotification();
+    // savePushNotification();
     setAppReady(true);
     await SplashScreen.hideAsync();
   }
@@ -80,7 +80,8 @@ export default function App() {
         return;
       }
     } catch (e) {
-      if (e.response.status === 401) {
+      // eslint-disable-next-line eqeqeq
+      if (e.response.status == 401) {
         setUserRole('s');
         return;
       }
