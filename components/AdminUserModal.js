@@ -11,7 +11,6 @@ import {
   StyleSheet,
   Image,
   Alert,
-  Picker,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
@@ -190,6 +189,20 @@ const AdminUserModal = ({
     </View>
   );
 
+  const PlanOption = ({ label, value }) => (
+    <TouchableOpacity
+      style={[styles.planOptionDefaultButton,
+        { backgroundColor: planNumber === value ? colors.mainColor : colors.whiteColor }]}
+      onLongPress={() => { handlePlanChange(value); }}
+    >
+      <Text
+        style={[styles.text,
+          { color: planNumber === value ? colors.whiteColor : styles.text.color }]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.container}>
@@ -318,22 +331,15 @@ const AdminUserModal = ({
           </Text>
           )}
 
-          <Picker
-            selectedValue={planNumber}
-            onValueChange={(value) => {
-              handlePlanChange(value);
-            }}
-            style={{
-              height: 50,
-              width: 170,
-              color: colors.mainColor,
-            }}
-          >
-            <Picker.Item label="Hora avulsa" value={1} />
-            <Picker.Item label="Mensal" value={2} />
-            <Picker.Item label="Fidelidade" value={3} />
-          </Picker>
-          <View style={{ marginBottom: verticalScale(20) }} />
+          <View style={{ marginBottom: verticalScale(10) }} />
+
+          <View style={styles.planOptionContainer}>
+            <PlanOption label="Hora Avulsa" value={1} />
+            <PlanOption label="Mensal" value={2} />
+            <PlanOption label="Fidelidade" value={3} />
+          </View>
+
+          <View style={{ marginBottom: verticalScale(10) }} />
 
         </ScrollView>
 
@@ -380,7 +386,19 @@ const styles = StyleSheet.create({
     padding: scale(10),
     borderRadius: scale(16),
   },
-
+  planOptionContainer: {
+    width: '96%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  planOptionDefaultButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: scale(6),
+    borderRadius: scale(16),
+    borderColor: colors.mainColor,
+    borderWidth: 2,
+  },
 });
 
 export default AdminUserModal;
