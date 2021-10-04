@@ -327,7 +327,7 @@ const AdminUserModal = ({
           <Text style={[styles.text, { fontSize: 12 }]}>
             Atualizado em:
             {'\t'}
-            {planUpdated ? showFormattedDate(planUpdated) : ''}
+            {showFormattedDate(planUpdated)}
           </Text>
           )}
 
