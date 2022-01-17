@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { LogBox, Platform } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 import Constants from 'expo-constants';

@@ -2,7 +2,6 @@
   "expo": {
     "name": "Solution Center",
     "slug": "solution-center",
-    "sdkVersion":"39.0.0",
     "privacy": "public",
     "platforms": [
       "ios",
