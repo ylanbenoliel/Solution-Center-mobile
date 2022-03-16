@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,18 +11,18 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { scale, verticalScale } from 'react-native-size-matters';
+} from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
 
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 
-import { GeneralStatusBar, HeaderDrawer } from '@components';
+import { GeneralStatusBar, HeaderDrawer } from "@components";
 
-import { api } from '@services/api';
+import { api } from "@services/api";
 
-import backgroundLogo from '@assets/LogoHorizontal.png';
+import backgroundLogo from "@assets/LogoHorizontal.png";
 
-import colors from '@constants/colors';
+import colors from "@constants/colors";
 
 export default function Plans({ navigation }) {
   const [plan, setPlan] = useState(0);
@@ -38,7 +38,7 @@ export default function Plans({ navigation }) {
 
   async function fetchPrice() {
     try {
-      const responsePrice = await api.get('/price');
+      const responsePrice = await api.get("/price");
       setPrice(responsePrice.data);
     } catch (error) {
       setPrice({});
@@ -58,16 +58,13 @@ export default function Plans({ navigation }) {
               {touchText}
             </Text>
             <View>
-              <Feather
-                name="arrow-down"
-                size={32}
-                color={colors.accentColor}
-              />
+              <Feather name="arrow-down" size={32} color={colors.accentColor} />
             </View>
           </View>
         </TouchableOpacity>
       );
-    } if (plan === state) {
+    }
+    if (plan === state) {
       return (
         <>
           <TouchableOpacity onPress={() => setPlan(0)}>
@@ -81,15 +78,11 @@ export default function Plans({ navigation }) {
                 {touchText}
               </Text>
               <View>
-                <Feather
-                  name="arrow-up"
-                  size={32}
-                  color={colors.accentColor}
-                />
+                <Feather name="arrow-up" size={32} color={colors.accentColor} />
               </View>
             </View>
           </TouchableOpacity>
-          <View style={{ backgroundColor: colors.whiteColor, width: '90%' }}>
+          <View style={{ backgroundColor: colors.whiteColor, width: "90%" }}>
             {description.map((item, index) => (
               <Text key={index} style={[styles.text]}>
                 {item}
@@ -116,27 +109,32 @@ export default function Plans({ navigation }) {
         source={backgroundLogo}
         imageStyle={{
           opacity: 0.1,
-          resizeMode: 'contain',
+          resizeMode: "contain",
         }}
         style={styles.imageBackground}
       >
         {/*  */}
 
-        <View style={{
-          flex: 1,
-          justifyContent: 'space-around',
-        }}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-around",
+          }}
         >
-          <HeaderDrawer navigation={navigation} gotToScreen="Login" title="Planos" />
+          <HeaderDrawer
+            navigation={navigation}
+            gotToScreen="Login"
+            title="Planos"
+          />
 
           <View style={{ marginVertical: verticalScale(14) }} />
 
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              {'\t\t'}
-              Nossos planos atendem a sua necessidade. Em todos eles,
-              os custos com recepcionista, água, café, energia elétrica,
-              segurança, internet e limpeza, estão inclusos no valor do aluguel.
+              {"\t\t"}
+              Nossos planos atendem a sua necessidade. Em todos eles, os custos
+              com recepcionista, água, café, energia elétrica, segurança,
+              internet e limpeza, estão inclusos no valor do aluguel.
             </Text>
           </View>
 
@@ -150,8 +148,8 @@ export default function Plans({ navigation }) {
               state={1}
               touchText="Hora avulsa"
               description={[
-                '– Períodos mínimos de 60 minutos.',
-                `– Valor: R$ ${price.avulso},00.`,
+                "– Períodos mínimos de 60 minutos.",
+                `– Valor: R$ ${price.avulso || 45},00.`,
               ]}
             />
             <View style={{ marginVertical: verticalScale(12) }} />
@@ -159,9 +157,9 @@ export default function Plans({ navigation }) {
               state={2}
               touchText="Turno"
               description={[
-                '– 6 horas consecutivas.',
-                `– Valor: R$ ${price.turno?.valor || 210},00.`,
-                `– Hora adicional: R$ ${price.turno?.adicional || 30},00.`,
+                "– 6 horas consecutivas.",
+                `– Valor: R$ ${price.turno?.valor || 240},00.`,
+                `– Hora adicional: R$ ${price.turno?.adicional || 40},00.`,
               ]}
             />
             <View style={{ marginVertical: verticalScale(12) }} />
@@ -169,22 +167,9 @@ export default function Plans({ navigation }) {
               state={3}
               touchText="Diária"
               description={[
-                '– De 08h às 18h.',
-                `– Valor: R$ ${price.diaria?.valor || 300},00.`,
-                `– Hora adicional: R$ ${price.diaria?.adicional || 30},00.`,
-              ]}
-            />
-            <View style={{ marginVertical: verticalScale(12) }} />
-            <Plan
-              state={4}
-              touchText="Mensal"
-              description={[
-                '– Sala exclusiva.',
-                `– Mensalidade: R$ ${price.mensal?.valor || 2500},00.`,
-                '– Renovação não obrigatória.',
-                '– Todas as despesas inclusas.',
-                '– De 08h às 13h ou de 13h às 18h.',
-                `– Hora fora do turno: R$ ${price.mensal?.hora || 30},00.`,
+                "– De 08h às 18h.",
+                `– Valor: R$ ${price.diaria?.valor || 350},00.`,
+                `– Hora adicional: R$ ${price.diaria?.adicional || 40},00.`,
               ]}
             />
           </ScrollView>
@@ -202,19 +187,19 @@ const styles = StyleSheet.create({
     marginHorizontal: verticalScale(20),
   },
   plansView: {
-    width: '90%',
+    width: "90%",
     marginHorizontal: scale(20),
   },
   text: {
-    fontFamily: 'Amaranth-Regular',
+    fontFamily: "Amaranth-Regular",
     fontSize: scale(16),
     color: colors.mainColor,
-    textAlign: 'justify',
+    textAlign: "justify",
   },
   showPlan: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });
