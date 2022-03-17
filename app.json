@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "2.0.0",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -27,7 +27,7 @@
     ],
     "ios": {
       "bundleIdentifier": "br.com.ylanbenoliel.solutioncenter",
-      "buildNumber": "2.0.0",
+      "buildNumber": "2.1.0",
       "supportsTablet": false,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "A permissão é necessária para salvar foto de perfil."
@@ -35,7 +35,7 @@
     },
     "android": {
       "package": "br.com.solutioncenter.solutioncenter",
-      "versionCode": 12,
+      "versionCode": 13,
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
