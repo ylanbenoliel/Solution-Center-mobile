@@ -97,7 +97,7 @@ const SendEmail = () => {
             <TextInput
               style={[styles.text, styles.textInput]}
               value={email}
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={(text) => setEmail(text.trim())}
               placeholder="Digite seu email"
               placeholderTextColor={colors.placeholderColor}
               autoCapitalize="none"
