@@ -18,7 +18,7 @@ import { GeneralStatusBar, SnackBar } from '@components';
 
 import { api } from '@services/api';
 
-import Logo from '@assets/logo-solution-azul.svg';
+// import Logo from '@assets/logo-solution-azul.svg';
 
 import colors from '@constants/colors';
 
@@ -87,7 +87,7 @@ const SendEmail = () => {
       />
 
       <View style={styles.container}>
-        <Logo width={scale(220)} height={(80)} />
+        {/* <Logo width={scale(220)} height={(80)} /> */}
         <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
           <Text style={[styles.text, { textAlign: 'center' }]}>
             Digite seu email para receber
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   text: {
     fontFamily: 'Amaranth-Regular',
