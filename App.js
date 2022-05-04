@@ -1,4 +1,5 @@
 // /* eslint-disable global-require */
+import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import { LogBox, Platform } from 'react-native';
 
