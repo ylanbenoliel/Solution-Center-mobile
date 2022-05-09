@@ -28,7 +28,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-calendar-strip": "^2.0.9",
+    "react-native-calendar-strip": "2.2.5",
     "react-native-calendars": "^1.264.0",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-image-slider-box": "^1.0.12",
