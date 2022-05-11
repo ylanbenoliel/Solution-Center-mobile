@@ -1,9 +1,6 @@
 import axios from 'axios';
 
-// eslint-disable-next-line import/extensions
-import { APP_URL } from '../env.js';
-
-const url = APP_URL;
+const url = 'https://solution-center.herokuapp.com';
 const api = axios.create({
   baseURL: url,
   timeout: 6 * 1000,

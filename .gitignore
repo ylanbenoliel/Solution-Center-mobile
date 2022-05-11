@@ -13,6 +13,7 @@ web-build/
 web-report/
 
 env.js
+enviroment.js
 
 # macOS
 .DS_Store
