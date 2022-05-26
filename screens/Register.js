@@ -172,8 +172,8 @@ export default function Register({ navigation }) {
       .min(14, 'Insira todo o CPF.')
       .required('Campo Obrigatório.'),
     rg: Yup.string()
-      .min(3, 'Insira um RG.')
-      .required('Campo Obrigatório.'),
+      .min(3, 'Insira um RG.'),
+    // .required('Campo Obrigatório.'),
     phone: Yup.string()
       .min(15, 'Insira todo o telefone.')
       .required('Campo Obrigatório.'),
@@ -188,7 +188,6 @@ export default function Register({ navigation }) {
 
       <ScrollView contentContainerStyle={{ paddingBottom: verticalScale(16) }}>
         <View style={styles.registerContainer}>
-          {/*  */}
 
           <View style={styles.avatarContainer}>
             <View style={styles.avatarImageContainer}>
@@ -398,7 +397,6 @@ export default function Register({ navigation }) {
                    && touched.phone
                     && <Text style={[styles.text, styles.errorFormText]}>{errors.phone}</Text>}
                 </View>
-                {/*  */}
 
                 <TouchableOpacity
                   style={styles.buttonContainer}
@@ -407,7 +405,6 @@ export default function Register({ navigation }) {
                   {loading
                     ? <ActivityIndicator color={`${colors.whiteColor}`} size="large" />
                     : <Text style={[styles.text, styles.buttonText]}>Registrar</Text>}
-                  {/* <Text style={[styles.text, styles.buttonText]}>Registrar</Text> */}
                 </TouchableOpacity>
               </>
             )}
