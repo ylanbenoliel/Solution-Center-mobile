@@ -224,7 +224,7 @@ export default function Schedule({ navigation }) {
           <View style={styles.calendarStrip}>
             <CalendarStrip
               ref={calendarRef}
-              maxDayComponentSize={60}
+              // maxDayComponentSize={60}
               startingDate={INITIALDATE}
               selectedDate={INITIALDATE}
               locale={LOCALE}

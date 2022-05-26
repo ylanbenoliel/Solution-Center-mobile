@@ -7433,10 +7433,10 @@ react-native-bundle-visualizer@^3.1.1:
     open "^8.4.0"
     source-map-explorer "^2.5.2"
 
-react-native-calendar-strip@2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/react-native-calendar-strip/-/react-native-calendar-strip-2.2.5.tgz#544d41784d93b455a886311de25c0d69935f369a"
-  integrity sha512-3DmHIJX+Uu9Nv2wNTViPOGBY7rvODaHl7xaaxuqDFTN4sCxeM+1ref8k5RE1PgyZ3Wqs4Z8XJoEyORQIc++VMA==
+react-native-calendar-strip@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-calendar-strip/-/react-native-calendar-strip-2.0.9.tgz#87b6e9164548c95614fb2c0ff9350740b9874b26"
+  integrity sha512-HLcN88fugbZ/PHWtg9oF1IcwdB6rv+x1yvVJTmKj2S0XmxAuIpr3TYxVhn1JMPttCk6nM7cCyV3qZ1Y2xkZrlw==
   dependencies:
     moment ">=2.0.0"
     node-git-hooks "^1.0.1"
